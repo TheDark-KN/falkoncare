@@ -56,6 +56,7 @@ import {
   UserPlus,
   Building,
   HelpCircle,
+  Sparkles,
 } from "lucide-react"
 
 // Custom Falcon Bird Icon Component
@@ -137,6 +138,7 @@ export const Icons = {
   database: Database,
   building: Building,
   helpCircle: HelpCircle,
+  sparkles: Sparkles,
 }
 
 export function getServiceIcon(iconName: string) {

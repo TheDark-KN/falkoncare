@@ -52,18 +52,28 @@ export default function DashboardPage() {
       <TopBar title="Dashboard" />
 
       <div className="p-6 space-y-6">
-        {/* Welcome Section */}
-        <div className="bg-gradient-to-r from-primary to-accent rounded-2xl p-6 text-primary-foreground">
-          <h2 className="text-2xl font-bold mb-2">Welcome back, {convexUser?.fullName?.split(" ")[0] || "User"}!</h2>
-          <p className="text-primary-foreground/80 mb-4">
-            Your water tanks are in good hands. Book your next service today.
-          </p>
-          <Link href="/dashboard/services">
-            <Button variant="secondary" className="bg-background text-primary hover:bg-background/90">
-              Book New Service
-              <Icons.arrowRight className="w-4 h-4 ml-2" />
-            </Button>
-          </Link>
+        {/* Premium Welcome Section */}
+        <div className="relative rounded-3xl p-8 overflow-hidden bg-gradient-to-br from-[#0c4a6e] via-[#0891b2] to-[#14b8a6] border border-white/20 shadow-2xl">
+          {/* Decorative Background Elements */}
+          <div className="absolute top-0 right-0 -mt-10 -mr-10 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 left-20 w-40 h-40 bg-teal-400/20 rounded-full blur-2xl" />
+          
+          <div className="relative z-10">
+            <h2 className="text-3xl font-bold mb-2 text-white flex items-center gap-3">
+              Ask Falkon, {convexUser?.fullName?.split(" ")[0] || "User"}! <Icons.sparkles className="w-6 h-6 text-amber-300" />
+            </h2>
+            <p className="text-white/90 text-lg mb-6 max-w-xl">
+              Your water tanks are in expert hands. Secure scheduling, instant tracking, and guaranteed purity.
+            </p>
+            <div className="flex gap-4">
+               <Link href="/dashboard/services">
+                 <Button className="bg-white text-[#0891b2] hover:bg-white/90 shadow-lg rounded-full px-8 font-semibold transition-all hover:scale-105 active:scale-95">
+                   Book New Service
+                   <Icons.arrowRight className="w-4 h-4 ml-2" />
+                 </Button>
+               </Link>
+            </div>
+          </div>
         </div>
 
         {/* Stats */}

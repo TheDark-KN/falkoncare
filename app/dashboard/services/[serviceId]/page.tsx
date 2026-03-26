@@ -21,6 +21,13 @@ import Link from "next/link"
 import { useUser } from "@clerk/nextjs"
 import { useMutation, useQuery, useConvexAuth } from "convex/react"
 import { api } from "@/convex/_generated/api"
+import Script from "next/script"
+
+declare global {
+  interface Window {
+    Razorpay: any;
+  }
+}
 
 export default function ServiceBookingPage() {
   const params = useParams()
@@ -108,9 +115,73 @@ export default function ServiceBookingPage() {
 
     setIsBooking(true)
 
+    // ONLINE PAYMENT FLOW (Razorpay)
+    if (["upi", "card", "netbanking"].includes(selectedPaymentMethod)) {
+      try {
+        const res = await fetch("/api/razorpay", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ amount: totalPrice }),
+        })
+        
+        const order = await res.json()
+        if (!res.ok) throw new Error(order.error || "Failed to create order")
+
+        const options = {
+          key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+          amount: order.amount,
+          currency: order.currency,
+          name: "Falkon Care",
+          description: `${service.name} Booking`,
+          image: "/icon.png",
+          order_id: order.id,
+          handler: async function (response: any) {
+            try {
+              setIsBooking(true)
+              // Process booking successfully after online payment
+              await createBooking({
+                serviceName: service.name,
+                date: new Date(selectedDate!).getTime(),
+                time: selectedTime!,
+                amount: totalPrice,
+                address: selectedAddress,
+                tankSize: selectedTankSize || undefined,
+                tankType: selectedTankType || undefined,
+                paymentMethod: selectedPaymentMethod,
+              });
+              toast.success("Payment Received! Booking confirmed.")
+              setStep(5)
+            } catch (err: any) {
+              console.error(err)
+              toast.error("Payment succeeded but booking failed. Please contact support.")
+            } finally {
+               setIsBooking(false)
+            }
+          },
+          prefill: {
+            name: user?.fullName || "User",
+            email: user?.email || "user@example.com",
+          },
+          theme: { color: "#519CAB" },
+        }
+
+        const rzp = new window.Razorpay(options);
+        rzp.on("payment.failed", function () {
+          toast.error("Payment failed or was cancelled.")
+          setIsBooking(false)
+        });
+        rzp.open();
+      } catch (err) {
+        console.error(err)
+        toast.error("Failed to initialize payment gateway.")
+        setIsBooking(false)
+      }
+      return; // Return early, Razorpay handles the rest
+    }
+
+    // CASH OR WALLET FLOW (Convex)
     try {
-      // Create booking using Convex mutation
-      const bookingId = await createBooking({
+      await createBooking({
         serviceName: service.name,
         date: new Date(selectedDate!).getTime(),
         time: selectedTime!,
@@ -118,16 +189,14 @@ export default function ServiceBookingPage() {
         address: selectedAddress,
         tankSize: selectedTankSize || undefined,
         tankType: selectedTankType || undefined,
-        paymentMethod: selectedPaymentMethod === "wallet" ? "wallet" : "cash",
+        paymentMethod: selectedPaymentMethod,
       });
 
-      console.log("Booking created successfully:", bookingId);
+      console.log("Booking created successfully");
       toast.success("Booking confirmed successfully!")
-      setStep(5) // Success step
+      setStep(5)
     } catch (error: any) {
       console.error("Booking error:", error);
-
-      // Handle specific error types
       if (error.message === "INSUFFICIENT_WALLET_BALANCE") {
         toast.error("Insufficient wallet balance. Please recharge your wallet to continue.");
       } else if (error.message === "UNAUTHENTICATED") {
@@ -155,10 +224,11 @@ export default function ServiceBookingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative">
+      <Script src="https://checkout.razorpay.com/v1/checkout.js" />
       <TopBar title="Book Service" />
 
-      <div className="p-6 max-w-4xl mx-auto">
+      <div className="p-6 max-w-4xl mx-auto relative z-10">
 
 
         {/* Progress Steps */}

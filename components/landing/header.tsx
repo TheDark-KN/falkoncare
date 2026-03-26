@@ -23,12 +23,12 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-xl border-b border-border/50">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16 md:h-20">
+        <div className="flex items-center justify-between h-16 md:h-20 relative">
           {/* Improved logo styling with better visual weight */}
           <Link href="/" className="flex items-center gap-2 group">
             <div className="relative w-10 h-10 md:w-12 md:h-12 group-hover:shadow-lg transition-shadow">
               <img 
-                src="/Gemini_Generated_Image_rwpfd0rwpfd0rwpf.png" 
+                src="/icon.png" 
                 alt="Falkon Care Logo" 
                 className="w-full h-full object-contain"
               />
@@ -39,7 +39,7 @@ export function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-1">
+          <nav className="hidden md:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
             <Link
               href="/services"
               className={`px-4 py-2 transition-colors font-medium relative group ${isActive("/services") ? "text-foreground" : "text-muted-foreground hover:text-foreground"
@@ -78,26 +78,21 @@ export function Header() {
           {/* Auth Buttons */}
           <div className="hidden md:flex items-center gap-3">
             <SignedOut>
-              <Link href="/sign-in">
-                <Button variant="ghost" className="font-semibold">
-                  Login
-                </Button>
-              </Link>
-              <Link href="/sign-up">
-                <Button className="bg-gradient-to-r from-primary to-secondary hover:shadow-lg text-primary-foreground font-semibold">
-                  Sign Up
-                </Button>
-              </Link>
+              <Button variant="ghost" className="font-semibold" asChild>
+                <Link href="/sign-in">Login</Link>
+              </Button>
+              <Button className="bg-gradient-to-r from-primary to-secondary hover:shadow-lg text-primary-foreground font-semibold" asChild>
+                <Link href="/sign-up">Sign Up</Link>
+              </Button>
             </SignedOut>
             <SignedIn>
-              <Link href="/dashboard">
-                <Button
+              <Button
                   variant="ghost"
                   className="font-semibold"
+                  asChild
                 >
-                  Dashboard
-                </Button>
-              </Link>
+                <Link href="/dashboard">Dashboard</Link>
+              </Button>
               <UserButton
                 afterSignOutUrl="/"
                 appearance={{
@@ -127,7 +122,7 @@ export function Header() {
                   <SheetTitle className="text-left flex items-center gap-2">
                     <div className="relative w-8 h-8">
                       <img 
-                        src="/Gemini_Generated_Image_rwpfd0rwpfd0rwpf.png" 
+                        src="/icon.png" 
                         alt="Falkon Care Logo" 
                         className="w-full h-full object-contain"
                       />
@@ -176,23 +171,17 @@ export function Header() {
                   </nav>
                   <div className="flex flex-col gap-3 pt-4 border-t border-border">
                     <SignedOut>
-                      <Link href="/sign-in" onClick={() => setMobileMenuOpen(false)}>
-                        <Button variant="outline" className="w-full font-semibold justify-center">
-                          Login
-                        </Button>
-                      </Link>
-                      <Link href="/sign-up" onClick={() => setMobileMenuOpen(false)}>
-                        <Button className="w-full bg-gradient-to-r from-primary to-secondary text-primary-foreground font-semibold justify-center shadow-lg shadow-primary/20">
-                          Sign Up
-                        </Button>
-                      </Link>
+                      <Button variant="outline" className="w-full font-semibold justify-center" asChild>
+                        <Link href="/sign-in" onClick={() => setMobileMenuOpen(false)}>Login</Link>
+                      </Button>
+                      <Button className="w-full bg-gradient-to-r from-primary to-secondary text-primary-foreground font-semibold justify-center shadow-lg shadow-primary/20" asChild>
+                        <Link href="/sign-up" onClick={() => setMobileMenuOpen(false)}>Sign Up</Link>
+                      </Button>
                     </SignedOut>
                     <SignedIn>
-                      <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)}>
-                        <Button variant="outline" className="w-full font-semibold justify-center">
-                          Dashboard
-                        </Button>
-                      </Link>
+                      <Button variant="outline" className="w-full font-semibold justify-center" asChild>
+                        <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)}>Dashboard</Link>
+                      </Button>
                       <div className="flex items-center justify-center py-4">
                         <UserButton afterSignOutUrl="/" />
                       </div>

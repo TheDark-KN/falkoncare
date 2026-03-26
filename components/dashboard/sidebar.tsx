@@ -70,9 +70,11 @@ export function Sidebar({ userRole }: SidebarProps) {
         {/* Logo */}
         <div className="h-16 flex items-center justify-between px-4 border-b border-border">
           {!collapsed && (
-            <Link href="/" className="flex items-center gap-2">
-              <Icons.falcon className="w-8 h-8 text-primary" />
-              <span className="text-xl font-bold text-foreground">Falkon Care</span>
+            <Link href="/" className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                 <img src="/icon.png" alt="Falkon Care" className="w-6 h-6 object-contain" />
+              </div>
+              <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/80">Falkon Care</span>
             </Link>
           )}
           <button

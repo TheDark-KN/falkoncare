@@ -54,7 +54,7 @@ export const create = mutation({
         address: v.string(),
         tankSize: v.optional(v.string()),
         tankType: v.optional(v.string()),
-        paymentMethod: v.union(v.literal("cash"), v.literal("wallet")),
+        paymentMethod: v.union(v.literal("cash"), v.literal("wallet"), v.literal("upi"), v.literal("card"), v.literal("netbanking")),
     },
     handler: async (ctx, args) => {
         const identity = await ctx.auth.getUserIdentity();
@@ -69,8 +69,9 @@ export const create = mutation({
             .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
             .first();
 
-        // Handle wallet payment
+        // Handle payment logic
         let paymentStatus = "pending";
+        
         if (args.paymentMethod === "wallet") {
             if (!user || !user.walletBalance || user.walletBalance < args.amount) {
                 throw new ConvexError(ERRORS.INSUFFICIENT_WALLET_BALANCE);
@@ -80,6 +81,9 @@ export const create = mutation({
                 walletBalance: (user.walletBalance || 0) - args.amount,
                 updatedAt: Date.now(),
             });
+            paymentStatus = "paid";
+        } else if (["upi", "card", "netbanking"].includes(args.paymentMethod)) {
+            // Online payments via Razorpay are captured frontend-side before hitting this mutation
             paymentStatus = "paid";
         }
 

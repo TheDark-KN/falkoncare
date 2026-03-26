@@ -12,182 +12,130 @@ export function HeroSection() {
     show: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.15,
-        delayChildren: 0.2
+        staggerChildren: 0.1,
+        delayChildren: 0.1
       }
     }
   }
 
   const item: Variants = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100, damping: 15 } }
+    hidden: { opacity: 0, y: 30 },
+    show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 80, damping: 15 } }
   }
 
   return (
-    <section className="relative overflow-hidden bg-background py-16 md:py-24 lg:py-32">
-      {/* Background blobs with glassmorphism */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden flex justify-center items-center">
+    <section className="relative overflow-hidden bg-background pt-24 pb-32 md:pt-32 md:pb-40">
+      
+      {/* Background Gradients (Smooth Water Fluid Motion) */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden flex justify-center items-center z-0">
         <motion.div 
-          animate={{ rotate: 360, scale: [1, 1.1, 1] }} 
-          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          className="absolute top-0 -left-20 w-[30rem] h-[30rem] bg-gradient-to-br from-primary/20 to-primary/5 rounded-full blur-3xl opacity-70" 
+          animate={{ x: [0, 50, -50, 0], y: [0, -50, 50, 0], scale: [1, 1.1, 0.9, 1], rotate: [0, 45, -45, 0] }} 
+          transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-10 md:top-20 left-10 md:left-20 w-[40rem] lg:w-[60rem] h-[30rem] lg:h-[40rem] bg-gradient-to-r from-cyan-400/20 via-primary/30 to-blue-400/20 mix-blend-multiply rounded-[40%_60%_70%_30%/40%_50%_60%_50%] blur-[100px] md:blur-[140px] opacity-80" 
         />
         <motion.div 
-          animate={{ rotate: -360, scale: [1, 1.2, 1] }} 
-          transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-          className="absolute -bottom-32 -right-20 w-[40rem] h-[40rem] bg-gradient-to-bl from-accent/20 to-accent/5 rounded-full blur-3xl opacity-70" 
+          animate={{ x: [0, -60, 40, 0], y: [0, 60, -40, 0], scale: [0.9, 1.2, 1, 0.9], rotate: [0, -30, 30, 0] }} 
+          transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute bottom-10 md:-bottom-20 right-10 md:-right-20 w-[30rem] lg:w-[50rem] h-[25rem] lg:h-[35rem] bg-gradient-to-r from-secondary/40 via-teal-300/20 to-primary/20 mix-blend-multiply rounded-[60%_40%_30%_70%/50%_60%_40%_50%] blur-[100px] md:blur-[140px] opacity-80" 
         />
       </div>
 
-      <div className="container relative mx-auto px-4 sm:px-6 lg:px-8 z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+      {/* Floating Elements (Like the coins in the design) */}
+      <div className="absolute inset-0 pointer-events-none z-10 hidden md:block">
+        <motion.div animate={{ y: [0, -20, 0] }} transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }} className="absolute top-[20%] left-[15%] w-16 h-16 liquid-glass rounded-2xl flex items-center justify-center bg-white/60 dark:bg-white/10 shadow-2xl border border-white/40">
+           <Icons.droplets className="w-8 h-8 text-primary" />
+        </motion.div>
+        <motion.div animate={{ y: [0, 20, 0] }} transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }} className="absolute top-[40%] right-[15%] w-20 h-20 liquid-glass rounded-[2rem] flex items-center justify-center bg-white/60 dark:bg-white/10 shadow-2xl border border-white/40">
+           <Icons.shield className="w-10 h-10 text-accent" />
+        </motion.div>
+        <motion.div animate={{ y: [0, -15, 0] }} transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 2 }} className="absolute bottom-[30%] left-[20%] w-14 h-14 liquid-glass rounded-xl flex items-center justify-center bg-white/60 dark:bg-white/10 shadow-lg border border-white/40">
+           <Icons.checkCircle className="w-7 h-7 text-green-500" />
+        </motion.div>
+      </div>
 
-          {/* CONTENT */}
-          <motion.div 
-            variants={container}
-            initial="hidden"
-            animate="show"
-            className="space-y-8"
-          >
-            <motion.div variants={item} className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 backdrop-blur-md border border-primary/20 shadow-sm rounded-full text-primary text-sm font-medium">
-              <Icons.falcon className="w-4 h-4" />
-              Trusted by 10,000+ Customers
-            </motion.div>
-
-            <motion.h1 variants={item} className="text-4xl md:text-5xl lg:text-7xl font-extrabold leading-[1.1] tracking-tight text-balance">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Falkon Care</span>{" "}
-              <span className="block text-foreground mt-2">
-                Professional Tank Cleaning Service
-              </span>
-            </motion.h1>
-
-            <motion.p variants={item} className="text-lg md:text-xl text-muted-foreground max-w-xl leading-relaxed">
-              Expert water tank cleaning services in Delhi, Noida, Gurgaon,
-              Faridabad & Ghaziabad. Certified technicians, hygienic process,
-              and affordable pricing.
-            </motion.p>
-
-            <motion.div variants={item} className="flex flex-col sm:flex-row gap-4 pt-2">
-              <Link href="/auth/login">
-                <Button
-                  size="lg"
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 h-14 px-8 text-lg w-full sm:w-auto overflow-hidden group relative"
-                >
-                  <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-black"></span>
-                  <span className="relative flex items-center">
-                    Book Now
-                    <Icons.arrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-                  </span>
-                </Button>
-              </Link>
-
-              <Link href="#services">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-primary/30 text-primary hover:bg-primary/10 backdrop-blur-sm transition-all hover:-translate-y-1 h-14 px-8 text-lg w-full sm:w-auto"
-                >
-                  View Services
-                </Button>
-              </Link>
-            </motion.div>
-
-            {/* Reviews */}
-            <motion.div variants={item} className="flex items-center gap-6 pt-6 border-t border-border/50">
-              <div className="flex -space-x-3">
-                {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className={`w-10 h-10 rounded-full border-2 border-background bg-muted flex items-center justify-center overflow-hidden relative z-[${5-i}]`}>
-                     <Image src={`/avatars/0${i}.png`} alt="Customer" width={40} height={40} className="object-cover" onError={(e) => { e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ccc'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M12 14c-6.1 0-8 4-8 4v2h16v-2s-1.9-4-8-4z'/%3E%3C/svg%3E"; }} />
-                  </div>
-                ))}
-                <div className="w-10 h-10 rounded-full border-2 border-background bg-primary flex items-center justify-center text-primary-foreground text-xs font-bold relative z-0">
-                  500+
-                </div>
-              </div>
-              <div className="flex flex-col">
-                <div className="flex items-center gap-1">
-                  {[1, 2, 3, 4, 5].map((i) => (
-                    <Icons.star
-                      key={i}
-                      className="w-4 h-4 fill-amber-400 text-amber-400"
-                    />
-                  ))}
-                  <span className="text-sm font-bold ml-1 text-foreground">4.9/5</span>
-                </div>
-                <span className="text-xs text-muted-foreground font-medium">
-                  Verified Customer Reviews
-                </span>
-              </div>
-            </motion.div>
+      <div className="container relative mx-auto px-4 sm:px-6 z-20 flex flex-col items-center text-center">
+        
+        <motion.div 
+          variants={container}
+          initial="hidden"
+          animate="show"
+          className="flex flex-col items-center max-w-4xl mx-auto space-y-8"
+        >
+          {/* Top Pill */}
+          <motion.div variants={item} className="inline-flex items-center gap-2 px-4 py-2 bg-white/50 dark:bg-black/20 backdrop-blur-xl border border-white/60 dark:border-white/10 shadow-sm rounded-full text-foreground/80 text-sm font-semibold">
+            <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center mr-1">
+               <img src="/icon.png" alt="Logo" className="w-4 h-4 object-contain" />
+            </div>
+            Falkon Care Services
           </motion.div>
 
-          {/* IMAGE */}
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9, rotate: -2 }}
-            animate={{ opacity: 1, scale: 1, rotate: 0 }}
-            transition={{ duration: 0.8, delay: 0.3, type: "spring" }}
-            className="relative lg:order-last"
-          >
-            <div className="relative aspect-square overflow-hidden rounded-[2rem] border border-white/20 bg-muted shadow-2xl group">
-              <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent z-10" />
-              <Image
-                src="/water-tank-cleaning-service.jpg"
-                alt="Professional Water Tank Cleaning Service"
-                fill
-                className="object-cover group-hover:scale-105 transition-transform duration-700"
-                priority
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                onError={(e) => {
-                  e.currentTarget.src = "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?q=80&w=2070&auto=format&fit=crop";
-                }}
-              />
-              
-              {/* Premium glass badge overlay */}
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1, type: "spring" }}
-                className="absolute bottom-8 left-8 right-8 z-20"
+          <motion.h1 variants={item} className="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-[1.1] tracking-tight text-balance text-foreground">
+            Unlock the Power of <br className="hidden md:block"/> Clean, Safe Water
+          </motion.h1>
+
+          <motion.p variants={item} className="text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed">
+            Invest in professional tank cleaning services and manage your family's health safely and easily with certified experts.
+          </motion.p>
+
+          <motion.div variants={item} className="flex flex-col sm:flex-row gap-4 pt-4 w-full sm:w-auto">
+            <Link href="/sign-up">
+              <Button
+                size="lg"
+                className="bg-foreground hover:bg-foreground/90 text-background shadow-xl hover:shadow-2xl transition-all hover:scale-105 h-14 px-10 text-lg rounded-full w-full sm:w-auto"
               >
-                <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-4 flex items-center justify-between shadow-2xl">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
-                      <Icons.shield className="w-6 h-6 text-white" />
+                Join Falkon Care
+              </Button>
+            </Link>
+          </motion.div>
+        </motion.div>
+
+        {/* Sleek Trust Indicators (Suits the site much better than a grey mockup box) */}
+        <motion.div 
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.5, type: "spring", stiffness: 50 }}
+          className="w-full max-w-4xl mx-auto mt-16 pb-12 relative flex justify-center"
+        >
+          <div className="inline-flex flex-wrap items-center justify-center gap-6 md:gap-12 liquid-glass rounded-full border border-white/50 dark:border-white/10 shadow-xl px-8 py-5 bg-white/40 dark:bg-black/20 backdrop-blur-xl">
+            
+            <div className="flex items-center gap-3">
+               <div className="flex -space-x-3">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className="w-10 h-10 rounded-full border-2 border-background bg-muted overflow-hidden">
+                       <img src={`https://i.pravatar.cc/100?img=${i + 10}`} alt="User" className="w-full h-full object-cover" />
                     </div>
-                    <div>
-                      <p className="text-white font-semibold flex items-center gap-2">
-                        100% Safe & Hygienic
-                      </p>
-                      <p className="text-white/80 text-sm">Certified Process</p>
-                    </div>
+                  ))}
+               </div>
+               <div className="flex flex-col text-left ml-2">
+                  <div className="flex items-center text-amber-500">
+                     <Icons.star className="w-4 h-4 fill-amber-500" />
+                     <Icons.star className="w-4 h-4 fill-amber-500" />
+                     <Icons.star className="w-4 h-4 fill-amber-500" />
+                     <Icons.star className="w-4 h-4 fill-amber-500" />
+                     <Icons.star className="w-4 h-4 fill-amber-500" />
                   </div>
-                  <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center shadow-lg shadow-green-500/30">
-                    <Icons.check className="w-6 h-6 text-white" />
-                  </div>
-                </div>
-              </motion.div>
+                  <p className="text-sm font-semibold text-foreground">Trusted by 10,000+ Users</p>
+               </div>
             </div>
 
-            {/* Floating availability badge */}
-            <motion.div 
-              animate={{ y: [0, -10, 0] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute -top-6 -right-6 bg-background rounded-2xl border shadow-xl p-4 flex items-center gap-4 z-30"
-            >
-              <div className="relative flex h-3 w-3">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-              </div>
-              <div>
-                <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">Available Now</p>
-                <p className="text-sm font-bold">Same-day Service</p>
-              </div>
-            </motion.div>
-          </motion.div>
+            <div className="hidden md:block w-px h-10 bg-foreground/10" />
 
-        </div>
+            <div className="flex items-center gap-4">
+               <div className="flex items-center gap-2">
+                  <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center">
+                     <Icons.checkCircle className="w-5 h-5 text-green-600" />
+                  </div>
+                  <div className="flex flex-col text-left">
+                     <p className="text-sm font-bold text-foreground">Certified Experts</p>
+                     <p className="text-xs text-muted-foreground">100% Guaranteed</p>
+                  </div>
+               </div>
+            </div>
+
+          </div>
+        </motion.div>
+
       </div>
     </section>
   )
 }
-
