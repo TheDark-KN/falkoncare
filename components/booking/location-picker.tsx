@@ -61,10 +61,11 @@ export function LocationPicker({ onLocationSelect, initialAddress }: LocationPic
                 }
             },
             (error) => {
-                console.error("Geolocation error:", error)
-                toast.error("Failed to get your location. Please enable location access.")
+                console.error("Geolocation error:", error.message || error.code || "Permission denied")
+                toast.error("Failed to get your location. Please check browser permissions.")
                 setIsGettingLocation(false)
-            }
+            },
+            { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
         )
     }
 
@@ -77,12 +78,14 @@ export function LocationPicker({ onLocationSelect, initialAddress }: LocationPic
     }
 
     return (
-        <Card className="bg-card border-border">
-            <CardHeader>
-                <CardTitle className="text-foreground">Service Location</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-                {/* Current Location Button */}
+        <Card className="glass-effect overflow-hidden relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-white/10 dark:from-black/40 dark:to-black/10 pointer-events-none" />
+            <div className="relative z-10">
+                <CardHeader>
+                    <CardTitle className="text-foreground">Service Location</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                    {/* Current Location Button */}
                 <Button
                     variant="outline"
                     className="w-full border-primary/50 hover:bg-primary/10"
@@ -144,6 +147,7 @@ export function LocationPicker({ onLocationSelect, initialAddress }: LocationPic
                     Confirm Location
                 </Button>
             </CardContent>
+            </div>
         </Card>
     )
 }

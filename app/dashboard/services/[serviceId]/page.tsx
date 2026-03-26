@@ -182,7 +182,7 @@ export default function ServiceBookingPage() {
         {step === 1 && (
           <div className="space-y-6">
             {/* Service with Image */}
-            <Card className="bg-card border-border overflow-hidden">
+            <Card className="glass-effect overflow-hidden">
               {service.image && (
                 <div className="h-64 bg-muted relative">
                   <Image src={service.image || "/placeholder.svg"} alt={service.name} fill className="object-cover" />
@@ -212,7 +212,7 @@ export default function ServiceBookingPage() {
 
             {/* Tank Size Selection */}
             {service.tankSizes && (
-              <Card className="bg-card border-border">
+              <Card className="glass-effect">
                 <CardHeader>
                   <CardTitle className="text-foreground">Select Tank Size</CardTitle>
                 </CardHeader>
@@ -249,7 +249,7 @@ export default function ServiceBookingPage() {
 
             {/* Tank Type Selection */}
             {service.tankTypes && (
-              <Card className="bg-card border-border">
+              <Card className="glass-effect">
                 <CardHeader>
                   <CardTitle className="text-foreground">Select Tank Type</CardTitle>
                 </CardHeader>
@@ -317,7 +317,7 @@ export default function ServiceBookingPage() {
               <CalendarPicker onDateSelect={setSelectedDate} selectedDate={selectedDate || undefined} />
 
               {/* Time Slots */}
-              <Card className="bg-card border-border h-fit">
+              <Card className="glass-effect h-fit">
                 <CardHeader>
                   <CardTitle className="text-foreground">Select Time Slot</CardTitle>
                 </CardHeader>
@@ -353,7 +353,7 @@ export default function ServiceBookingPage() {
             />
 
             {/* Notes */}
-            <Card className="bg-card border-border">
+            <Card className="glass-effect">
               <CardHeader>
                 <CardTitle className="text-foreground">Additional Notes (Optional)</CardTitle>
               </CardHeader>
@@ -448,7 +448,7 @@ export default function ServiceBookingPage() {
               Back to Payment
             </Button>
 
-            <Card className="bg-card border-border">
+            <Card className="glass-effect">
               <CardHeader>
                 <CardTitle className="text-foreground">Booking Summary</CardTitle>
               </CardHeader>
@@ -525,12 +525,11 @@ export default function ServiceBookingPage() {
 
             <div className="flex justify-center">
               <Button
-                variant="outline"
                 size="lg"
                 onClick={handleBooking}
                 disabled={isBooking || (selectedPaymentMethod === "wallet" && user && user.walletBalance < totalPrice)}
                 className={cn(
-                  "border-green-500 text-green-600 hover:bg-green-50 bg-transparent",
+                  "w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-lg hover:shadow-xl transition-all",
                   selectedPaymentMethod === "wallet" && user && user.walletBalance < totalPrice && "opacity-50 cursor-not-allowed"
                 )}
               >

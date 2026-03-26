@@ -3,82 +3,83 @@
 @import "tailwindcss/utilities";
 
 :root {
-  /* Primary: Water Blue - Main brand color for trust and reliability */
-  --primary: 210 100% 50%;
-  --primary-foreground: 0 0% 98%;
+  /* User Requested Colors */
+  /* Light blue #C3E7F1 -> 193 62% 85% */
+  /* Moonstone #519CAB -> 190 36% 49% */
+  /* Saffron #FFC64F -> 41 100% 65% */
+  /* Gunmetal #20373B -> 189 30% 18% */
 
-  /* Secondary: Ocean Teal - Complementary accent */
-  --secondary: 190 80% 45%;
-  --secondary-foreground: 0 0% 98%;
+  --primary: 190 36% 49%;
+  --primary-foreground: 0 0% 100%;
 
-  /* Accent: Fresh Green - Action and highlights */
-  --accent: 140 60% 60%;
-  --accent-foreground: 0 0% 98%;
+  --secondary: 193 62% 85%;
+  --secondary-foreground: 189 30% 18%;
 
-  /* Success color */
-  --success: 142 76% 36%;
+  --accent: 41 100% 65%;
+  --accent-foreground: 189 30% 18%;
 
-  /* Backgrounds with better hierarchy */
-  --background: 0 0% 100%;
-  --foreground: 222 84% 4.9%;
+  /* Very light tint of light blue for cards/bg */
+  --background: 193 40% 98%;
+  --foreground: 189 30% 18%;
+  
   --card: 0 0% 100%;
-  --card-foreground: 222 84% 4.9%;
+  --card-foreground: 189 30% 18%;
+  
   --popover: 0 0% 100%;
-  --popover-foreground: 222 84% 4.9%;
+  --popover-foreground: 189 30% 18%;
 
-  /* Neutral variants for better hierarchy */
-  --muted: 210 40% 96%;
-  --muted-foreground: 215 16% 47%;
+  --muted: 193 40% 92%;
+  --muted-foreground: 189 20% 45%;
+  
+  --success: 142 76% 36%;
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 98%;
 
-  /* Enhanced borders and inputs */
-  --border: 214 32% 91%;
-  --input: 214 32% 91%;
-  --ring: 210 100% 50%;
+  --border: 190 30% 85%;
+  --input: 190 30% 85%;
+  --ring: 190 36% 49%;
 
-  /* Chart colors with better contrast */
-  --chart-1: 210 100% 50%;
-  --chart-2: 190 80% 45%;
-  --chart-3: 140 60% 60%;
-  --chart-4: 180 70% 55%;
-  --chart-5: 220 60% 65%;
+  --chart-1: 190 36% 49%;
+  --chart-2: 193 62% 85%;
+  --chart-3: 41 100% 65%;
+  --chart-4: 180 30% 50%;
+  --chart-5: 200 40% 60%;
 
-  --radius: 0.75rem;
+  --radius: 1rem;
 }
 
 .dark {
-  /* Dark mode optimized for water-themed service app */
-  --primary: 210 100% 70%;
-  --primary-foreground: 222 84% 4.9%;
+  --primary: 41 100% 65%;
+  --primary-foreground: 189 30% 18%;
 
-  --secondary: 190 80% 65%;
-  --secondary-foreground: 222 84% 4.9%;
+  --secondary: 190 36% 49%;
+  --secondary-foreground: 0 0% 98%;
 
-  --accent: 140 60% 75%;
-  --accent-foreground: 222 84% 4.9%;
+  --accent: 193 62% 85%;
+  --accent-foreground: 189 30% 18%;
 
-  --background: 222 84% 4.9%;
-  --foreground: 0 0% 98%;
-  --card: 222 84% 8%;
-  --card-foreground: 0 0% 98%;
-  --popover: 222 84% 8%;
-  --popover-foreground: 0 0% 98%;
+  --background: 189 30% 18%; /* Gunmetal */
+  --foreground: 193 62% 85%; /* Light blue */
+  
+  --card: 189 30% 14%;
+  --card-foreground: 193 62% 85%;
+  
+  --popover: 189 30% 12%;
+  --popover-foreground: 193 62% 85%;
 
-  --muted: 217 32% 17%;
-  --muted-foreground: 215 20% 65%;
+  --muted: 189 20% 25%;
+  --muted-foreground: 193 30% 65%;
+  
   --destructive: 0 62% 65%;
   --destructive-foreground: 0 0% 98%;
 
-  --border: 217 32% 17%;
-  --input: 217 32% 17%;
-  --ring: 210 100% 70%;
+  --border: 189 20% 30%;
+  --input: 189 20% 30%;
+  --ring: 41 100% 65%;
 
-  --chart-1: 210 100% 70%;
-  --chart-2: 190 80% 65%;
-  --chart-3: 140 60% 75%;
-  --chart-4: 180 70% 70%;
-  --chart-5: 220 60% 75%;
+  --chart-1: 41 100% 65%;
+  --chart-2: 190 36% 49%;
+  --chart-3: 193 62% 85%;
 }
 
 @layer base {
@@ -86,17 +87,28 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
     font-family: var(--font-roboto), system-ui, sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
+    /* Global glassmorphic mesh background */
+    background: 
+      radial-gradient(circle at 15% 50%, rgba(195, 231, 241, 0.4) 0%, transparent 50%),
+      radial-gradient(circle at 85% 30%, rgba(81, 156, 171, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 50% 80%, rgba(255, 198, 79, 0.1) 0%, transparent 50%),
+      hsl(var(--background));
+    background-attachment: fixed;
+    min-height: 100vh;
   }
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    @apply text-balance font-semibold tracking-tight;
+  .dark body {
+    background: 
+      radial-gradient(circle at 15% 50%, rgba(81, 156, 171, 0.2) 0%, transparent 50%),
+      radial-gradient(circle at 85% 30%, rgba(255, 198, 79, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 50% 80%, rgba(195, 231, 241, 0.1) 0%, transparent 50%),
+      hsl(var(--background));
+    background-attachment: fixed;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-balance font-bold tracking-tight;
     font-family: var(--font-poppins), system-ui, sans-serif;
   }
   p {
@@ -105,29 +117,28 @@
 }
 
 @layer components {
-  /* Enhanced button styles with improved visual feedback and accessibility */
+  /* Enhanced button styles with user colors */
   .btn-primary {
-    @apply bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-lg transition-all duration-200 active:scale-95 shadow-sm hover:shadow-md;
+    @apply bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-xl transition-all duration-300 active:scale-95 shadow-[0_4px_14px_0_rgba(81,156,171,0.39)] hover:shadow-[0_6px_20px_rgba(81,156,171,0.23)];
   }
 
   .btn-secondary {
-    @apply bg-secondary hover:bg-secondary/90 text-secondary-foreground font-semibold rounded-lg transition-all duration-200 shadow-sm;
+    @apply bg-secondary hover:bg-secondary/90 text-secondary-foreground font-semibold rounded-xl transition-all duration-300 shadow-sm hover:shadow-md;
   }
 
   .btn-outline {
-    @apply border-2 border-primary text-primary hover:bg-primary/10 font-semibold rounded-lg transition-all duration-200;
+    @apply border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground font-semibold rounded-xl transition-all duration-300;
   }
 
-  /* Enhanced card styling with better shadows, borders, and hover effects */
+  /* Deep Glassmorphic card styling */
   .card-featured {
-    @apply bg-card rounded-xl p-6 sm:p-8 shadow-md hover:shadow-lg transition-all duration-300 border border-border/50 hover:border-primary/30;
+    @apply bg-white/40 dark:bg-black/20 backdrop-blur-xl rounded-2xl p-6 sm:p-8 shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] hover:shadow-[0_8px_32px_0_rgba(81,156,171,0.15)] transition-all duration-300 border border-white/50 dark:border-white/10 hover:border-primary/50;
   }
 
   .card-standard {
-    @apply bg-card rounded-lg p-4 sm:p-6 shadow-sm border border-border/50 transition-all duration-200 hover:shadow-md;
+    @apply bg-white/40 dark:bg-black/20 backdrop-blur-xl rounded-xl p-4 sm:p-6 shadow-[0_4px_24px_0_rgba(31,38,135,0.05)] border border-white/40 dark:border-white/10 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-primary/30;
   }
 
-  /* Responsive section padding with better spacing hierarchy */
   .section-padding {
     @apply py-12 sm:py-16 md:py-20 lg:py-28;
   }
@@ -136,16 +147,15 @@
     @apply py-8 sm:py-12 md:py-16;
   }
 
-  /* New utility classes for better visual hierarchy and consistency */
   .container-max {
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
 
   .gradient-text {
-    @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent;
   }
 
   .glass-effect {
-    @apply bg-background/80 backdrop-blur-xl border border-border/50;
+    @apply bg-white/50 dark:bg-black/30 backdrop-blur-2xl border border-white/50 dark:border-white/10 shadow-xl;
   }
 }

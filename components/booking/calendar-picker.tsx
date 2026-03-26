@@ -41,8 +41,10 @@ export function CalendarPicker({ onDateSelect, selectedDate }: CalendarPickerPro
   }
 
   return (
-    <div className="w-full p-4 bg-card rounded-lg border border-border">
-      <div className="mb-4">
+    <div className="w-full p-4 glass-effect overflow-hidden relative rounded-2xl">
+      <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-white/10 dark:from-black/40 dark:to-black/10 pointer-events-none" />
+      <div className="relative z-10">
+        <div className="mb-4">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-lg font-semibold text-foreground">
             {getMonthName(currentMonth)} {currentYear}
@@ -107,6 +109,7 @@ export function CalendarPicker({ onDateSelect, selectedDate }: CalendarPickerPro
           <span className="w-3 h-3 ring-2 ring-primary rounded"></span>
           Today
         </p>
+      </div>
       </div>
     </div>
   )

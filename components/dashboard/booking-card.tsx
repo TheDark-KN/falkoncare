@@ -21,7 +21,7 @@ export function BookingCard({ booking, showActions = true }: BookingCardProps) {
   })
 
   return (
-    <Card className="bg-card border-border hover:border-primary/30 transition-colors">
+    <Card className="bg-card border-border hover:border-primary/30 transition-colors ">
       <CardContent className="p-4">
         <div className="flex items-start justify-between mb-3">
           <div>

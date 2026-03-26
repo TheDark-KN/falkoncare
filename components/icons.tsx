@@ -124,6 +124,7 @@ export const Icons = {
   eye: Eye,
   eyeOff: EyeOff,
   whatsapp: MessageCircle,
+  messageCircle: MessageCircle,
   externalLink: ExternalLink,
   briefcase: Briefcase,
   target: Target,
