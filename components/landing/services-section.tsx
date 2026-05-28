@@ -1,180 +1,308 @@
 "use client"
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
 import { serviceCategories, serviceItems } from "@/lib/mock-data"
 import { getServiceIcon, Icons } from "@/components/icons"
 import Link from "next/link"
 import { motion, Variants } from "framer-motion"
+import { Button } from "@/components/ui/button"
 
-export function ServicesSection() {
+interface ServicesSectionProps {
+  selectedCategory: string | null
+  setSelectedCategory: (categoryId: string | null) => void
+  searchQuery: string
+  setSearchQuery: (query: string) => void
+}
+
+const getInclusions = (serviceId: string) => {
+  switch (serviceId) {
+    case "tank-cleaning-basic":
+      return [
+        "Mechanical scrubbing & high-pressure washing",
+        "Sludge removal & vacuuming",
+        "Eco-friendly anti-bacterial treatment"
+      ]
+    case "tank-cleaning-premium":
+      return [
+        "Everything in Basic cleaning plus:",
+        "Advanced UV radiation disinfection",
+        "Full tank sanitization & water testing"
+      ]
+    case "tank-repair":
+      return [
+        "Crack sealing & leakage detection",
+        "Epoxy coating for chemical resistance",
+        "Inlet/outlet pipe joint sealing"
+      ]
+    case "pipe-cleaning":
+      return [
+        "High-pressure jet pipe cleaning",
+        "Descaling & chemical-free residue clearing",
+        "Flow pressure checking & validation"
+      ]
+    case "pipe-replacement":
+      return [
+        "Heavy-duty corrosion-free pipe installation",
+        "Complete pressure testing for leaks",
+        "Old line removal & site cleanup"
+      ]
+    case "filter-installation":
+      return [
+        "Brand-independent RO/UV filter installation",
+        "TDS testing before & after setup",
+        "Leak validation & pressure setup"
+      ]
+    case "filter-service":
+      return [
+        "Filter sediment cartridge replacement",
+        "Membrane flushing & health check",
+        "Complete sanitation of filter chamber"
+      ]
+    case "water-testing":
+      return [
+        "12+ physical & chemical parameter analysis",
+        "pH level, TDS, and hardness checking",
+        "Laboratory certified digital report"
+      ]
+    case "motor-service":
+      return [
+        "Winding check & electrical validation",
+        "Pump impeller cleaning & lubrication",
+        "Coupling check & dry-run validation"
+      ]
+    default:
+      return [
+        "Background-verified professional",
+        "Eco-friendly materials used",
+        "100% satisfaction guaranteed"
+      ]
+  }
+}
+
+export function ServicesSection({
+  selectedCategory,
+  setSelectedCategory,
+  searchQuery,
+  setSearchQuery,
+}: ServicesSectionProps) {
+  
+  // Filter Logic
+  const filteredServices = serviceItems.filter((service) => {
+    const matchesCategory = selectedCategory ? service.categoryId === selectedCategory : true
+    const matchesSearch = searchQuery
+      ? service.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        service.description.toLowerCase().includes(searchQuery.toLowerCase())
+      : true
+    return matchesCategory && matchesSearch
+  })
+
   const container: Variants = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.1
-      }
-    }
+        staggerChildren: 0.08,
+      },
+    },
   }
 
   const item: Variants = {
-    hidden: { opacity: 0, y: 30 },
-    show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100, damping: 15 } }
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100, damping: 15 } },
   }
 
   return (
     <section
       id="services"
-      className="relative py-20 md:py-32 bg-background overflow-hidden"
+      className="relative py-20 bg-background overflow-hidden border-t border-border/40"
     >
-      {/* Background decorations */}
+      {/* Background elements */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-gradient-to-bl from-accent/10 to-transparent blur-3xl rounded-full" />
-        <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-gradient-to-tr from-primary/10 to-transparent blur-3xl rounded-full" />
+        <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-gradient-to-bl from-primary/5 to-transparent blur-3xl rounded-full" />
+        <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-gradient-to-tr from-accent/5 to-transparent blur-3xl rounded-full" />
       </div>
 
-      <div className="container relative mx-auto px-4 sm:px-6 lg:px-8 z-10">
-        {/* Header */}
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.7 }}
-          className="text-center mb-16 md:mb-24"
-        >
-          <div className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-primary/10 rounded-full text-primary text-sm font-semibold mb-6">
-            <Icons.checkCircle className="w-4 h-4" />
-            Our Expertise
-          </div>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-foreground mb-6 tracking-tight text-balance">
-            Water Tank Cleaning Services <br className="hidden md:block"/> in <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">Delhi NCR</span>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        
+        {/* Section Header */}
+        <div className="text-center mb-10">
+          <h2 className="text-3xl md:text-4xl font-extrabold text-foreground tracking-tight">
+            Our Standardized Services
           </h2>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            Hygienic, certified, and affordable water tank cleaning for homes,
-            societies, offices, and commercial buildings across Delhi, Noida,
-            Gurgaon, Faridabad & Ghaziabad.
+          <p className="text-muted-foreground mt-2 max-w-2xl mx-auto text-sm sm:text-base">
+            Simple, upfront, and transparent pricing. No negotiations, no hidden charges.
           </p>
-        </motion.div>
+        </div>
 
-        {/* Services Grid */}
-        <motion.div 
-          variants={container}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, margin: "-100px" }}
-          className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 mb-16"
-        >
+        {/* Categories Horizontal Tabs (Styled like Urban Company Category pills) */}
+        <div className="flex items-center justify-start sm:justify-center gap-2 overflow-x-auto pb-4 mb-10 scrollbar-none border-b border-border/30">
+          <Button
+            variant={selectedCategory === null ? "default" : "outline"}
+            size="sm"
+            onClick={() => setSelectedCategory(null)}
+            className={`rounded-full px-5 py-2 text-xs font-bold shrink-0 transition-all ${
+              selectedCategory === null
+                ? "bg-foreground text-background shadow-md"
+                : "border-border hover:border-slate-400 text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            All Services
+          </Button>
           {serviceCategories.map((category) => {
             const IconComponent = getServiceIcon(category.icon)
-            const categoryServices = serviceItems.filter(
-              (s) => s.categoryId === category.id
-            )
-            const startingPrice = Math.min(
-              ...categoryServices.map((s) => s.basePrice)
-            )
+            const isSelected = selectedCategory === category.id
 
             return (
-              <motion.div key={category.id} variants={item}>
-                <Card
-                  className="group relative h-full flex flex-col overflow-hidden border-border/50 bg-card/50 backdrop-blur-sm transition-all duration-500
-                  hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(2,132,199,0.2)] hover:border-primary/50"
-                >
-                  {/* Glow effect */}
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
-                    <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary/20 rounded-full blur-[3rem]" />
-                  </div>
-
-                  <CardHeader className="relative z-10 pb-4">
-                    <div className="mb-6 flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/10
-                      group-hover:bg-gradient-to-br group-hover:from-primary group-hover:to-primary/90 transition-all duration-500 shadow-sm group-hover:shadow-primary/25 group-hover:shadow-lg group-hover:-rotate-3">
-                      <IconComponent className="w-8 h-8 text-primary group-hover:text-primary-foreground transition-colors duration-500" />
-                    </div>
-
-                    <CardTitle className="text-2xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors">
-                      {category.name}
-                    </CardTitle>
-
-                    <CardDescription className="text-base text-muted-foreground">
-                      {category.description}
-                    </CardDescription>
-                  </CardHeader>
-
-                  <CardContent className="relative z-10 hidden flex-col flex-1 pb-6 pt-2">
-                    {/* Service list */}
-                    <div className="space-y-4 flex-1">
-                      {categoryServices.slice(0, 3).map((service) => (
-                        <div
-                          key={service.id}
-                          className="flex items-center justify-between text-sm group/item"
-                        >
-                          <span className="text-muted-foreground group-hover/item:text-foreground transition-colors flex items-center gap-2">
-                            <span className="w-1.5 h-1.5 rounded-full bg-primary/40 group-hover/item:bg-primary transition-colors" />
-                            {service.name}
-                          </span>
-                          <span className="font-semibold text-foreground group-hover/item:text-primary transition-colors">
-                            ₹{service.basePrice.toLocaleString('en-IN')}+
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Pricing */}
-                    <div className="mt-8 pt-4 border-t border-border/50 flex flex-col gap-1">
-                      <span className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
-                        Starting from
-                      </span>
-                      <div className="flex items-baseline gap-1">
-                        <span className="text-2xl font-black text-foreground group-hover:text-primary transition-colors">
-                          ₹{startingPrice.toLocaleString('en-IN')}
-                        </span>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
+              <Button
+                key={category.id}
+                variant={isSelected ? "default" : "outline"}
+                size="sm"
+                onClick={() => setSelectedCategory(category.id)}
+                className={`rounded-full px-5 py-2 text-xs font-bold shrink-0 transition-all ${
+                  isSelected
+                    ? "bg-foreground text-background shadow-md"
+                    : "border-border hover:border-slate-400 text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <IconComponent className="w-3.5 h-3.5 mr-1.5 text-primary" />
+                {category.name}
+              </Button>
             )
           })}
-        </motion.div>
+        </div>
 
-        {/* CTA */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-8"
-        >
-          <Link href="/auth/login">
-            <Button
-              size="lg"
-              className="w-full sm:w-auto h-14 px-8 text-lg bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 group relative overflow-hidden"
-            >
-              <span className="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-20 bg-gradient-to-b from-transparent via-transparent to-black pointer-events-none"></span>
-              <span className="relative flex items-center">
-                Book a Service Now
-                <Icons.arrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+        {/* Active Filters Display */}
+        {(selectedCategory || searchQuery) && (
+          <div className="flex items-center gap-2 mb-8 flex-wrap text-sm font-semibold">
+            <span className="text-muted-foreground font-medium">Active filters:</span>
+            {selectedCategory && (
+              <span className="inline-flex items-center gap-1 bg-muted px-3 py-1 rounded-full text-foreground text-xs">
+                Category: {serviceCategories.find(c => c.id === selectedCategory)?.name}
+                <button onClick={() => setSelectedCategory(null)} className="hover:text-red-500 ml-1">
+                  <Icons.x className="w-3 h-3" />
+                </button>
               </span>
-            </Button>
-          </Link>
+            )}
+            {searchQuery && (
+              <span className="inline-flex items-center gap-1 bg-muted px-3 py-1 rounded-full text-foreground text-xs">
+                Search: "{searchQuery}"
+                <button onClick={() => setSearchQuery("")} className="hover:text-red-500 ml-1">
+                  <Icons.x className="w-3 h-3" />
+                </button>
+              </span>
+            )}
+          </div>
+        )}
 
-          <Link href="/services">
+        {/* Services Menu List */}
+        {filteredServices.length > 0 ? (
+          <motion.div
+            variants={container}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: "-50px" }}
+            className="grid gap-6 md:grid-cols-2"
+          >
+            {filteredServices.map((service) => {
+              const category = serviceCategories.find((c) => c.id === service.categoryId)
+              const inclusions = getInclusions(service.id)
+
+              return (
+                <motion.div key={service.id} variants={item}>
+                  <div className="bg-card border border-border/50 hover:border-primary/45 rounded-2xl p-5 sm:p-6 shadow-sm hover:shadow-xl transition-all duration-350 flex gap-6 items-start group relative">
+                    
+                    {/* Left: Info */}
+                    <div className="flex-1 flex flex-col justify-between h-full min-h-[140px]">
+                      <div>
+                        {/* Rating Badging */}
+                        <div className="flex items-center gap-1.5 mb-1.5 text-[11px] font-bold text-amber-500">
+                          <Icons.star className="w-3.5 h-3.5 fill-amber-500" />
+                          <span>4.8 (2.5k+ reviews)</span>
+                        </div>
+
+                        {/* Title */}
+                        <h3 className="text-lg sm:text-xl font-bold text-foreground leading-snug group-hover:text-primary transition-colors">
+                          {service.name}
+                        </h3>
+
+                        {/* Price & Duration */}
+                        <div className="flex items-center gap-3 mt-2 text-sm">
+                          <span className="font-extrabold text-foreground flex items-center text-base">
+                            <Icons.rupee className="w-3.5 h-3.5" />
+                            {service.basePrice.toLocaleString("en-IN")}
+                          </span>
+                          <span className="text-muted-foreground">•</span>
+                          <span className="text-muted-foreground flex items-center gap-1 text-xs font-semibold">
+                            <Icons.clock className="w-3.5 h-3.5 text-slate-400" />
+                            {service.duration}
+                          </span>
+                        </div>
+
+                        {/* Inclusions List - Styled like Urban Company details */}
+                        <ul className="mt-4 space-y-2 border-t border-dashed border-border/60 pt-3">
+                          {inclusions.map((inc, index) => (
+                            <li key={index} className="flex items-start gap-2 text-xs text-muted-foreground leading-relaxed">
+                              <Icons.checkCircle className="w-3.5 h-3.5 text-emerald-500 mt-0.5 shrink-0" />
+                              <span>{inc}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+
+                    {/* Right: Image & Floating Add Button */}
+                    <div className="relative flex flex-col items-center justify-center shrink-0">
+                      <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden shadow-inner bg-muted border border-border/20">
+                        {service.image ? (
+                          <img
+                            src={service.image}
+                            alt={service.name}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                            <Icons.droplets className="w-8 h-8" />
+                          </div>
+                        )}
+                      </div>
+                      
+                      {/* Floating Add Button Overlay (Exactly like Urban Company) */}
+                      <div className="absolute bottom-[-12px] left-1/2 -translate-x-1/2">
+                        <Link href={`/dashboard/services/${service.id}`}>
+                          <Button
+                            className="bg-white hover:bg-slate-50 text-primary border border-primary/20 shadow-md font-bold text-xs px-5 py-1.5 h-auto rounded-lg uppercase tracking-wider transition-all duration-300 hover:scale-105 active:scale-95"
+                          >
+                            Add
+                          </Button>
+                        </Link>
+                      </div>
+                    </div>
+
+                  </div>
+                </motion.div>
+              )
+            })}
+          </motion.div>
+        ) : (
+          <div className="text-center py-16 bg-muted/20 border border-dashed border-border/60 rounded-3xl max-w-md mx-auto">
+            <Icons.search className="w-10 h-10 text-muted-foreground/60 mx-auto mb-3" />
+            <h4 className="font-bold text-foreground mb-1 text-base">No services found</h4>
+            <p className="text-xs text-muted-foreground px-4">
+              We couldn't find any services matching your criteria. Try adjusting your search query or filters.
+            </p>
             <Button
-              size="lg"
               variant="outline"
-              className="w-full sm:w-auto h-14 px-8 text-lg border-primary/20 text-foreground hover:bg-primary/5 hover:text-primary transition-all hover:-translate-y-1"
+              size="sm"
+              onClick={() => {
+                setSelectedCategory(null)
+                setSearchQuery("")
+              }}
+              className="mt-4 text-xs font-semibold"
             >
-              View All Services
+              Reset Filters
             </Button>
-          </Link>
-        </motion.div>
+          </div>
+        )}
+
       </div>
     </section>
   )

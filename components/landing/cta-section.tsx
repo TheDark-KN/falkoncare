@@ -45,7 +45,7 @@ export function CTASection() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6">
-            <Link href="/auth/login" className="w-full sm:w-auto">
+            <Link href="/dashboard/services" className="w-full sm:w-auto">
               <Button
                 size="lg"
                 className="w-full h-14 px-8 text-lg bg-white text-primary hover:bg-white/90 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1 rounded-xl group"
