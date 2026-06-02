@@ -23,14 +23,6 @@ import { useMutation, useQuery, useConvexAuth } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import Script from "next/script"
 
-declare global {
-  interface Window {
-    Razorpay: new (options: object) => {
-      on: (event: string, handler: (response?: any) => void) => void;
-      open: () => void;
-    };
-  }
-}
 
 export default function ServiceBookingPage() {
   const params = useParams()

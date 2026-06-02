@@ -11,23 +11,6 @@ import Script from "next/script"
 import { motion } from "framer-motion"
 import type { RazorpayResponse, RazorpayOrder } from "@/lib/types"
 
-declare global {
-  interface Window {
-    Razorpay: new (options: object) => {
-      on: (event: string, handler: (response: RazorpayFailureEvent) => void) => void;
-      open: () => void;
-    };
-  }
-}
-
-interface RazorpayFailureEvent {
-  error: {
-    code: string;
-    description: string;
-    reason: string;
-    metadata: { order_id: string; payment_id: string };
-  };
-}
 
 export default function WalletPage() {
   const [amount, setAmount] = useState("")
