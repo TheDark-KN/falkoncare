@@ -24,7 +24,7 @@ export default function AdminStaffPage() {
   useEffect(() => {
     try {
       const users = JSON.parse(localStorage.getItem("users") || "[]")
-      const staffMembers = users.filter((u: any) => u.role === "staff")
+      const staffMembers = users.filter((u: Record<string, string>) => u.role === "staff")
       setStaff(staffMembers)
     } catch (err) {
       console.error("Error fetching staff:", err)
@@ -37,7 +37,7 @@ export default function AdminStaffPage() {
   const handleStatusChange = (staffId: string, newStatus: string) => {
     try {
       const users = JSON.parse(localStorage.getItem("users") || "[]")
-      const updatedUsers = users.map((u: any) => (u.id === staffId ? { ...u, status: newStatus } : u))
+      const updatedUsers = users.map((u: Record<string, string>) => (u.id === staffId ? { ...u, status: newStatus } : u))
       localStorage.setItem("users", JSON.stringify(updatedUsers))
 
       setStaff(staff.map((s) => (s.id === staffId ? { ...s, status: newStatus } : s)))

@@ -1,15 +1,12 @@
 "use client"
 
 import { useParams, useRouter } from "next/navigation"
-import { useState } from "react"
 import { useUser } from "@clerk/nextjs"
 import { TopBar } from "@/components/dashboard/top-bar"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { StatusBadge } from "@/components/ui/status-badge"
 import { Icons } from "@/components/icons"
-// import { LocalBookingManager, LocalBooking } from "@/lib/local-storage"
-import { mockStaff } from "@/lib/mock-data"
 import Link from "next/link"
 import { useQuery, useMutation } from "convex/react"
 import { api } from "@/convex/_generated/api"
@@ -24,7 +21,6 @@ export default function BookingDetailsPage() {
   const booking = useQuery(api.bookings.getById, { id: bookingId })
   const cancelBooking = useMutation(api.bookings.cancel)
 
-  const assignedStaff: any = null // Remove staff assignment for now
 
   if (!isLoaded || booking === undefined) {
     return (
@@ -132,40 +128,6 @@ export default function BookingDetailsPage() {
             </div>
           </CardContent>
         </Card>
-
-        {/* Assigned Staff */}
-        {assignedStaff && (
-          <Card className="bg-card border-border mb-6">
-            <CardHeader>
-              <CardTitle className="text-foreground">Assigned Technician</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center gap-4">
-                <img
-                  src={assignedStaff.photo || "/placeholder.svg"}
-                  alt={assignedStaff.name}
-                  className="w-14 h-14 rounded-full object-cover"
-                />
-                <div className="flex-1">
-                  <h3 className="font-semibold text-foreground">{assignedStaff.name}</h3>
-                  <div className="flex items-center gap-2 mt-1">
-                    <div className="flex items-center gap-1">
-                      <Icons.star className="w-4 h-4 fill-warning text-warning" />
-                      <span className="text-sm font-medium text-foreground">{assignedStaff.rating}</span>
-                    </div>
-                    <span className="text-muted-foreground">•</span>
-                    <span className="text-sm text-muted-foreground">{assignedStaff.completedJobs} jobs completed</span>
-                  </div>
-                </div>
-                <a href={`tel:${assignedStaff.mobile}`}>
-                  <Button variant="outline" size="icon">
-                    <Icons.phone className="w-4 h-4" />
-                  </Button>
-                </a>
-              </div>
-            </CardContent>
-          </Card>
-        )}
 
         {/* Payment Details */}
         <Card className="bg-card border-border mb-6">

@@ -23,7 +23,7 @@ export default function AdminCustomersPage() {
     try {
       const users = JSON.parse(localStorage.getItem("users") || "[]")
       setCustomers(
-        users.map((user: any) => ({
+        users.map((user: Record<string, string>) => ({
           id: user.id,
           fullName: user.fullName,
           email: user.email,

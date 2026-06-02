@@ -29,7 +29,7 @@ export default function LoginPage() {
     try {
       // Simple local login - check localStorage
       const users = JSON.parse(localStorage.getItem("users") || "[]")
-      const user = users.find((u: any) => u.email === formData.email && u.password === formData.password)
+      const user = users.find((u: Record<string, string>) => u.email === formData.email && u.password === formData.password)
 
       if (!user) {
         throw new Error("Invalid email or password")

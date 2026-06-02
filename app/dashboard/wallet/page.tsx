@@ -76,7 +76,7 @@ export default function WalletPage() {
       };
 
       const rzp = new window.Razorpay(options);
-      rzp.on("payment.failed", function (_event: RazorpayFailureEvent) {
+      rzp.on("payment.failed", function (_event?: RazorpayPaymentFailureEvent) {
         toast.error("Payment failed or was cancelled. Please try again.")
         setIsLoading(false)
       });

@@ -40,7 +40,7 @@ export default function SignupPage() {
       // Simple local signup - store in localStorage for demo
       const users = JSON.parse(localStorage.getItem("users") || "[]")
 
-      if (users.some((u: any) => u.email === formData.email)) {
+      if (users.some((u: Record<string, string>) => u.email === formData.email)) {
         setError("User already exists")
         setIsLoading(false)
         return

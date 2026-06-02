@@ -52,7 +52,7 @@ export default function ProfilePage() {
       localStorage.setItem("currentUser", JSON.stringify(updatedUser))
 
       const users = JSON.parse(localStorage.getItem("users") || "[]")
-      const userIndex = users.findIndex((u: any) => u.id === updatedUser.id)
+      const userIndex = users.findIndex((u: Record<string, string>) => u.id === updatedUser.id)
       if (userIndex !== -1) {
         users[userIndex] = updatedUser
         localStorage.setItem("users", JSON.stringify(users))
