@@ -7,13 +7,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { serviceCategories, serviceItems } from "@/lib/mock-data"
 import { getServiceIcon, Icons } from "@/components/icons"
-import type { ServiceCategoryType, ServiceItem } from "@/lib/types"
+import type { ServiceItem } from "@/lib/types"
 import { cn } from "@/lib/utils"
 import Image from "next/image"
 
 export default function ServicesPage() {
   const router = useRouter()
-  const [selectedCategory, setSelectedCategory] = useState<ServiceCategoryType | null>(null)
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
 
   const filteredServices = selectedCategory
     ? serviceItems.filter((s) => s.categoryId === selectedCategory)
