@@ -7,9 +7,10 @@ import { useAppStore } from "@/lib/store"
 
 interface AdminTopBarProps {
   title: string
+  subtitle?: string
 }
 
-export function AdminTopBar({ title }: AdminTopBarProps) {
+export function AdminTopBar({ title, subtitle }: AdminTopBarProps) {
   const router = useRouter()
   const { logout } = useAppStore()
 
@@ -20,7 +21,12 @@ export function AdminTopBar({ title }: AdminTopBarProps) {
 
   return (
     <header className="h-16 bg-card border-b border-border flex items-center justify-between px-6">
-      <h1 className="text-xl font-semibold text-foreground">{title}</h1>
+      <div>
+        <h1 className="text-xl font-semibold text-foreground">{title}</h1>
+        {subtitle && (
+          <p className="text-sm text-muted-foreground">{subtitle}</p>
+        )}
+      </div>
 
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="icon">
