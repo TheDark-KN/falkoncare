@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils"
 import { CalendarPicker } from "@/components/booking/calendar-picker"
 import { LocationPicker } from "@/components/booking/location-picker"
 import { PaymentMethods } from "@/components/payment/payment-methods"
-import type { PaymentMethod } from "@/lib/types"
+import type { PaymentMethod, RazorpayResponse, RazorpayOrder } from "@/lib/types"
 import Link from "next/link"
 // import { LocalBookingManager } from "@/lib/local-storage"
 
@@ -25,7 +25,10 @@ import Script from "next/script"
 
 declare global {
   interface Window {
-    Razorpay: any;
+    Razorpay: new (options: object) => {
+      on: (event: string, handler: (response?: any) => void) => void;
+      open: () => void;
+    };
   }
 }
 
@@ -133,7 +136,7 @@ export default function ServiceBookingPage() {
           description: `${service.name} Booking`,
           image: "/icon.png",
           order_id: order.id,
-          handler: async function (response: any) {
+          handler: async function (response: RazorpayResponse) {
             try {
               setIsBooking(true)
               // Process booking successfully after online payment
@@ -149,9 +152,9 @@ export default function ServiceBookingPage() {
               });
               toast.success("Payment Received! Booking confirmed.")
               setStep(5)
-            } catch (err: any) {
-              console.error(err)
-              toast.error("Payment succeeded but booking failed. Please contact support.")
+            } catch (err: unknown) {
+              const msg = err instanceof Error ? err.message : "Booking failed"
+              toast.error(`Payment succeeded but booking failed: ${msg}. Please contact support.`)
             } finally {
                setIsBooking(false)
             }
@@ -190,17 +193,20 @@ export default function ServiceBookingPage() {
         paymentMethod: selectedPaymentMethod,
       });
 
-      console.log("Booking created successfully");
+      // Booking created via Convex mutation
       toast.success("Booking confirmed successfully!")
       setStep(5)
-    } catch (error: any) {
-      console.error("Booking error:", error);
-      if (error.message === "INSUFFICIENT_WALLET_BALANCE") {
-        toast.error("Insufficient wallet balance. Please recharge your wallet to continue.");
-      } else if (error.message === "UNAUTHENTICATED") {
-        toast.error("Please log in to book a service.");
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        if (error.message === "INSUFFICIENT_WALLET_BALANCE") {
+          toast.error("Insufficient wallet balance. Please recharge your wallet to continue.");
+        } else if (error.message === "UNAUTHENTICATED") {
+          toast.error("Please log in to book a service.");
+        } else {
+          toast.error(error.message || "Failed to create booking. Please try again.");
+        }
       } else {
-        toast.error(error.message || "Failed to create booking. Please try again.");
+        toast.error("Failed to create booking. Please try again.");
       }
     } finally {
       setIsBooking(false)

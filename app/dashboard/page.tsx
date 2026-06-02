@@ -12,6 +12,7 @@ import Link from "next/link"
 import { useUser } from "@clerk/nextjs"
 import { useQuery } from "convex/react"
 import { api } from "@/convex/_generated/api"
+import { DisplayBooking } from "@/lib/types"
 
 export default function DashboardPage() {
   const { isLoaded } = useUser()
@@ -35,10 +36,10 @@ export default function DashboardPage() {
     )
   }
 
-  // Format bookings for display (handle _id)
-  const formattedBookings = (bookings || []).map(b => ({
+  // Map Convex bookings to DisplayBooking shape
+  const formattedBookings: DisplayBooking[] = (bookings || []).map(b => ({
     ...b,
-    id: b._id,
+    id: b._id as string,
     tankSize: b.tankSize || undefined,
     tankType: b.tankType || undefined
   }))
@@ -103,8 +104,7 @@ export default function DashboardPage() {
             {activeBookings.length > 0 ? (
               <div className="grid md:grid-cols-2 gap-4">
                 {activeBookings.slice(0, 2).map((booking) => (
-                  // @ts-ignore
-                  <BookingCard key={booking.id} booking={booking as any} />
+                  <BookingCard key={booking.id} booking={booking} />
                 ))}
               </div>
             ) : (

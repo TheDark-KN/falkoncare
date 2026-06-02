@@ -21,7 +21,10 @@ export default function AdminBookingsPage() {
   }
 
   const handleStatusChange = async (id: Id<"bookings">, newStatus: string) => {
-    await updateStatus({ id, status: newStatus as any });
+    const validStatuses = ["pending", "confirmed", "in-progress", "completed", "cancelled"] as const;
+    type ValidStatus = typeof validStatuses[number];
+    if (!validStatuses.includes(newStatus as ValidStatus)) return;
+    await updateStatus({ id, status: newStatus as ValidStatus });
   };
 
   return (

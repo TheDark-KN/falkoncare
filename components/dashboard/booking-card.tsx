@@ -4,11 +4,11 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { StatusBadge } from "@/components/ui/status-badge"
 import { Icons } from "@/components/icons"
-import { LocalBooking } from "@/lib/local-storage"
+import { DisplayBooking } from "@/lib/types"
 import Link from "next/link"
 
 interface BookingCardProps {
-  booking: LocalBooking
+  booking: DisplayBooking
   showActions?: boolean
 }
 

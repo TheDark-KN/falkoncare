@@ -11,6 +11,7 @@ import { BookingCard } from "@/components/dashboard/booking-card"
 // import { LocalBookingManager, LocalBooking } from "@/lib/local-storage"
 import { useQuery } from "convex/react"
 import { api } from "@/convex/_generated/api"
+import { DisplayBooking } from "@/lib/types"
 
 type FilterType = "all" | "active" | "completed" | "cancelled"
 
@@ -19,10 +20,10 @@ export default function BookingsPage() {
   const bookings = useQuery(api.bookings.getByUser)
   const [filter, setFilter] = useState<FilterType>("all")
 
-  // Map Convex bookings to the shape expected by BookingCard (handling _id vs id)
-  const formattedBookings = (bookings || []).map(b => ({
+  // Map Convex bookings to DisplayBooking shape
+  const formattedBookings: DisplayBooking[] = (bookings || []).map(b => ({
     ...b,
-    id: b._id,
+    id: b._id as string,
     tankSize: b.tankSize || undefined,
     tankType: b.tankType || undefined
   }))
@@ -92,8 +93,7 @@ export default function BookingsPage() {
         ) : filteredBookings.length > 0 ? (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredBookings.map((booking) => (
-              // @ts-ignore - BookingCard expects LocalBooking but we pass mapped Convex booking
-              <BookingCard key={booking.id} booking={booking as any} />
+              <BookingCard key={booking.id} booking={booking} />
             ))}
           </div>
         ) : (

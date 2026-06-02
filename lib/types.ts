@@ -1,141 +1,78 @@
-// Customer Module Types
-export interface Customer {
-  id: string
-  name: string
-  mobile: string
-  email: string
-  address: string
-  walletBalance: number
-  createdAt: Date
+/**
+ * Shared type definitions used across the FalkonCare app.
+ * This file bridges Convex backend types with frontend display types.
+ */
+
+/** Booking status union — must stay in sync with convex/schema.ts */
+export type BookingStatus =
+  | "pending"
+  | "confirmed"
+  | "in-progress"
+  | "completed"
+  | "cancelled";
+
+/** Minimal booking shape required by BookingCard — works with both LocalBooking and Convex data */
+export interface DisplayBooking {
+  id: string;
+  serviceName: string;
+  date: number; // Unix timestamp (ms)
+  time: string;
+  amount: number;
+  address: string;
+  tankSize?: string;
+  tankType?: string;
+  status: BookingStatus;
+  paymentStatus?: string;
 }
 
-export interface CustomerFeedback {
-  id: string
-  customerId: string
-  bookingId: string
-  rating: number
-  comment: string
-  createdAt: Date
+/** Razorpay checkout response payload */
+export interface RazorpayResponse {
+  razorpay_payment_id: string;
+  razorpay_order_id: string;
+  razorpay_signature: string;
 }
 
-// Service Module Types
-export type ServiceCategoryType =
-  | "tank-services"
-  | "pipe-services"
-  | "filter-purification"
-  | "monitoring"
-  | "miscellaneous"
-
-export interface ServiceCategory {
-  id: ServiceCategoryType
-  name: string
-  description: string
-  icon: string
+/** Razorpay failure event payload */
+export interface RazorpayFailureResponse {
+  error: {
+    code: string;
+    description: string;
+    source: string;
+    step: string;
+    reason: string;
+    metadata: {
+      order_id: string;
+      payment_id: string;
+    };
+  };
 }
 
-export interface ServiceItem {
-  id: string
-  categoryId: ServiceCategoryType
-  name: string
-  description: string
-  basePrice: number
-  duration: string
-  image?: string
-  tankSizes?: { size: string; priceMultiplier: number }[]
-  tankTypes?: { type: string; priceAddition: number }[]
+/** Razorpay order creation response from /api/razorpay */
+export interface RazorpayOrder {
+  id: string;
+  amount: number;
+  currency: string;
 }
 
-export interface ServiceAvailability {
-  date: string
-  slots: { time: string; available: boolean }[]
+/** Razorpay checkout options */
+export interface RazorpayOptions {
+  key: string | undefined;
+  amount: number;
+  currency: string;
+  name: string;
+  description: string;
+  image?: string;
+  order_id: string;
+  handler: (response: RazorpayResponse) => void | Promise<void>;
+  prefill?: {
+    name?: string;
+    email?: string;
+    contact?: string;
+  };
+  theme?: {
+    color?: string;
+  };
 }
 
-// Booking Module Types
-export type BookingStatus = "pending" | "confirmed" | "in-progress" | "completed" | "cancelled"
-
-export interface Booking {
-  id: string
-  customerId: string
-  serviceId: string
-  serviceName: string
-  date: string
-  time: string
-  status: BookingStatus
-  amount: number
-  staffId?: string
-  address: string
-  tankSize?: string
-  tankType?: string
-  notes?: string
-  createdAt: Date
-}
-
-export interface StaffAssignment {
-  bookingId: string
-  staffId: string
-  assignedAt: Date
-}
-
-// Staff Module Types
-export interface Staff {
-  id: string
-  name: string
-  mobile: string
-  email: string
-  photo: string
-  rating: number
-  completedJobs: number
-  status: "available" | "busy" | "off-duty"
-}
-
-export interface StaffSchedule {
-  staffId: string
-  date: string
-  bookings: string[]
-}
-
-// Payment Module Types
-export type PaymentStatus = "pending" | "paid" | "refunded"
-export type PaymentMethod = "wallet" | "card" | "upi" | "netbanking" | "cash"
-
-export interface Payment {
-  id: string
-  bookingId: string
-  customerId: string
-  amount: number
-  status: PaymentStatus
-  method: PaymentMethod
-  transactionId?: string
-  createdAt: Date
-}
-
-export interface WalletTransaction {
-  id: string
-  customerId: string
-  amount: number
-  type: "credit" | "debit"
-  description: string
-  createdAt: Date
-}
-
-// Notification Types
-export interface Notification {
-  id: string
-  userId: string
-  userType: "customer" | "staff" | "admin"
-  title: string
-  message: string
-  read: boolean
-  createdAt: Date
-}
-
-// Complaint Types
-export interface Complaint {
-  id: string
-  customerId: string
-  bookingId: string
-  subject: string
-  description: string
-  status: "open" | "in-progress" | "resolved"
-  createdAt: Date
-}
+/** Payment methods supported by the app */
+export type PaymentMethod = "wallet" | "cash" | "upi" | "card" | "netbanking";

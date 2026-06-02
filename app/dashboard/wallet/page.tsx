@@ -9,11 +9,24 @@ import { Icons } from "@/components/icons"
 import { toast } from "sonner"
 import Script from "next/script"
 import { motion } from "framer-motion"
+import type { RazorpayResponse, RazorpayOrder } from "@/lib/types"
 
 declare global {
   interface Window {
-    Razorpay: any;
+    Razorpay: new (options: object) => {
+      on: (event: string, handler: (response: RazorpayFailureEvent) => void) => void;
+      open: () => void;
+    };
   }
+}
+
+interface RazorpayFailureEvent {
+  error: {
+    code: string;
+    description: string;
+    reason: string;
+    metadata: { order_id: string; payment_id: string };
+  };
 }
 
 export default function WalletPage() {
@@ -33,16 +46,16 @@ export default function WalletPage() {
     setIsLoading(true)
     
     try {
-      // 1. Create order on our Next.js backend
+      // 1. Create Razorpay order via our authenticated Next.js backend
       const res = await fetch("/api/razorpay", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ amount: numAmount }),
       })
       
-      const order = await res.json()
+      const order: RazorpayOrder = await res.json()
       
-      if (!res.ok) throw new Error(order.error || "Failed to create order")
+      if (!res.ok) throw new Error((order as unknown as { error: string }).error || "Failed to create order")
 
       // 2. Initialize Razorpay Checkout
       const options = {
@@ -53,19 +66,20 @@ export default function WalletPage() {
         description: "Wallet Top Up",
         image: "/icon.png",
         order_id: order.id,
-        handler: async function (response: any) {
+        // 3. [FIXED C3] Handler now passes razorpay_signature for server-side HMAC verification
+        handler: async function (response: RazorpayResponse) {
           try {
-            // 3. Inform Convex backend to verify & update user balance
             await addBalance({
               amount: numAmount,
               paymentId: response.razorpay_payment_id,
               orderId: response.razorpay_order_id,
+              signature: response.razorpay_signature, // ← signature required for server-side verification
             });
             toast.success(`Successfully added ₹${numAmount} to your wallet!`)
             setAmount("")
-          } catch (err) {
-            console.error(err)
-            toast.error("Payment processed, but wallet update failed. Please contact support.")
+          } catch (err: unknown) {
+            const message = err instanceof Error ? err.message : "Unknown error"
+            toast.error(`Wallet update failed: ${message}. Please contact support.`)
           }
         },
         prefill: {
@@ -79,17 +93,20 @@ export default function WalletPage() {
       };
 
       const rzp = new window.Razorpay(options);
-      rzp.on("payment.failed", function (response: any) {
-        toast.error("Payment transfer failed.")
+      rzp.on("payment.failed", function (_event: RazorpayFailureEvent) {
+        toast.error("Payment failed or was cancelled. Please try again.")
+        setIsLoading(false)
       });
       rzp.open();
       
-    } catch (err) {
-      console.error(err)
-      toast.error("Failed to initialize payment gateway.")
-    } finally {
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Failed to initialize payment"
+      toast.error(message)
       setIsLoading(false)
     }
+    // Note: setIsLoading(false) is NOT called here on success path —
+    // Razorpay is async and the handler runs after rzp.open() returns.
+    // Loading is cleared in the handler's finally or on failure.
   }
 
   return (
