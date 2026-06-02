@@ -103,7 +103,7 @@ const ServiceAreas = () => {
             <div 
               key={area.id} 
               className={`area-card ${selectedArea === area.id ? 'expanded' : ''}`}
-              onClick={() => setSelectedArea(selectedArea === area.id ? null : area.id)}
+              onClick={() => setSelectedArea(selectedArea === area.id ? (null as null) : area.id)}
             >
               <div className="area-header">
                 <h3>{area.name}</h3>
