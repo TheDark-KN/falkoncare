@@ -16,8 +16,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 interface ChartData {
   name: string
-  value: number
-  value2?: number
+  [key: string]: string | number | undefined
 }
 
 interface AnalyticsChartProps {
