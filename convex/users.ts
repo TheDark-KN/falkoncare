@@ -31,10 +31,22 @@ export const current = query({
   },
 });
 
-// Get user by Clerk ID
+// [FIXED H3] Get user by Clerk ID — now requires auth; only self or admin allowed
 export const getByClerkId = query({
   args: { clerkId: v.string() },
   handler: async (ctx, { clerkId }) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Unauthenticated");
+
+    // Allow access only to own profile or admin
+    if (identity.subject !== clerkId) {
+      const caller = await ctx.db
+        .query("users")
+        .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+        .first();
+      if (!caller || caller.role !== "admin") throw new Error("Unauthorized");
+    }
+
     return await ctx.db
       .query("users")
       .withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId))
@@ -47,7 +59,7 @@ export const ensureUser = mutation({
   args: {},
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
-    console.log("JWT Verification - ensureUser identity:", identity);
+    // [FIXED M7] Removed console.log that leaked JWT identity data
     if (!identity) {
       throw new Error("Not authenticated");
     }
@@ -58,14 +70,11 @@ export const ensureUser = mutation({
       .first();
 
     if (user) {
-      // Hack for testing: Top up wallet if empty
-      if ((user.walletBalance || 0) < 5000) {
-        await ctx.db.patch(user._id, { walletBalance: 5000 });
-      }
+      // [FIXED H2] Removed "hack for testing" wallet auto-refill
       return user._id;
     }
 
-    // Create new user
+    // Create new user with zero starting balance — wallet is topped up via real payments only
     const now = Date.now();
     return await ctx.db.insert("users", {
       clerkId: identity.subject,
@@ -73,7 +82,7 @@ export const ensureUser = mutation({
       fullName: identity.name || "",
       imageUrl: identity.pictureUrl || "",
       role: "user",
-      walletBalance: 5000,
+      walletBalance: 0,
       createdAt: now,
       updatedAt: now,
     });
@@ -163,14 +172,14 @@ export const updateProfile = mutation({
       .first();
 
     if (!user) {
-      // Create user if doesn't exist
+      // Create user if doesn't exist — start with zero balance
       return await ctx.db.insert("users", {
         clerkId: identity.subject,
         email: identity.email || "",
         fullName: fullName || identity.name || "",
         imageUrl: identity.pictureUrl || "",
         role: "user",
-        walletBalance: 5000,
+        walletBalance: 0, // [FIXED H2] No hardcoded free balance
         address,
         phoneNumber,
         createdAt: Date.now(),
@@ -190,20 +199,17 @@ export const updateProfile = mutation({
   },
 });
 
-// Update wallet balance
-export const updateWalletBalance = mutation({
+// [FIXED C4] updateWalletBalance is now internalMutation — not callable from client
+// Use wallet.addBalance (with Razorpay signature verification) to credit wallets
+export const updateWalletBalance = internalMutation({
   args: {
     amount: v.number(),
+    userId: v.string(),
   },
-  handler: async (ctx, { amount }) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new Error("Not authenticated");
-    }
-
+  handler: async (ctx, { amount, userId }) => {
     const user = await ctx.db
       .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", userId))
       .first();
 
     if (!user) {
@@ -221,5 +227,23 @@ export const updateWalletBalance = mutation({
     });
 
     return newBalance;
+  },
+});
+
+// Admin: list all users (admin only)
+export const listAll = query({
+  args: {},
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Unauthenticated");
+
+    const caller = await ctx.db
+      .query("users")
+      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+      .first();
+
+    if (!caller || caller.role !== "admin") throw new Error("Unauthorized");
+
+    return await ctx.db.query("users").collect();
   },
 });

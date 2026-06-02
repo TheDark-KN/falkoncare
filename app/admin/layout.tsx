@@ -1,12 +1,23 @@
 import { ReactNode } from "react";
-import { Sidebar } from "@/components/admin/sidebar"; // We'll create this or reuse existing sidebar logic
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
+import { Sidebar } from "@/components/admin/sidebar";
 import { TopBar } from "@/components/dashboard/top-bar";
 
-// Force dynamic rendering for all admin pages to prevent static generation issues
+// Force dynamic rendering for all admin pages
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-export default function AdminLayout({ children }: { children: ReactNode }) {
+// [FIXED H1] Server-side admin guard — second layer of defense beyond middleware.
+// Redirects any non-admin user who somehow bypasses middleware.
+export default async function AdminLayout({ children }: { children: ReactNode }) {
+  const { sessionClaims } = await auth();
+  const role = (sessionClaims?.publicMetadata as { role?: string })?.role;
+
+  if (role !== "admin") {
+    redirect("/dashboard");
+  }
+
   return (
     <div className="flex h-screen bg-muted/30">
       <Sidebar />

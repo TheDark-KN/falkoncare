@@ -28,3 +28,6 @@ next-env.d.ts
 
 # clerk configuration (can include secrets)
 /.clerk/
+
+# [SECURITY] Razorpay key file — must never be committed
+rzp-key.csv

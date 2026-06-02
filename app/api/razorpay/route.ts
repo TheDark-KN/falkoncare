@@ -1,33 +1,80 @@
 import { NextResponse } from "next/server";
 import Razorpay from "razorpay";
+import { auth } from "@clerk/nextjs/server";
 
+// Simple in-memory rate limiter (resets per serverless invocation; use Redis/Upstash for production)
+const requestCounts = new Map<string, { count: number; resetAt: number }>();
+const RATE_LIMIT_WINDOW_MS = 60 * 1000; // 1 minute
+const RATE_LIMIT_MAX = 10; // max 10 order creations per minute per user
+
+function isRateLimited(userId: string): boolean {
+  const now = Date.now();
+  const entry = requestCounts.get(userId);
+  if (!entry || now > entry.resetAt) {
+    requestCounts.set(userId, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
+    return false;
+  }
+  if (entry.count >= RATE_LIMIT_MAX) return true;
+  entry.count++;
+  return false;
+}
+
+// [FIXED C8] POST /api/razorpay — now requires authentication, validates input, and rate-limits
 export async function POST(req: Request) {
   try {
+    // [FIXED C8 - Auth] Require authenticated session
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // [FIXED M4] Basic rate limiting per user
+    if (isRateLimited(userId)) {
+      return NextResponse.json(
+        { error: "Too many requests. Please try again later." },
+        { status: 429 }
+      );
+    }
+
+    const body = await req.json();
+    const { amount } = body;
+
+    // [FIXED C8 - Validation] Strict type and range check on amount
+    if (
+      amount === undefined ||
+      amount === null ||
+      typeof amount !== "number" ||
+      !Number.isFinite(amount) ||
+      amount <= 0 ||
+      amount > 100000 // Max ₹1,00,000 per top-up
+    ) {
+      return NextResponse.json(
+        { error: "Invalid amount. Must be a number between 1 and 100000." },
+        { status: 400 }
+      );
+    }
+
     const razorpay = new Razorpay({
       key_id: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "",
       key_secret: process.env.RAZORPAY_KEY_SECRET || "",
     });
 
-    const { amount } = await req.json();
-
-    if (!amount) {
-      return NextResponse.json(
-        { error: "Amount is required" },
-        { status: 400 }
-      );
-    }
-
     const options = {
-      amount: amount * 100, // Amount is in currency subunits. Default currency is INR.
+      amount: Math.round(amount) * 100, // Convert to paise, use integer
       currency: "INR",
-      receipt: `receipt_${Date.now()}`,
+      receipt: `receipt_${userId.slice(-8)}_${Date.now()}`,
     };
 
     const order = await razorpay.orders.create(options);
 
-    return NextResponse.json(order);
+    // Return only necessary fields — not the full Razorpay order object
+    return NextResponse.json({
+      id: order.id,
+      amount: order.amount,
+      currency: order.currency,
+    });
   } catch (error) {
-    console.error("Error creating Razorpay order:", error);
+    // [FIXED M7] Do not leak internal error details to client
     return NextResponse.json(
       { error: "Failed to create order" },
       { status: 500 }

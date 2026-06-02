@@ -31,12 +31,15 @@ export default defineSchema({
         imageUrl: v.optional(v.string()),
 
         // App specific fields
-        role: v.optional(v.string()), // "admin" | "user"
+        // [FIXED M5] Role is now a constrained union — not any string
+        role: v.optional(v.union(v.literal("admin"), v.literal("user"), v.literal("staff"))),
         walletBalance: v.optional(v.number()),
         address: v.optional(v.string()),
         phoneNumber: v.optional(v.string()),
         createdAt: v.number(),
         updatedAt: v.number(),
+        // [FIXED C3] Tracks processed Razorpay payment IDs to prevent replay attacks
+        processedPaymentIds: v.optional(v.array(v.string())),
     })
         .index("by_clerk_id", ["clerkId"])
         .index("by_email", ["email"]),
