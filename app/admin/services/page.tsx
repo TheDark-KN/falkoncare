@@ -81,7 +81,7 @@ export default function AdminServicesPage() {
                         <td className="p-4">
                           {service.tankSizes ? (
                             <div className="flex flex-wrap gap-1">
-                              {service.tankSizes.map((size) => (
+                              {service.tankSizes.map((size: { size: string; priceMultiplier: number }) => (
                                 <span
                                   key={size.size}
                                   className="text-xs px-2 py-0.5 bg-muted rounded text-muted-foreground"

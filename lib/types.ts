@@ -101,6 +101,17 @@ export interface CustomerFeedback {
   createdAt: Date;
 }
 
+export interface Complaint {
+  id: string;
+  customerId: string;
+  bookingId?: string;
+  subject: string;
+  description: string;
+  status: "open" | "in-progress" | "resolved" | "closed";
+  createdAt: Date;
+  resolvedAt?: Date;
+}
+
 export interface Notification {
   id: string;
   userId: string;
