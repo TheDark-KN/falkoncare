@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import '../global-styles.css'; // Import global styles
-import './responsive-header.css';
 
 const ResponsiveHeader: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

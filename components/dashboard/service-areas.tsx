@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import './service-areas.css';
 
 const ServiceAreas = () => {
-  const [selectedArea, setSelectedArea] = useState(null);
+  const [selectedArea, setSelectedArea] = useState<number | null>(null);
   
   const serviceAreas = [
     {

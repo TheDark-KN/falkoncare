@@ -55,9 +55,9 @@ const ContactSupport = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
+    setFormData(prev => ({ ...prev, [name as keyof FormData]: value }))
     if (errors[name as keyof FormErrors]) {
-      setErrors(prev => ({ ...prev, [name]: '' }))
+      setErrors(prev => ({ ...prev, [name as keyof FormErrors]: '' }))
     }
   }
 

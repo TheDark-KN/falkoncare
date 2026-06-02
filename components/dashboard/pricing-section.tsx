@@ -1,5 +1,4 @@
 import React from 'react';
-import './pricing-section.css';
 
 const PricingSection = () => {
   const tankOptions = [

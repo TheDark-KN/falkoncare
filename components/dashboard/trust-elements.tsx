@@ -1,5 +1,4 @@
 import React from 'react';
-import './trust-elements.css';
 
 const TrustElements = () => {
   const testimonials = [

@@ -1,222 +1,194 @@
-import React, { useState, useEffect } from 'react';
-import './order-tracking.css';
+"use client"
+
+import React, { useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Icons } from '@/components/icons'
+
+interface BookingStatus {
+  id: string
+  customerName: string
+  location: string
+  tankSize: string
+  waterType: string
+  scheduledDate: string
+  scheduledTime: string
+  status: string
+  estimatedDelivery: string
+  driverName: string
+  driverPhone: string
+  vehicleNumber: string
+}
+
+interface TimelineItem {
+  id: number
+  status: string
+  title: string
+  description: string
+  date: string
+  completed: boolean
+}
+
+const mockBookingData: BookingStatus = {
+  id: 'WT-2023-001234',
+  customerName: 'Rajesh Kumar',
+  location: 'Sector 45, Delhi',
+  tankSize: '1000 Liters',
+  waterType: 'Mineral Water',
+  scheduledDate: '2023-06-15',
+  scheduledTime: 'afternoon',
+  status: 'in-transit',
+  estimatedDelivery: '2023-06-15T14:30:00',
+  driverName: 'Amit Sharma',
+  driverPhone: '+91 9876543210',
+  vehicleNumber: 'DL01AB1234',
+}
+
+const statusTimeline: TimelineItem[] = [
+  { id: 1, status: 'confirmed',   title: 'Booking Confirmed', description: 'Your order has been confirmed',     date: '2023-06-14 10:30 AM', completed: true  },
+  { id: 2, status: 'processing',  title: 'Processing',        description: 'Preparing your order',             date: '2023-06-14 11:15 AM', completed: true  },
+  { id: 3, status: 'dispatched',  title: 'Dispatched',        description: 'Your order has been dispatched',   date: '2023-06-15 08:00 AM', completed: true  },
+  { id: 4, status: 'in-transit',  title: 'In Transit',        description: 'On the way to your location',     date: '2023-06-15 12:30 PM', completed: true  },
+  { id: 5, status: 'delivered',   title: 'Delivered',         description: 'Order delivered successfully',    date: '',                    completed: false },
+]
+
+const statusColors: Record<string, string> = {
+  confirmed:   'bg-blue-500',
+  processing:  'bg-blue-400',
+  dispatched:  'bg-blue-300',
+  'in-transit':'bg-amber-500',
+  delivered:   'bg-green-500',
+}
 
 const OrderTracking = () => {
-  const [trackingNumber, setTrackingNumber] = useState('');
-  const [bookingStatus, setBookingStatus] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  
-  // Mock booking data
-  const mockBookingData = {
-    id: 'WT-2023-001234',
-    customerName: 'Rajesh Kumar',
-    location: 'Sector 45, Delhi',
-    tankSize: '1000 Liters',
-    waterType: 'Mineral Water',
-    scheduledDate: '2023-06-15',
-    scheduledTime: 'afternoon',
-    status: 'in-transit',
-    estimatedDelivery: '2023-06-15T14:30:00',
-    driverName: 'Amit Sharma',
-    driverPhone: '+91 9876543210',
-    vehicleNumber: 'DL01AB1234'
-  };
+  const [trackingNumber, setTrackingNumber] = useState('')
+  const [bookingStatus, setBookingStatus] = useState<BookingStatus | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
 
-  const statusTimeline = [
-    { id: 1, status: 'confirmed', title: 'Booking Confirmed', description: 'Your order has been confirmed', date: '2023-06-14 10:30 AM', completed: true },
-    { id: 2, status: 'processing', title: 'Processing', description: 'Preparing your order', date: '2023-06-14 11:15 AM', completed: true },
-    { id: 3, status: 'dispatched', title: 'Dispatched', description: 'Your order has been dispatched', date: '2023-06-15 08:00 AM', completed: true },
-    { id: 4, status: 'in-transit', title: 'In Transit', description: 'On the way to your location', date: '2023-06-15 12:30 PM', completed: true },
-    { id: 5, status: 'delivered', title: 'Delivered', description: 'Order delivered successfully', date: '', completed: false }
-  ];
-
-  const handleTrackOrder = (e) => {
-    e.preventDefault();
-    if (!trackingNumber.trim()) return;
-    
-    setIsLoading(true);
-    
-    // Simulate API call
+  const handleTrackOrder = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!trackingNumber.trim()) return
+    setIsLoading(true)
     setTimeout(() => {
-      setBookingStatus(mockBookingData);
-      setIsLoading(false);
-    }, 1000);
-  };
-
-  const getStatusColor = (status) => {
-    switch(status) {
-      case 'confirmed': return '#3b82f6';
-      case 'processing': return '#60a5fa';
-      case 'dispatched': return '#93c5fd';
-      case 'in-transit': return '#f59e0b';
-      case 'delivered': return '#10b981';
-      default: return '#9ca3af';
-    }
-  };
+      setBookingStatus(mockBookingData)
+      setIsLoading(false)
+    }, 1000)
+  }
 
   return (
-    <div className="order-tracking-container">
-      <div className="container">
-        <h2 className="section-title">Track Your Order</h2>
-        <p className="section-subtitle">Enter your booking ID to track your water tank delivery</p>
-        
-        <form onSubmit={handleTrackOrder} className="tracking-form">
-          <div className="form-group">
-            <input
-              type="text"
-              value={trackingNumber}
-              onChange={(e) => setTrackingNumber(e.target.value)}
-              placeholder="Enter Booking ID (e.g., WT-2023-001234)"
-              className="tracking-input"
-            />
-            <button type="submit" className="btn btn-primary" disabled={isLoading}>
-              {isLoading ? 'Tracking...' : 'Track Order'}
-            </button>
-          </div>
+    <section id="order-tracking" className="py-16">
+      <div className="container mx-auto px-6 max-w-4xl">
+        <h2 className="text-3xl font-bold text-center text-foreground mb-2">Track Your Order</h2>
+        <p className="text-muted-foreground text-center mb-10">Enter your booking ID to track your service</p>
+
+        <form onSubmit={handleTrackOrder} className="flex gap-3 mb-8">
+          <Input
+            value={trackingNumber}
+            onChange={(e) => setTrackingNumber(e.target.value)}
+            placeholder="Enter Booking ID (e.g., WT-2023-001234)"
+            className="bg-background border-input flex-1"
+          />
+          <Button type="submit" disabled={isLoading} className="bg-primary hover:bg-primary/90 text-primary-foreground">
+            {isLoading ? <><Icons.loader className="w-4 h-4 mr-2 animate-spin" />Tracking...</> : 'Track Order'}
+          </Button>
         </form>
 
         {bookingStatus && (
-          <div className="booking-details">
-            <div className="booking-summary">
-              <div className="summary-item">
-                <span className="label">Booking ID:</span>
-                <span className="value">{bookingStatus.id}</span>
-              </div>
-              <div className="summary-item">
-                <span className="label">Customer:</span>
-                <span className="value">{bookingStatus.customerName}</span>
-              </div>
-              <div className="summary-item">
-                <span className="label">Delivery Location:</span>
-                <span className="value">{bookingStatus.location}</span>
-              </div>
-              <div className="summary-item">
-                <span className="label">Tank Size:</span>
-                <span className="value">{bookingStatus.tankSize}</span>
-              </div>
-              <div className="summary-item">
-                <span className="label">Water Type:</span>
-                <span className="value">{bookingStatus.waterType}</span>
-              </div>
-              <div className="summary-item">
-                <span className="label">Scheduled Date:</span>
-                <span className="value">{new Date(bookingStatus.scheduledDate).toLocaleDateString()}</span>
-              </div>
-              <div className="summary-item">
-                <span className="label">Status:</span>
-                <span className="value status-badge" style={{ backgroundColor: getStatusColor(bookingStatus.status) }}>
-                  {bookingStatus.status.replace('-', ' ')}
-                </span>
-              </div>
-            </div>
+          <div className="space-y-6">
+            <Card className="bg-card border-border">
+              <CardHeader><CardTitle className="text-foreground">Booking Summary</CardTitle></CardHeader>
+              <CardContent className="grid grid-cols-2 gap-3 text-sm">
+                {[
+                  ['Booking ID', bookingStatus.id],
+                  ['Customer', bookingStatus.customerName],
+                  ['Location', bookingStatus.location],
+                  ['Tank Size', bookingStatus.tankSize],
+                  ['Water Type', bookingStatus.waterType],
+                  ['Scheduled Date', new Date(bookingStatus.scheduledDate).toLocaleDateString()],
+                ].map(([label, value]) => (
+                  <div key={label}>
+                    <p className="text-muted-foreground">{label}</p>
+                    <p className="font-medium text-foreground">{value}</p>
+                  </div>
+                ))}
+                <div>
+                  <p className="text-muted-foreground">Status</p>
+                  <span className={`inline-block px-2 py-0.5 rounded text-white text-xs font-medium ${statusColors[bookingStatus.status] ?? 'bg-gray-400'}`}>
+                    {bookingStatus.status.replace('-', ' ')}
+                  </span>
+                </div>
+              </CardContent>
+            </Card>
 
-            <div className="status-timeline">
-              <h3>Order Progress</h3>
-              <div className="timeline">
-                {statusTimeline.map((item, index) => (
-                  <div key={item.id} className={`timeline-item ${item.completed ? 'completed' : ''} ${bookingStatus.status === item.status ? 'current' : ''}`}>
-                    <div className="timeline-marker">
-                      <div className="marker-inner"></div>
-                    </div>
-                    <div className="timeline-content">
-                      <h4>{item.title}</h4>
-                      <p>{item.description}</p>
-                      {item.date && <small>{item.date}</small>}
+            <Card className="bg-card border-border">
+              <CardHeader><CardTitle className="text-foreground">Order Progress</CardTitle></CardHeader>
+              <CardContent className="space-y-4">
+                {statusTimeline.map((item) => (
+                  <div key={item.id} className="flex items-start gap-4">
+                    <div className={`w-3 h-3 mt-1 rounded-full flex-shrink-0 ${item.completed ? 'bg-primary' : 'bg-muted'} ${bookingStatus.status === item.status ? 'ring-2 ring-primary ring-offset-2' : ''}`} />
+                    <div>
+                      <p className={`font-medium ${item.completed ? 'text-foreground' : 'text-muted-foreground'}`}>{item.title}</p>
+                      <p className="text-sm text-muted-foreground">{item.description}</p>
+                      {item.date && <p className="text-xs text-muted-foreground mt-0.5">{item.date}</p>}
                     </div>
                   </div>
                 ))}
-              </div>
-            </div>
+              </CardContent>
+            </Card>
 
             {bookingStatus.status === 'in-transit' && (
-              <div className="delivery-info">
-                <h3>Delivery Information</h3>
-                <div className="info-grid">
-                  <div className="info-item">
-                    <div className="info-icon">🚚</div>
-                    <div>
-                      <h4>Estimated Delivery</h4>
-                      <p>{new Date(bookingStatus.estimatedDelivery).toLocaleString()}</p>
-                    </div>
+              <Card className="bg-card border-border">
+                <CardHeader><CardTitle className="text-foreground">Delivery Information</CardTitle></CardHeader>
+                <CardContent className="grid grid-cols-3 gap-4 text-sm">
+                  <div>
+                    <p className="text-muted-foreground">ETA</p>
+                    <p className="font-medium text-foreground">{new Date(bookingStatus.estimatedDelivery).toLocaleString()}</p>
                   </div>
-                  <div className="info-item">
-                    <div className="info-icon">👨‍💼</div>
-                    <div>
-                      <h4>Delivery Driver</h4>
-                      <p>{bookingStatus.driverName}</p>
-                      <a href={`tel:${bookingStatus.driverPhone}`} className="contact-link">
-                        Call Driver
-                      </a>
-                    </div>
+                  <div>
+                    <p className="text-muted-foreground">Technician</p>
+                    <p className="font-medium text-foreground">{bookingStatus.driverName}</p>
+                    <a href={`tel:${bookingStatus.driverPhone}`} className="text-primary hover:underline text-xs">Call</a>
                   </div>
-                  <div className="info-item">
-                    <div className="info-icon">🚛</div>
-                    <div>
-                      <h4>Vehicle</h4>
-                      <p>{bookingStatus.vehicleNumber}</p>
-                    </div>
+                  <div>
+                    <p className="text-muted-foreground">Vehicle</p>
+                    <p className="font-medium text-foreground">{bookingStatus.vehicleNumber}</p>
                   </div>
-                </div>
-              </div>
+                </CardContent>
+              </Card>
             )}
 
-            <div className="action-buttons">
-              <button className="btn btn-secondary">Download Receipt</button>
-              <button className="btn btn-outline">Contact Support</button>
+            <div className="flex gap-3">
+              <Button variant="outline" className="flex-1">Download Receipt</Button>
+              <Button variant="outline" className="flex-1">Contact Support</Button>
             </div>
           </div>
         )}
 
         {!bookingStatus && !isLoading && (
-          <div className="confirmation-preview">
-            <h3>Booking Confirmation Preview</h3>
-            <div className="confirmation-card">
-              <div className="confirmation-header">
-                <h4>Thank You for Your Booking!</h4>
-                <p>Your water tank delivery is confirmed</p>
-              </div>
-              
-              <div className="confirmation-details">
-                <div className="detail-row">
-                  <span>Booking ID:</span>
-                  <span>WT-2023-001234</span>
+          <Card className="bg-card border-border">
+            <CardHeader><CardTitle className="text-foreground text-center">Booking Confirmation Preview</CardTitle></CardHeader>
+            <CardContent className="grid grid-cols-2 gap-3 text-sm">
+              {[
+                ['Booking ID', 'WT-2023-001234'],
+                ['Address', 'Sector 45, Delhi'],
+                ['Tank Size', '1000 Liters'],
+                ['Water Type', 'Mineral Water'],
+                ['Date', 'June 15, 2023'],
+                ['Time Slot', 'Afternoon (12PM–4PM)'],
+                ['Total', '₹600'],
+              ].map(([label, value]) => (
+                <div key={label}>
+                  <p className="text-muted-foreground">{label}</p>
+                  <p className="font-medium text-foreground">{value}</p>
                 </div>
-                <div className="detail-row">
-                  <span>Delivery Address:</span>
-                  <span>Sector 45, Delhi</span>
-                </div>
-                <div className="detail-row">
-                  <span>Tank Size:</span>
-                  <span>1000 Liters</span>
-                </div>
-                <div className="detail-row">
-                  <span>Water Type:</span>
-                  <span>Mineral Water</span>
-                </div>
-                <div className="detail-row">
-                  <span>Scheduled Date:</span>
-                  <span>June 15, 2023</span>
-                </div>
-                <div className="detail-row">
-                  <span>Time Slot:</span>
-                  <span>Afternoon (12PM - 4PM)</span>
-                </div>
-                <div className="detail-row">
-                  <span>Total Amount:</span>
-                  <span>₹600</span>
-                </div>
-              </div>
-              
-              <div className="confirmation-actions">
-                <button className="btn btn-primary">Track Order</button>
-                <button className="btn btn-outline">Edit Booking</button>
-              </div>
-            </div>
-          </div>
+              ))}
+            </CardContent>
+          </Card>
         )}
       </div>
-    </div>
-  );
-};
+    </section>
+  )
+}
 
-export default OrderTracking;
+export default OrderTracking
