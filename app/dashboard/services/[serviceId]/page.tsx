@@ -45,9 +45,7 @@ export default function ServiceBookingPage() {
     walletBalance: userData.walletBalance || 0,
   } : null;
 
-  // Debug logging
-  console.log("Clerk Auth isSignedIn:", isSignedIn, "isLoaded:", isLoaded);
-  console.log("User data:", user);
+  // Auth state available via isSignedIn / isLoaded
 
   const service = serviceItems.find((s) => s.id === params.serviceId)
   const category = serviceCategories.find((c) => c.id === service?.categoryId)
@@ -597,7 +595,7 @@ export default function ServiceBookingPage() {
               <Button
                 size="lg"
                 onClick={handleBooking}
-                disabled={isBooking || (selectedPaymentMethod === "wallet" && user && user.walletBalance < totalPrice)}
+                disabled={isBooking || !!(selectedPaymentMethod === "wallet" && user && user.walletBalance < totalPrice)}
                 className={cn(
                   "w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold shadow-lg hover:shadow-xl transition-all",
                   selectedPaymentMethod === "wallet" && user && user.walletBalance < totalPrice && "opacity-50 cursor-not-allowed"
