@@ -88,7 +88,7 @@ export const addBalance = mutation({
         updatedAt: Date.now(),
         walletBalance: 0,
       });
-      user = await ctx.db.get(newUserId);
+      user = await ctx.db.get(newUserId) as NonNullable<typeof user>;
     }
 
     if (!user) throw new Error("Failed to secure user wallet record");
