@@ -16,6 +16,7 @@ import PhotoDocumentationSection from "./components/PhotoDocumentationSection";
 import CustomerResponseSection from "./components/CustomerResponseSection";
 import SurveyorRemarksSection from "./components/SurveyorRemarksSection";
 import DeclarationSection from "./components/DeclarationSection";
+import { ErrorBoundary } from "@/components/shared/error-boundary";
 
 import type {
   SurveyFormData,
@@ -237,7 +238,7 @@ const successVariants = {
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Main Survey Page
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-export default function SurveyPage() {
+function SurveyPageContent() {
   const { user, isLoaded } = useUser();
   const submitSurvey = useMutation(api.surveys.submitSurvey);
   const societies = useQuery(api.surveys.getSocieties) ?? [];
@@ -830,5 +831,13 @@ export default function SurveyPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function SurveyPage() {
+  return (
+    <ErrorBoundary>
+      <SurveyPageContent />
+    </ErrorBoundary>
   );
 }
