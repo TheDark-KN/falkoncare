@@ -40,12 +40,12 @@ const nextConfig = {
             value: [
               "default-src 'self'",
               // Next.js requires unsafe-inline for styles; Razorpay checkout needs its own origin
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://checkout.razorpay.com https://api.razorpay.com https://*.clerk.accounts.dev https://*.accounts.dev",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://checkout.razorpay.com https://api.razorpay.com https://*.clerk.accounts.dev https://*.accounts.dev https://*.clerk.com",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com",
               "img-src 'self' data: https: blob:",
-              "connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://*.clerk.accounts.dev https://*.accounts.dev https://api.razorpay.com https://checkout.razorpay.com https://clerk-telemetry.com",
-              "frame-src https://api.razorpay.com https://checkout.razorpay.com https://*.clerk.accounts.dev https://*.accounts.dev",
+              "connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://*.clerk.accounts.dev https://*.accounts.dev https://*.clerk.com https://api.razorpay.com https://checkout.razorpay.com https://clerk-telemetry.com",
+              "frame-src https://api.razorpay.com https://checkout.razorpay.com https://*.clerk.accounts.dev https://*.accounts.dev https://*.clerk.com",
               "worker-src 'self' blob:",
               "object-src 'none'",
               "base-uri 'self'",
