@@ -12,6 +12,7 @@ import { BookingCard } from "@/components/dashboard/booking-card"
 import { useQuery } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import { DisplayBooking } from "@/lib/types"
+import { Booking } from "@/convex/_generated/dataModel"
 
 type FilterType = "all" | "active" | "completed" | "cancelled"
 
@@ -21,7 +22,7 @@ export default function BookingsPage() {
   const [filter, setFilter] = useState<FilterType>("all")
 
   // Map Convex bookings to DisplayBooking shape
-  const formattedBookings: DisplayBooking[] = (bookings || []).map(b => ({
+  const formattedBookings: DisplayBooking[] = (bookings || []).map((b: Booking) => ({
     ...b,
     id: b._id as string,
     tankSize: b.tankSize || undefined,

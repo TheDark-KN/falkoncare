@@ -3,14 +3,14 @@ import { v } from "convex/values";
 
 export const getBalance = query({
   args: {},
-  handler: async (ctx) => {
+  handler: async (ctx: any) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) return 0;
 
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
-      .first();
+     const user = await ctx.db
+       .query("users")
+       .withIndex("by_clerk_id", (q: any) => q.eq("clerkId", identity.subject))
+       .first();
 
     if (!user) return 0;
 
@@ -28,7 +28,7 @@ export const addBalance = mutation({
     orderId: v.string(),     // Razorpay order ID (order_xxx)
     signature: v.string(),   // HMAC-SHA256 signature from Razorpay callback
   },
-  handler: async (ctx, args) => {
+  handler: async (ctx: any, args: any) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new Error("Unauthenticated");
 
@@ -66,7 +66,7 @@ export const addBalance = mutation({
     // Guard against replay attacks — check if paymentId was already processed
     const existingPayment = await ctx.db
       .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+      .withIndex("by_clerk_id", (q: any) => q.eq("clerkId", identity.subject))
       .first();
 
     if (!existingPayment) throw new Error("User not found");

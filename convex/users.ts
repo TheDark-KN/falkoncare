@@ -4,7 +4,7 @@ import { mutation, query, internalMutation } from "./_generated/server";
 // Get current user from Clerk
 export const current = query({
   args: {},
-  handler: async (ctx) => {
+  handler: async (ctx: any) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
       return null;
@@ -34,7 +34,7 @@ export const current = query({
 // [FIXED H3] Get user by Clerk ID — now requires auth; only self or admin allowed
 export const getByClerkId = query({
   args: { clerkId: v.string() },
-  handler: async (ctx, { clerkId }) => {
+  handler: async (ctx: any, { clerkId }: { clerkId: string }) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new Error("Unauthenticated");
 
@@ -42,14 +42,14 @@ export const getByClerkId = query({
     if (identity.subject !== clerkId) {
       const caller = await ctx.db
         .query("users")
-        .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+        .withIndex("by_clerk_id", (q: any) => q.eq("clerkId", identity.subject))
         .first();
       if (!caller || caller.role !== "admin") throw new Error("Unauthorized");
     }
 
     return await ctx.db
       .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId))
+      .withIndex("by_clerk_id", (q: any) => q.eq("clerkId", clerkId))
       .first();
   },
 });
@@ -57,7 +57,7 @@ export const getByClerkId = query({
 // Ensure user exists in Convex (called from client)
 export const ensureUser = mutation({
   args: {},
-  handler: async (ctx) => {
+  handler: async (ctx: any) => {
     const identity = await ctx.auth.getUserIdentity();
     // [FIXED M7] Removed console.log that leaked JWT identity data
     if (!identity) {
@@ -97,7 +97,7 @@ export const createUser = internalMutation({
     fullName: v.optional(v.string()),
     imageUrl: v.optional(v.string()),
   },
-  handler: async (ctx, { clerkId, email, fullName, imageUrl }) => {
+  handler: async (ctx: any, { clerkId, email, fullName, imageUrl }: { clerkId: string, email: string, fullName?: string, imageUrl?: string }) => {
     const now = Date.now();
 
     return await ctx.db.insert("users", {
@@ -121,7 +121,7 @@ export const updateUser = internalMutation({
     fullName: v.optional(v.string()),
     imageUrl: v.optional(v.string()),
   },
-  handler: async (ctx, { clerkId, email, fullName, imageUrl }) => {
+  handler: async (ctx: any, { clerkId, email, fullName, imageUrl }: { clerkId: string, email: string, fullName?: string, imageUrl?: string }) => {
     const user = await ctx.db
       .query("users")
       .withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId))
@@ -141,7 +141,7 @@ export const updateUser = internalMutation({
 // Delete user (called by webhook)
 export const deleteUser = internalMutation({
   args: { clerkId: v.string() },
-  handler: async (ctx, { clerkId }) => {
+  handler: async (ctx: any, { clerkId }: { clerkId: string }) => {
     const user = await ctx.db
       .query("users")
       .withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId))
@@ -160,7 +160,7 @@ export const updateProfile = mutation({
     address: v.optional(v.string()),
     phoneNumber: v.optional(v.string()),
   },
-  handler: async (ctx, { fullName, address, phoneNumber }) => {
+  handler: async (ctx: any, { fullName, address, phoneNumber }: { fullName?: string, address?: string, phoneNumber?: string }) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
       throw new Error("Not authenticated");
@@ -206,10 +206,10 @@ export const updateWalletBalance = internalMutation({
     amount: v.number(),
     userId: v.string(),
   },
-  handler: async (ctx, { amount, userId }) => {
+  handler: async (ctx: any, { amount, userId }: { amount: number, userId: string }) => {
     const user = await ctx.db
       .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", userId))
+      .withIndex("by_clerk_id", (q: any) => q.eq("clerkId", userId))
       .first();
 
     if (!user) {
@@ -233,13 +233,13 @@ export const updateWalletBalance = internalMutation({
 // Admin: list all users (admin only)
 export const listAll = query({
   args: {},
-  handler: async (ctx) => {
+  handler: async (ctx: any) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new Error("Unauthenticated");
 
     const caller = await ctx.db
       .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+      .withIndex("by_clerk_id", (q: any) => q.eq("clerkId", identity.subject))
       .first();
 
     if (!caller || caller.role !== "admin") throw new Error("Unauthorized");

@@ -45,7 +45,7 @@ export const submitSurvey = mutation({
     signatureName: v.string(),
     timestamp: v.number(),
   },
-  handler: async (ctx, args) => {
+  handler: async (ctx: any, args: any) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
       throw new ConvexError("UNAUTHENTICATED");
@@ -75,7 +75,7 @@ export const submitSurvey = mutation({
 // Get all surveys (admin-only)
 export const getAll = query({
   args: {},
-  handler: async (ctx) => {
+  handler: async (ctx: any) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
       throw new ConvexError("UNAUTHENTICATED");
@@ -83,7 +83,7 @@ export const getAll = query({
 
     const user = await ctx.db
       .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+      .withIndex("by_clerk_id", (q: any) => q.eq("clerkId", identity.subject))
       .first();
 
     if (!user || (user.role !== "admin" && user.role !== "staff")) {
@@ -97,7 +97,7 @@ export const getAll = query({
 // Get surveys by surveyor
 export const getBySurveyor = query({
   args: {},
-  handler: async (ctx) => {
+  handler: async (ctx: any) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
       return [];
@@ -105,7 +105,7 @@ export const getBySurveyor = query({
 
     return await ctx.db
       .query("surveys")
-      .withIndex("by_surveyor", (q) => q.eq("surveyorId", identity.subject))
+      .withIndex("by_surveyor", (q: any) => q.eq("surveyorId", identity.subject))
       .order("desc")
       .collect();
   },
@@ -114,7 +114,7 @@ export const getBySurveyor = query({
 // Get society/area list for the dropdown
 export const getSocieties = query({
   args: {},
-  handler: async (ctx) => {
+  handler: async (ctx: any) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
       return [];

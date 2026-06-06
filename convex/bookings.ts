@@ -36,7 +36,7 @@ async function assertAuth(ctx: { auth: any }) {
 // [FIXED C5] Admin-only query to get all bookings — now requires admin role
 export const get = query({
     args: {},
-    handler: async (ctx) => {
+    handler: async (ctx: any) => {
         await assertAdmin(ctx);
         return await ctx.db.query("bookings").collect();
     },
@@ -45,14 +45,14 @@ export const get = query({
 // Get bookings for current user
 export const getByUser = query({
     args: {},
-    handler: async (ctx) => {
+    handler: async (ctx: any) => {
         const identity = await ctx.auth.getUserIdentity();
         if (!identity) {
             return [];
         }
         return await ctx.db
             .query("bookings")
-            .withIndex("by_user", (q) => q.eq("userId", identity.subject))
+            .withIndex("by_user", (q: any) => q.eq("userId", identity.subject))
             .collect();
     },
 });
@@ -60,11 +60,11 @@ export const getByUser = query({
 // [FIXED C7-a] Get bookings by specific user ID — now requires admin role
 export const getByUserId = query({
     args: { userId: v.string() },
-    handler: async (ctx, { userId }) => {
+    handler: async (ctx: any, { userId }: { userId: string }) => {
         await assertAdmin(ctx);
         return await ctx.db
             .query("bookings")
-            .withIndex("by_user", (q) => q.eq("userId", userId))
+            .withIndex("by_user", (q: any) => q.eq("userId", userId))
             .collect();
     },
 });
@@ -81,7 +81,7 @@ export const create = mutation({
         tankType: v.optional(v.string()),
         paymentMethod: v.union(v.literal("cash"), v.literal("wallet"), v.literal("upi"), v.literal("card"), v.literal("netbanking")),
     },
-    handler: async (ctx, args) => {
+    handler: async (ctx: any, args: any) => {
         const identity = await ctx.auth.getUserIdentity();
         if (!identity) {
             throw new ConvexError(ERRORS.UNAUTHENTICATED);
@@ -99,13 +99,13 @@ export const create = mutation({
         // Get user to check wallet balance if paying with wallet
         const user = await ctx.db
             .query("users")
-            .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+            .withIndex("by_clerk_id", (q: any) => q.eq("clerkId", identity.subject))
             .first();
 
         // Handle payment logic
         let paymentStatus = "pending";
 
-        if (args.paymentMethod === "wallet") {
+        if (typeof args.paymentMethod === "string" && args.paymentMethod === "wallet") {
             if (!user || !user.walletBalance || user.walletBalance < args.amount) {
                 throw new ConvexError(ERRORS.INSUFFICIENT_WALLET_BALANCE);
             }
@@ -115,7 +115,7 @@ export const create = mutation({
                 updatedAt: Date.now(),
             });
             paymentStatus = "paid";
-        } else if (["upi", "card", "netbanking"].includes(args.paymentMethod)) {
+        } else if (["upi", "card", "netbanking"].includes(args.paymentMethod as string)) {
             // Online payments via Razorpay — payment is verified server-side before this mutation
             // The wallet.addBalance mutation handles its own verification
             paymentStatus = "pending"; // Stays pending until payment webhook confirms
@@ -150,7 +150,7 @@ export const updateStatus = mutation({
             v.literal("cancelled")
         ),
     },
-    handler: async (ctx, args) => {
+    handler: async (ctx: any, args: any) => {
         await assertAdmin(ctx);
         await ctx.db.patch(args.id, { status: args.status });
     },
@@ -161,7 +161,7 @@ export const cancel = mutation({
     args: {
         id: v.id("bookings"),
     },
-    handler: async (ctx, args) => {
+    handler: async (ctx: any, args: any) => {
         const identity = await assertAuth(ctx);
 
         const booking = await ctx.db.get(args.id);
@@ -181,7 +181,7 @@ export const cancel = mutation({
         if (booking.paymentStatus === "paid") {
             const user = await ctx.db
                 .query("users")
-                .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+                .withIndex("by_clerk_id", (q: any) => q.eq("clerkId", identity.subject))
                 .first();
 
             if (user) {
@@ -202,7 +202,7 @@ export const cancel = mutation({
 // [FIXED C7-b] Get booking by ID — now requires auth and ownership or admin role
 export const getById = query({
     args: { id: v.id("bookings") },
-    handler: async (ctx, args) => {
+    handler: async (ctx: any, args: any) => {
         const identity = await ctx.auth.getUserIdentity();
         if (!identity) throw new ConvexError(ERRORS.UNAUTHENTICATED);
 
@@ -214,7 +214,7 @@ export const getById = query({
 
         const user = await ctx.db
             .query("users")
-            .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+            .withIndex("by_clerk_id", (q: any) => q.eq("clerkId", identity.subject))
             .first();
 
         if (user?.role === "admin") return booking;
