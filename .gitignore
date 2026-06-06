@@ -31,3 +31,5 @@ next-env.d.ts
 
 # [SECURITY] Razorpay key file — must never be committed
 rzp-key.csv
+
+.env*.local

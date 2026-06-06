@@ -5,7 +5,14 @@ import { ClerkProvider, useAuth } from "@clerk/nextjs";
 import { ConvexReactClient } from "convex/react";
 import { ConvexProviderWithClerk } from "convex/react-clerk";
 
-const convexUrl = process.env.NEXT_PUBLIC_CONVEX_URL || "https://watchful-wombat-507.convex.cloud";
+let convexUrl = process.env.NEXT_PUBLIC_CONVEX_URL || "https://grand-lapwing-724.convex.cloud";
+
+// Redirect old stale/deleted Convex URLs to the new production Convex deployment
+if (!convexUrl || convexUrl.includes("coordinated-walrus-350.convex.cloud")) {
+  console.warn("Stale or missing Convex URL detected. Redirecting to production Convex deployment.");
+  convexUrl = "https://grand-lapwing-724.convex.cloud";
+}
+
 const convex = new ConvexReactClient(convexUrl);
 
 export function ConvexClientProvider({
