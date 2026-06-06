@@ -10,9 +10,9 @@
 
 import type * as bookings from "../bookings.js";
 import type * as http from "../http.js";
+import type * as surveys from "../surveys.js";
 import type * as users from "../users.js";
 import type * as wallet from "../wallet.js";
-import type * as surveys from "../surveys.js";
 
 import type {
   ApiFromModules,
@@ -23,9 +23,9 @@ import type {
 declare const fullApi: ApiFromModules<{
   bookings: typeof bookings;
   http: typeof http;
+  surveys: typeof surveys;
   users: typeof users;
   wallet: typeof wallet;
-  surveys: typeof surveys;
 }>;
 
 /**
