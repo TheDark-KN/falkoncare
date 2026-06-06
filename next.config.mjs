@@ -7,8 +7,8 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  // Set output directory to a temporary location to avoid permission issues
-  distDir: '/tmp/next-build',
+  // Set output directory to default .next
+  distDir: '.next',
   // Disable source maps in production to reduce file writes
   productionBrowserSourceMaps: false,
 
