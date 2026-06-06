@@ -12,7 +12,7 @@ export const current = query({
 
     const user = await ctx.db
       .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+      .withIndex("by_clerk_id", (q: any) => q.eq("clerkId", identity.subject))
       .first();
 
     if (!user) {
@@ -66,7 +66,7 @@ export const ensureUser = mutation({
 
     const user = await ctx.db
       .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+      .withIndex("by_clerk_id", (q: any) => q.eq("clerkId", identity.subject))
       .first();
 
     if (user) {
@@ -124,7 +124,7 @@ export const updateUser = internalMutation({
   handler: async (ctx: any, { clerkId, email, fullName, imageUrl }: { clerkId: string, email: string, fullName?: string, imageUrl?: string }) => {
     const user = await ctx.db
       .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId))
+      .withIndex("by_clerk_id", (q: any) => q.eq("clerkId", clerkId))
       .first();
 
     if (user) {
@@ -144,7 +144,7 @@ export const deleteUser = internalMutation({
   handler: async (ctx: any, { clerkId }: { clerkId: string }) => {
     const user = await ctx.db
       .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", clerkId))
+      .withIndex("by_clerk_id", (q: any) => q.eq("clerkId", clerkId))
       .first();
 
     if (user) {
@@ -168,7 +168,7 @@ export const updateProfile = mutation({
 
     const user = await ctx.db
       .query("users")
-      .withIndex("by_clerk_id", (q) => q.eq("clerkId", identity.subject))
+      .withIndex("by_clerk_id", (q: any) => q.eq("clerkId", identity.subject))
       .first();
 
     if (!user) {
@@ -207,6 +207,7 @@ export const updateWalletBalance = internalMutation({
     userId: v.string(),
   },
   handler: async (ctx: any, { amount, userId }: { amount: number, userId: string }) => {
+    const identity = await ctx.auth.getUserIdentity();
     const user = await ctx.db
       .query("users")
       .withIndex("by_clerk_id", (q: any) => q.eq("clerkId", userId))

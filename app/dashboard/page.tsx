@@ -13,7 +13,7 @@ import { useUser } from "@clerk/nextjs"
 import { useQuery } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import { DisplayBooking } from "@/lib/types"
-import { Booking } from "@/convex/_generated/dataModel"
+import type { Doc } from "@/convex/_generated/dataModel"
 
 export default function DashboardPage() {
   const { isLoaded } = useUser()
@@ -38,7 +38,7 @@ export default function DashboardPage() {
   }
 
   // Map Convex bookings to DisplayBooking shape
-  const formattedBookings: DisplayBooking[] = (bookings || []).map((b: Booking) => ({
+  const formattedBookings: DisplayBooking[] = (bookings || []).map((b: Doc<"bookings">) => ({
     ...b,
     id: b._id as string,
     tankSize: b.tankSize || undefined,

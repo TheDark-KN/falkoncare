@@ -10,7 +10,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { Icons } from "@/components/icons";
-import { Id, Booking } from "@/convex/_generated/dataModel";
+import type { Id, Doc } from "@/convex/_generated/dataModel";
 
 export default function AdminBookingsPage() {
   const bookings = useQuery(api.bookings.get);
@@ -49,7 +49,7 @@ export default function AdminBookingsPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {bookings.map((booking: Booking) => (
+                {bookings.map((booking: Doc<"bookings">) => (
                   <TableRow key={booking._id}>
                     <TableCell className="font-medium">{booking.userId}</TableCell>
                     <TableCell>{booking.serviceName}</TableCell>

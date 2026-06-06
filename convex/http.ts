@@ -1,5 +1,5 @@
 import { httpRouter } from "convex/server";
-import { httpAction, type MutationCtx } from "./_generated/server";
+import { httpAction } from "./_generated/server";
 import { internal } from "./_generated/api";
 
 const http = httpRouter();
@@ -9,7 +9,7 @@ const http = httpRouter();
 http.route({
   path: "/clerk",
   method: "POST",
-  handler: httpAction(async (ctx: MutationCtx, request: Request) => {
+  handler: httpAction(async (ctx, request) => {
     const payloadString = await request.text();
 
     // Extract required Svix headers

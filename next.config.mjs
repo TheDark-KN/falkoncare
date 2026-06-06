@@ -7,6 +7,10 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  // Set output directory to a temporary location to avoid permission issues
+  distDir: '/tmp/next-build',
+  // Disable source maps in production to reduce file writes
+  productionBrowserSourceMaps: false,
 
   // [FIXED M1] Security headers applied to all routes
   async headers() {
