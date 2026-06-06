@@ -2,6 +2,56 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 export default defineSchema({
+    surveys: defineTable({
+        surveyorId: v.string(),
+        surveyorName: v.string(),
+        surveyDate: v.string(),
+        societyArea: v.string(),
+        gpsCoordinates: v.union(
+            v.object({ lat: v.number(), lng: v.number() }),
+            v.null()
+        ),
+        houseFlatNumber: v.string(),
+        floor: v.string(),
+        mobileNumber: v.string(),
+        customerName: v.string(),
+        emailId: v.string(),
+        tankType: v.string(),
+        tankMaterials: v.array(v.string()),
+        otherMaterial: v.string(),
+        totalTanks: v.string(),
+        tankCapacity: v.string(),
+        totalWaterStorage: v.number(),
+        lastCleaning: v.string(),
+        isDirty: v.union(v.boolean(), v.null()),
+        isLidBroken: v.union(v.boolean(), v.null()),
+        isDamaged: v.union(v.boolean(), v.null()),
+        isMosquitoPresent: v.union(v.boolean(), v.null()),
+        waterCondition: v.string(),
+        photoCategories: v.array(v.string()),
+        customerConsent: v.union(v.boolean(), v.null()),
+        numberOfPhotos: v.number(),
+        customerDecision: v.string(),
+        servicesRequired: v.array(v.string()),
+        preferredServiceDate: v.string(),
+        leadPriority: v.string(),
+        remarks: v.string(),
+        declarationAccepted: v.boolean(),
+        signatureName: v.string(),
+        timestamp: v.number(),
+        submittedBy: v.string(),
+        createdAt: v.number(),
+    })
+        .index("by_surveyor", ["surveyorId"])
+        .index("by_society", ["societyArea"])
+        .index("by_date", ["surveyDate"]),
+
+    societies: defineTable({
+        name: v.string(),
+        area: v.string(),
+    })
+        .index("by_name", ["name"]),
+
     bookings: defineTable({
         userId: v.string(), // Clerk User ID
         serviceName: v.string(),
