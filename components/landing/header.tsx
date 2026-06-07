@@ -6,12 +6,14 @@ import { Icons } from "@/components/icons"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet"
-import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs"
+import { SignedIn, SignedOut, UserButton, useUser } from "@clerk/nextjs"
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
   const pathname = usePathname()
+  const { user } = useUser()
+  const isAdmin = user?.publicMetadata?.role === "admin"
 
   useEffect(() => {
     setMounted(true)
@@ -75,6 +77,16 @@ export function Header() {
                 </Button>
               </SignedOut>
               <SignedIn>
+                {isAdmin && (
+                  <Link
+                    href="/admin"
+                    className={`text-sm font-semibold transition-colors hover:text-primary ${
+                      pathname.startsWith("/admin") ? "text-primary" : "text-muted-foreground"
+                    }`}
+                  >
+                    Admin
+                  </Link>
+                )}
                 <Link
                   href="/dashboard/bookings"
                   className={`text-sm font-semibold transition-colors hover:text-primary ${
@@ -173,6 +185,18 @@ export function Header() {
                       </Button>
                     </SignedOut>
                     <SignedIn>
+                      {isAdmin && (
+                        <Link
+                          href="/admin"
+                          className={`px-4 py-3 rounded-xl font-medium flex items-center justify-between ${
+                            pathname.startsWith("/admin") ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-muted/50"
+                          }`}
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          Admin
+                          <Icons.shield className="w-4 h-4" />
+                        </Link>
+                      )}
                       <Link
                         href="/dashboard/bookings"
                         className="px-4 py-3 rounded-xl font-medium text-muted-foreground hover:bg-muted/50 flex items-center justify-between"

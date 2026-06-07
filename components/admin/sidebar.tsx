@@ -11,7 +11,11 @@ const sidebarLinks = [
         href: "/admin",
         icon: "calendar",
     },
-    // Add more admin links here as needed
+    {
+        title: "Surveys",
+        href: "/admin/surveys",
+        icon: "clipboardList",
+    },
 ]
 
 export function Sidebar() {

@@ -11,7 +11,11 @@ const isAdminRoute = createRouteMatcher(['/admin(.*)']);
 
 export default clerkMiddleware(async (auth, req) => {
     // Require authentication on all protected routes
-    if (isProtectedRoute(req)) await auth.protect();
+    if (isProtectedRoute(req)) {
+        const signInUrl = new URL('/sign-in', req.url);
+        signInUrl.searchParams.set('redirect_url', req.url);
+        await auth.protect({ unauthenticatedUrl: signInUrl.toString() });
+    }
 
     // Admin routes require publicMetadata.role === "admin" (set via Clerk Dashboard)
     if (isAdminRoute(req)) {
