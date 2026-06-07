@@ -94,19 +94,21 @@ function getDefaultFormData(surveyorName: string, surveyorId: string): SurveyFor
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Lead Priority auto-suggestion
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function calculateLeadPriority(form: SurveyFormData): LeadPriority {
-  const { tankHealthCheck, waterTankDetails } = form;
-
+function calculateLeadPriority(
+  isDirty: boolean | null,
+  isDamaged: boolean | null,
+  lastCleaning: string
+): LeadPriority {
   const isHot =
-    tankHealthCheck.isDirty === true ||
-    tankHealthCheck.isDamaged === true ||
-    waterTankDetails.lastCleaning === "Never Cleaned";
+    isDirty === true ||
+    isDamaged === true ||
+    lastCleaning === "Never Cleaned";
 
   if (isHot) return "Hot Lead";
 
   const isWarm =
-    waterTankDetails.lastCleaning === "6–12 Months Ago" ||
-    waterTankDetails.lastCleaning === "More Than 1 Year Ago";
+    lastCleaning === "6–12 Months Ago" ||
+    lastCleaning === "More Than 1 Year Ago";
 
   if (isWarm) return "Warm Lead";
 
@@ -292,7 +294,11 @@ function SurveyPageContent() {
 
   // Auto-suggest lead priority whenever health check or tank details change
   useEffect(() => {
-    const suggested = calculateLeadPriority(formData);
+    const suggested = calculateLeadPriority(
+      formData.tankHealthCheck.isDirty,
+      formData.tankHealthCheck.isDamaged,
+      formData.waterTankDetails.lastCleaning
+    );
     setFormData((prev) => ({
       ...prev,
       customerResponse: {
