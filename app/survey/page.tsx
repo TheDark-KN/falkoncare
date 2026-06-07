@@ -529,8 +529,23 @@ function SurveyPageContent() {
         setErrors({});
       }, 3000);
     } catch (error) {
-      const msg = error instanceof Error ? error.message : "Submission failed";
-      toast.error("❌ Submission Failed", { description: msg });
+      const raw = error instanceof Error ? error.message : "Submission failed";
+      const isAuth =
+        raw.toLowerCase().includes("unauthenticated") ||
+        raw.toLowerCase().includes("not authenticated") ||
+        raw.toLowerCase().includes("sign-in expired");
+
+      if (isAuth) {
+        toast.error("❌ Sign-in required", {
+          description:
+            "Your session expired or the Convex auth pipeline is not configured. " +
+            "Please sign out, sign back in, and try again. If the problem persists, " +
+            "ask the team to verify the Clerk 'convex' JWT template and the " +
+            "CLERK_JWT_ISSUER_DOMAIN env var on the Convex deployment.",
+        });
+      } else {
+        toast.error("❌ Submission Failed", { description: raw });
+      }
     } finally {
       setIsSubmitting(false);
     }

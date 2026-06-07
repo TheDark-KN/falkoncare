@@ -48,7 +48,15 @@ export const submitSurvey = mutation({
   handler: async (ctx: any, args: any) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
-      throw new ConvexError("UNAUTHENTICATED");
+      // The Clerk → Convex JWT pipeline is not working.  The most common
+      // causes are: (1) the Clerk "convex" JWT template is missing, or
+      // (2) CLERK_JWT_ISSUER_DOMAIN on the Convex deployment does not
+      // match the Clerk instance.  See `convex/auth.config.ts` for
+      // setup notes.
+      throw new ConvexError(
+        "Sign-in expired or the Convex auth pipeline is mis-configured. " +
+          "Please sign out and back in, and contact the team if the issue persists."
+      );
     }
 
     // Validate mobile number server-side

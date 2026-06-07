@@ -1,6 +1,29 @@
 import { v } from "convex/values";
 import { mutation, query, internalMutation } from "./_generated/server";
 
+// Diagnostic: returns the raw Convex auth identity. Useful from the client
+// to verify that the Clerk → Convex JWT pipeline is wired up correctly.
+// Returns { authenticated: false } when there is no signed-in user.
+export const whoami = query({
+  args: {},
+  handler: async (ctx: any) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      return { authenticated: false as const, identity: null };
+    }
+    return {
+      authenticated: true as const,
+      identity: {
+        subject: identity.subject,
+        email: identity.email ?? null,
+        name: identity.name ?? null,
+        pictureUrl: identity.pictureUrl ?? null,
+        issuer: identity.issuer ?? null,
+      },
+    };
+  },
+});
+
 // Get current user from Clerk
 export const current = query({
   args: {},
