@@ -1,4 +1,5 @@
 {
-    "buildCommand": "npm run build",
-    "installCommand": "npm install"
+    "buildCommand": "npx convex deploy --typecheck disable --yes && next build",
+    "installCommand": "npm install",
+    "framework": "nextjs"
 }

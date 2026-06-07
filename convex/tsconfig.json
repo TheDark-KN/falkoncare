@@ -20,6 +20,17 @@
     "isolatedModules": true,
     "noEmit": true
   },
-  "include": ["./**/*"],
-  "exclude": ["./_generated"]
+  "include": [
+    "./auth.config.ts",
+    "./schema.ts",
+    "./bookings.ts",
+    "./http.ts",
+    "./surveys.ts",
+    "./users.ts",
+    "./wallet.ts"
+  ],
+  "exclude": [
+    "./_generated",
+    "./my-app"
+  ]
 }

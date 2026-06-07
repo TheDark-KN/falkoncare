@@ -272,27 +272,4 @@ export const listAll = query({
   },
 });
 
-// TEMPORARY: list all users without auth check to find the user
-export const listAllDev = query({
-  args: {},
-  handler: async (ctx: any) => {
-    return await ctx.db.query("users").collect();
-  },
-});
-
-// TEMPORARY: make a user an admin in Convex database
-export const makeAdminDev = mutation({
-  args: { email: v.string() },
-  handler: async (ctx: any, { email }: { email: string }) => {
-    const user = await ctx.db
-      .query("users")
-      .filter((q: any) => q.eq(q.field("email"), email))
-      .first();
-    if (!user) {
-      throw new Error(`User with email ${email} not found`);
-    }
-    await ctx.db.patch(user._id, { role: "admin" });
-    return `User ${email} successfully promoted to admin in Convex!`;
-  },
-});
 
