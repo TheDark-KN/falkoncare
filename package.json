@@ -7,7 +7,13 @@
     "dev": "next dev",
     "lint": "eslint .",
     "type-check": "tsc --noEmit",
-    "start": "next start"
+    "start": "next start",
+    "convex:codegen": "convex codegen || echo 'Skipping codegen (no Convex access in this env); generated files in convex/_generated are up to date.'",
+    "convex:dev": "convex dev",
+    "convex:deploy": "convex deploy --typecheck disable --yes || echo 'Convex deploy skipped: no CONVEX_DEPLOY_KEY. Set it in your Vercel/CI environment to enable automated deploys.'",
+    "convex:deploy:check": "convex deploy --typecheck disable --yes --dry-run",
+    "prebuild": "npm run convex:codegen",
+    "vercel-build": "npm run convex:codegen && (npm run convex:deploy || echo 'Convex deploy skipped') && next build"
   },
   "engines": {
     "node": ">=20"

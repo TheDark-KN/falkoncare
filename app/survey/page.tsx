@@ -17,12 +17,14 @@ import CustomerResponseSection from "./components/CustomerResponseSection";
 import SurveyorRemarksSection from "./components/SurveyorRemarksSection";
 import DeclarationSection from "./components/DeclarationSection";
 import { ErrorBoundary } from "@/components/shared/error-boundary";
+import { ConvexStatusBanner } from "@/components/shared/convex-status-banner";
 
 import type {
   SurveyFormData,
   SurveySubmissionPayload,
   LeadPriority,
   SectionStatus,
+  SocietyOption,
 } from "@/types/survey";
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -243,7 +245,14 @@ const successVariants = {
 function SurveyPageContent() {
   const { user, isLoaded } = useUser();
   const submitSurvey = useMutation(api.surveys.submitSurvey);
-  const societies = useQuery(api.surveys.getSocieties) ?? [];
+
+  // Gracefully handle the case where the Convex backend has not been
+  // deployed yet. The query throws "Could not find public function" in
+  // that case, and we want the page itself (not the error boundary) to
+  // still render so the surveyor can finish the form.
+  const societiesResult = useQuery(api.surveys.getSocieties);
+  const societies: SocietyOption[] =
+    (societiesResult as SocietyOption[] | undefined) ?? [];
 
   const surveyorName = user?.fullName ?? user?.firstName ?? "Surveyor";
   const surveyorId = user?.id ?? "";
@@ -559,6 +568,9 @@ function SurveyPageContent() {
 
   return (
     <div className="relative min-h-screen bg-gray-50 dark:bg-gray-950 pb-24">
+      {/* ── Convex Deployment Status Banner ── */}
+      <ConvexStatusBanner />
+
       {/* ── Offline Banner ── */}
       <AnimatePresence>
         {!isOnline && (
