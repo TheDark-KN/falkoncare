@@ -25,7 +25,18 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error("Uncaught error in Survey Page:", error, errorInfo);
+    // Production-grade structured logging for reliability audits
+    const errorMsg = error?.message || "";
+    const isConvex = errorMsg.includes("CONVEX") || errorMsg.includes("surveys");
+    const isSync = errorMsg.includes("Could not find public function") || errorMsg.includes("Did you forget to run");
+    
+    console.error("[PRODUCTION_AUDIT] Uncaught error in Survey Page:", {
+      errorType: isSync ? "CONVEX_SYNC_ERROR" : isConvex ? "CONVEX_RUNTIME_ERROR" : "APPLICATION_ERROR",
+      message: errorMsg,
+      onlineStatus: typeof window !== "undefined" ? window.navigator.onLine : "unknown",
+      componentStack: errorInfo.componentStack,
+      timestamp: new Date().toISOString(),
+    });
   }
 
   public render() {
@@ -34,7 +45,22 @@ export class ErrorBoundary extends Component<Props, State> {
         return this.props.fallback;
       }
 
-      const isConvexError = this.state.error?.message?.includes("CONVEX") || this.state.error?.message?.includes("surveys");
+      const errorMsg = this.state.error?.message || "";
+      const isConvexError = errorMsg.includes("CONVEX") || errorMsg.includes("surveys");
+      const isSyncError = errorMsg.includes("Could not find public function") || errorMsg.includes("Did you forget to run");
+
+      let title = "Application Error";
+      let details = errorMsg;
+      let isUnauthenticated = errorMsg.includes("UNAUTHENTICATED") || errorMsg.includes("Not authenticated");
+
+      if (isSyncError) {
+        title = "Database Sync Needed";
+      } else if (isConvexError) {
+        title = "Database Error";
+        if (isUnauthenticated) {
+          details = "Session Expired or Unauthenticated. Please sign in or refresh the page.";
+        }
+      }
 
       return (
         <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-gray-950 p-4">
@@ -42,11 +68,11 @@ export class ErrorBoundary extends Component<Props, State> {
             <CardHeader>
               <CardTitle className="flex items-center gap-3 text-lg font-bold text-gray-900 dark:text-white">
                 <span>⚠️</span>
-                {isConvexError ? "Database Sync Needed" : "Application Error"}
+                {title}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              {isConvexError ? (
+              {isSyncError ? (
                 <>
                   <p className="text-sm text-muted-foreground leading-relaxed">
                     The backend database functions are currently not deployed or synchronized on this environment.
@@ -61,11 +87,13 @@ export class ErrorBoundary extends Component<Props, State> {
               ) : (
                 <>
                   <p className="text-sm text-muted-foreground leading-relaxed">
-                    A client-side exception occurred while rendering the page.
+                    {isConvexError
+                      ? "A database communication error occurred while processing this page."
+                      : "A client-side exception occurred while rendering the page."}
                   </p>
-                  {this.state.error?.message && (
+                  {details && (
                     <div className="bg-red-50 dark:bg-red-950/20 p-3 rounded-lg text-xs font-mono text-red-600 dark:text-red-400 overflow-x-auto">
-                      {this.state.error.message}
+                      {details}
                     </div>
                   )}
                 </>
