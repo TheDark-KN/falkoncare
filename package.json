@@ -13,7 +13,7 @@
     "convex:deploy": "convex deploy --typecheck disable --yes",
     "convex:deploy:check": "convex deploy --typecheck disable --yes --dry-run",
     "prebuild": "npm run convex:codegen",
-    "vercel-build": "npm run convex:codegen && npm run convex:deploy && next build"
+    "vercel-build": "npm run convex:codegen && next build"
   },
   "engines": {
     "node": ">=20"
