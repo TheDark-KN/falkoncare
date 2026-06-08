@@ -31,6 +31,8 @@ export default defineSchema({
         photoCategories: v.array(v.string()),
         customerConsent: v.union(v.boolean(), v.null()),
         numberOfPhotos: v.number(),
+        photoStorageIds: v.optional(v.array(v.string())),
+
         customerDecision: v.string(),
         servicesRequired: v.array(v.string()),
         preferredServiceDate: v.string(),

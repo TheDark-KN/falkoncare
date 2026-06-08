@@ -245,6 +245,8 @@ const successVariants = {
 function SurveyPageContent() {
   const { user, isLoaded } = useUser();
   const submitSurvey = useMutation(api.surveys.submitSurvey);
+  const generateUploadUrl = useMutation(api.surveys.generateUploadUrl);
+
 
   // Gracefully handle the case where the Convex backend has not been
   // deployed yet. The query throws "Could not find public function" in
@@ -444,7 +446,7 @@ function SurveyPageContent() {
   );
 
   // Build submission payload
-  const buildPayload = useCallback((): SurveySubmissionPayload => {
+  const buildPayload = useCallback((photoStorageIds?: string[]): SurveySubmissionPayload => {
     return {
       surveyorId: formData.surveyInformation.surveyorId,
       surveyorName: formData.surveyInformation.surveyorName,
@@ -471,6 +473,7 @@ function SurveyPageContent() {
       photoCategories: formData.photoDocumentation.photoCategories,
       customerConsent: formData.photoDocumentation.customerConsent,
       numberOfPhotos: formData.photoDocumentation.photos.length,
+      photoStorageIds,
       customerDecision: formData.customerResponse.customerDecision,
       servicesRequired: formData.customerResponse.servicesRequired,
       preferredServiceDate: formData.customerResponse.preferredServiceDate,
@@ -487,17 +490,49 @@ function SurveyPageContent() {
     if (!isFormValid || isSubmitting) return;
 
     setIsSubmitting(true);
-    const payload = buildPayload();
 
     try {
       if (!isOnline) {
-        saveToOfflineQueue(payload);
+        const offlinePayload = buildPayload();
+        saveToOfflineQueue(offlinePayload);
         toast.warning("⚠️ No internet — data saved locally", {
           description: "Survey will be submitted when you're back online.",
         });
         setIsSubmitting(false);
         return;
       }
+
+      // 1. Upload photos to Convex Storage if there are any
+      const photoStorageIds: string[] = [];
+      const photosToUpload = formData.photoDocumentation.photos;
+      if (photosToUpload.length > 0) {
+        toast.loading("Uploading photos...", { id: "upload-toast" });
+        for (let i = 0; i < photosToUpload.length; i++) {
+          const photo = photosToUpload[i];
+          
+          // Get upload URL
+          const uploadUrl = await generateUploadUrl();
+          
+          // POST to Convex Storage
+          const response = await fetch(uploadUrl, {
+            method: "POST",
+            headers: { "Content-Type": photo.file.type },
+            body: photo.file,
+          });
+
+          if (!response.ok) {
+            toast.dismiss("upload-toast");
+            throw new Error(`Failed to upload photo "${photo.file.name}"`);
+          }
+
+          const { storageId } = await response.json();
+          photoStorageIds.push(storageId);
+        }
+        toast.dismiss("upload-toast");
+      }
+
+      // 2. Build final payload with photo storage IDs
+      const payload = buildPayload(photoStorageIds);
 
       await submitSurvey(payload);
 
@@ -529,6 +564,7 @@ function SurveyPageContent() {
         setErrors({});
       }, 3000);
     } catch (error) {
+      toast.dismiss("upload-toast");
       const raw = error instanceof Error ? error.message : "Submission failed";
       const isAuth =
         raw.toLowerCase().includes("unauthenticated") ||
@@ -549,7 +585,8 @@ function SurveyPageContent() {
     } finally {
       setIsSubmitting(false);
     }
-  }, [isFormValid, isSubmitting, buildPayload, isOnline, submitSurvey, formData]);
+  }, [isFormValid, isSubmitting, buildPayload, isOnline, submitSurvey, generateUploadUrl, formData]);
+
 
   // Start next house handler
   const handleStartNextHouse = useCallback(() => {

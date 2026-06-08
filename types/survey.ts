@@ -163,7 +163,9 @@ export interface SurveySubmissionPayload {
   photoCategories: string[];
   customerConsent: boolean | null;
   numberOfPhotos: number;
+  photoStorageIds?: string[];
   customerDecision: string;
+
   servicesRequired: string[];
   preferredServiceDate: string;
   leadPriority: string;

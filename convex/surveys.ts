@@ -5,6 +5,18 @@ import { mutation, query } from "./_generated/server";
 // Falkon Survey — Convex Backend
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+// Generate a secure upload URL for files
+export const generateUploadUrl = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new ConvexError("UNAUTHENTICATED");
+    }
+    return await ctx.storage.generateUploadUrl();
+  },
+});
+
 // Submit a completed survey form
 export const submitSurvey = mutation({
   args: {
@@ -36,6 +48,7 @@ export const submitSurvey = mutation({
     photoCategories: v.array(v.string()),
     customerConsent: v.union(v.boolean(), v.null()),
     numberOfPhotos: v.number(),
+    photoStorageIds: v.optional(v.array(v.string())),
     customerDecision: v.string(),
     servicesRequired: v.array(v.string()),
     preferredServiceDate: v.string(),
@@ -80,6 +93,7 @@ export const submitSurvey = mutation({
   },
 });
 
+
 // Get all surveys (admin-only)
 export const getAll = query({
   args: {},
@@ -98,7 +112,21 @@ export const getAll = query({
       throw new ConvexError("UNAUTHORIZED");
     }
 
-    return await ctx.db.query("surveys").order("desc").collect();
+    const surveys = await ctx.db.query("surveys").order("desc").collect();
+    return await Promise.all(
+      surveys.map(async (survey: any) => {
+        let photoUrls: string[] = [];
+        if (survey.photoStorageIds) {
+          photoUrls = await Promise.all(
+            survey.photoStorageIds.map((id: string) => ctx.storage.getUrl(id))
+          );
+        }
+        return {
+          ...survey,
+          photoUrls: photoUrls.filter(Boolean),
+        };
+      })
+    );
   },
 });
 
@@ -111,11 +139,26 @@ export const getBySurveyor = query({
       return [];
     }
 
-    return await ctx.db
+    const surveys = await ctx.db
       .query("surveys")
       .withIndex("by_surveyor", (q: any) => q.eq("surveyorId", identity.subject))
       .order("desc")
       .collect();
+
+    return await Promise.all(
+      surveys.map(async (survey: any) => {
+        let photoUrls: string[] = [];
+        if (survey.photoStorageIds) {
+          photoUrls = await Promise.all(
+            survey.photoStorageIds.map((id: string) => ctx.storage.getUrl(id))
+          );
+        }
+        return {
+          ...survey,
+          photoUrls: photoUrls.filter(Boolean),
+        };
+      })
+    );
   },
 });
 

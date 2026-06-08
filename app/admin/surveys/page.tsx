@@ -16,7 +16,8 @@ import {
 } from "@/components/ui/table";
 import { Icons } from "@/components/icons";
 
-type Survey = Doc<"surveys">;
+type Survey = Doc<"surveys"> & { photoUrls?: string[] };
+
 
 function formatDate(value: number | string) {
   const date = typeof value === "number" ? new Date(value) : new Date(value);
@@ -71,6 +72,7 @@ function StatCard({
 export default function AdminSurveysPage() {
   const surveys = useQuery(api.surveys.getAll);
   const [search, setSearch] = useState("");
+  const [selectedPhotos, setSelectedPhotos] = useState<string[] | null>(null);
 
   const filteredSurveys = useMemo(() => {
     if (!surveys) return [];
@@ -160,6 +162,7 @@ export default function AdminSurveysPage() {
                   <TableHead>Customer</TableHead>
                   <TableHead>Location</TableHead>
                   <TableHead>Tank Details</TableHead>
+                  <TableHead>Photos</TableHead>
                   <TableHead>Lead</TableHead>
                   <TableHead>Surveyor</TableHead>
                 </TableRow>
@@ -198,6 +201,19 @@ export default function AdminSurveysPage() {
                       </div>
                       <div className="text-xs text-muted-foreground">{formatList(survey.tankMaterials)}</div>
                     </TableCell>
+                    <TableCell className="min-w-36">
+                      {survey.photoUrls && survey.photoUrls.length > 0 ? (
+                        <button
+                          type="button"
+                          onClick={() => setSelectedPhotos(survey.photoUrls || null)}
+                          className="inline-flex items-center gap-1.5 rounded-lg border border-primary/25 bg-primary/5 px-2.5 py-1 text-xs font-semibold text-primary transition-all hover:bg-primary/10 active:scale-[0.98]"
+                        >
+                          📸 {survey.photoUrls.length} photo{survey.photoUrls.length !== 1 ? "s" : ""}
+                        </button>
+                      ) : (
+                        <span className="text-xs text-muted-foreground">No photos</span>
+                      )}
+                    </TableCell>
                     <TableCell className="min-w-56">
                       <div className="font-medium text-foreground">{survey.leadPriority}</div>
                       <div className="text-sm text-muted-foreground">{survey.customerDecision || "-"}</div>
@@ -214,6 +230,44 @@ export default function AdminSurveysPage() {
           )}
         </CardContent>
       </Card>
+
+      {/* Lightbox / Photo Viewer Overlay */}
+      {selectedPhotos && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="relative max-w-4xl w-full rounded-xl bg-white dark:bg-gray-900 p-6 shadow-2xl border border-gray-200 dark:border-gray-800 animate-in fade-in zoom-in duration-250">
+            <button
+              onClick={() => setSelectedPhotos(null)}
+              className="absolute right-4 top-4 rounded-full p-1 text-gray-500 hover:text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-800 transition-colors"
+              aria-label="Close photo viewer"
+            >
+              <Icons.x className="h-6 w-6" />
+            </button>
+            <h3 className="text-lg font-bold mb-4 text-foreground flex items-center gap-2">
+              <span>📸</span> Inspection Photos
+            </h3>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 max-h-[60vh] overflow-y-auto p-2 scrollbar-thin">
+              {selectedPhotos.map((url, idx) => (
+                <a
+                  key={idx}
+                  href={url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="block relative aspect-square overflow-hidden rounded-lg border border-border bg-muted group shadow-sm"
+                >
+                  <img
+                    src={url}
+                    alt={`Inspection photo ${idx + 1}`}
+                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                    <Icons.externalLink className="h-6 w-6 text-white" />
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
