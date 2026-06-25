@@ -40,7 +40,7 @@ export function TopBar({ title, onMenuClick }: TopBarProps) {
             <div className="flex items-center gap-2 px-4 py-2 bg-sky-50 dark:bg-sky-950/40 border border-sky-100/50 dark:border-sky-900/50 rounded-full cursor-pointer hover:bg-sky-100/50 dark:hover:bg-sky-900/40 transition-all duration-200">
               <Icons.wallet className="w-4 h-4 text-[#006194]" />
               <span className="text-sm font-bold text-[#006194] dark:text-sky-300 font-headline flex items-center gap-0.5">
-                ₹{convexUser.walletBalance.toLocaleString()}
+                ₹{(convexUser.walletBalance ?? 0).toLocaleString()}
               </span>
             </div>
           </Link>
