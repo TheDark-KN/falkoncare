@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { useUser } from "@clerk/nextjs"
-import { useMutation, useQuery } from "convex/react"
+import { useMutation, useQuery, useConvexAuth } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import { toast } from "sonner"
 import { z } from "zod"
@@ -28,7 +27,7 @@ type ProfileFormData = z.infer<typeof profileSchema>
 
 export default function CompleteProfilePage() {
   const router = useRouter()
-  const { isLoaded, isSignedIn, user: clerkUser } = useUser()
+  const { isLoading: isAuthLoading, isAuthenticated } = useConvexAuth()
   const convexUser = useQuery(api.users.current)
   const updateProfile = useMutation(api.users.updateProfile)
 
@@ -51,14 +50,14 @@ export default function CompleteProfilePage() {
 
   // Redirect if not signed in
   useEffect(() => {
-    if (isLoaded && !isSignedIn) {
-      router.push("/sign-in?redirect_url=/complete-profile")
+    if (!isAuthLoading && !isAuthenticated) {
+      router.push("/signin?redirect_url=/complete-profile")
     }
-  }, [isLoaded, isSignedIn, router])
+  }, [isAuthLoading, isAuthenticated, router])
 
   // Redirect if profile is already complete
   useEffect(() => {
-    if (convexUser && convexUser.phoneNumber && convexUser.dob) {
+    if (convexUser && (convexUser.phone || convexUser.phoneNumber) && convexUser.dob) {
       toast.info("Your profile is already complete!")
       router.push("/dashboard/services")
     }
@@ -141,7 +140,7 @@ export default function CompleteProfilePage() {
     }
   }
 
-  if (!isLoaded || convexUser === undefined) {
+  if (isAuthLoading || convexUser === undefined) {
     return (
       <div className="min-h-screen bg-[#f7f9fb] dark:bg-slate-950 flex flex-col justify-center items-center">
         <Icons.loader className="w-8 h-8 animate-spin text-primary mb-4" />

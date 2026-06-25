@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils"
 import { Icons } from "@/components/icons"
 import { useAppStore } from "@/lib/store"
 import { Button } from "@/components/ui/button"
-import { useClerk } from "@clerk/nextjs"
+import { useAuthActions } from "@convex-dev/auth/react"
 
 interface SidebarProps {
   userRole: "customer" | "admin" | "staff"
@@ -36,7 +36,7 @@ export function Sidebar({ userRole }: SidebarProps) {
   const router = useRouter()
   /* const { logout, notifications } = useAppStore() */
   const { notifications } = useAppStore()
-  const { signOut } = useClerk()
+  const { signOut } = useAuthActions()
   const [collapsed, setCollapsed] = useState(false)
 
   const navItems = userRole === "admin" ? adminNavItems : customerNavItems

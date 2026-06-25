@@ -2,7 +2,8 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Public_Sans, Plus_Jakarta_Sans } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
-import { ConvexClientProvider } from "@/components/providers/convex-provider"
+import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
+import { ConvexClientProvider } from "@/components/ConvexClientProvider";
 import { Toaster } from "sonner"
 import "./globals.css"
 
@@ -155,10 +156,12 @@ export default function RootLayout({
         />
       </head>
       <body className={`${publicSans.variable} ${plusJakartaSans.variable} font-sans antialiased`}>
-        <ConvexClientProvider>
-          {children}
-          <Toaster />
-        </ConvexClientProvider>
+        <ConvexAuthNextjsServerProvider>
+          <ConvexClientProvider>
+            {children}
+            <Toaster />
+          </ConvexClientProvider>
+        </ConvexAuthNextjsServerProvider>
         <Analytics />
       </body>
     </html>

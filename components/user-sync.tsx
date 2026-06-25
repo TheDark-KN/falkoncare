@@ -1,7 +1,6 @@
 "use client";
 
 export function UserSync() {
-    // Disabled - no longer using Convex auth sync
-    // All user management is handled by Clerk directly
+    // Disabled - user sync no longer needed with Convex Auth
     return null;
 }

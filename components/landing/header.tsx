@@ -6,14 +6,16 @@ import { Icons } from "@/components/icons"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet"
-import { Show, UserButton, useUser } from "@clerk/nextjs"
+import { useQuery, useConvexAuth } from "convex/react"
+import { api } from "@/convex/_generated/api"
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
   const pathname = usePathname()
-  const { user } = useUser()
-  const isAdmin = user?.publicMetadata?.role === "admin"
+  const { isLoading: isAuthLoading, isAuthenticated } = useConvexAuth()
+  const convexUser = useQuery(api.users.current)
+  const isAdmin = convexUser?.role === "admin"
 
   useEffect(() => {
     setMounted(true)
@@ -86,49 +88,59 @@ export function Header() {
 
             {/* Auth Block */}
             <div className="flex items-center gap-4 pl-4 border-l border-border/60">
-              <Show when="signed-out">
-                <Button variant="ghost" size="sm" className="font-semibold text-sm hover:text-primary hover:bg-transparent" asChild>
-                  <Link href="/sign-in">Login</Link>
-                </Button>
-                <Button className="bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-bold shadow-md hover:shadow-lg rounded-xl transition-all" size="sm" asChild>
-                  <Link href="/sign-up">Sign Up</Link>
-                </Button>
-              </Show>
-              <Show when="signed-in">
-                {isAdmin && (
+              {!isAuthLoading && !isAuthenticated && (
+                <>
+                  <Button variant="ghost" size="sm" className="font-semibold text-sm hover:text-primary hover:bg-transparent" asChild>
+                    <Link href="/signin">Login</Link>
+                  </Button>
+                  <Button className="bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-bold shadow-md hover:shadow-lg rounded-xl transition-all" size="sm" asChild>
+                    <Link href="/signup">Sign Up</Link>
+                  </Button>
+                </>
+              )}
+              {!isAuthLoading && isAuthenticated && (
+                <>
+                  {isAdmin && (
+                    <Link
+                      href="/admin"
+                      className={`text-sm font-semibold transition-colors hover:text-primary ${
+                        pathname.startsWith("/admin") ? "text-primary font-bold" : "text-muted-foreground"
+                      }`}
+                    >
+                      Admin
+                    </Link>
+                  )}
                   <Link
-                    href="/admin"
+                    href="/dashboard/bookings"
                     className={`text-sm font-semibold transition-colors hover:text-primary ${
-                      pathname.startsWith("/admin") ? "text-primary font-bold" : "text-muted-foreground"
+                      isActive("/dashboard/bookings") ? "text-primary font-bold" : "text-muted-foreground"
                     }`}
                   >
-                    Admin
+                    My Bookings
                   </Link>
-                )}
-                <Link
-                  href="/dashboard/bookings"
-                  className={`text-sm font-semibold transition-colors hover:text-primary ${
-                    isActive("/dashboard/bookings") ? "text-primary font-bold" : "text-muted-foreground"
-                  }`}
-                >
-                  My Bookings
-                </Link>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="font-semibold text-sm hover:text-primary hover:bg-transparent"
-                  asChild
-                >
-                  <Link href="/dashboard">Dashboard</Link>
-                </Button>
-                <UserButton
-                  appearance={{
-                    elements: {
-                      avatarBox: "w-8.5 h-8.5 border border-primary/20",
-                    },
-                  }}
-                />
-              </Show>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="font-semibold text-sm hover:text-primary hover:bg-transparent"
+                    asChild
+                  >
+                    <Link href="/dashboard">Dashboard</Link>
+                  </Button>
+                  <Link href="/dashboard/profile" className="flex items-center">
+                    {convexUser?.image || convexUser?.imageUrl ? (
+                      <img
+                        src={convexUser?.image || convexUser?.imageUrl}
+                        alt="Profile"
+                        className="w-8.5 h-8.5 rounded-full object-cover border border-primary/20 hover:border-primary/50 transition-all"
+                      />
+                    ) : (
+                      <div className="w-8.5 h-8.5 rounded-full bg-primary/10 flex items-center justify-center text-primary transition-all font-headline font-bold text-xs">
+                        {(convexUser?.name || convexUser?.fullName || "U")[0]}
+                      </div>
+                    )}
+                  </Link>
+                </>
+              )}
             </div>
           </nav>
 

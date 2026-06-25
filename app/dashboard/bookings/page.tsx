@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { useUser } from "@clerk/nextjs"
 import { TopBar } from "@/components/dashboard/top-bar"
 import { Button } from "@/components/ui/button"
 import { Icons } from "@/components/icons"
@@ -17,7 +16,6 @@ import type { Doc } from "@/convex/_generated/dataModel"
 type FilterType = "all" | "active" | "completed" | "cancelled"
 
 export default function BookingsPage() {
-  const { isLoaded } = useUser()
   const bookings = useQuery(api.bookings.getByUser)
   const [filter, setFilter] = useState<FilterType>("all")
 
@@ -46,16 +44,7 @@ export default function BookingsPage() {
     { label: "Cancelled", value: "cancelled" },
   ]
 
-  if (!isLoaded) {
-    return (
-      <div className="min-h-screen bg-background">
-        <TopBar title="My Bookings" />
-        <div className="flex items-center justify-center py-16">
-          <Icons.loader className="w-8 h-8 animate-spin text-primary" />
-        </div>
-      </div>
-    )
-  }
+
 
   return (
     <div className="min-h-screen bg-background">

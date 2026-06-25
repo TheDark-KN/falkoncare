@@ -1,7 +1,6 @@
 "use client"
 
 import { useParams, useRouter } from "next/navigation"
-import { useUser } from "@clerk/nextjs"
 import { TopBar } from "@/components/dashboard/top-bar"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -28,7 +27,6 @@ function formatDate(value: number) {
 export default function BookingDetailsPage() {
   const params = useParams()
   const router = useRouter()
-  const { isLoaded } = useUser()
 
   const bookingId = params.bookingId as Id<"bookings">
   const booking = useQuery(api.bookings.getById, { id: bookingId })
@@ -44,7 +42,7 @@ export default function BookingDetailsPage() {
     }
   }
 
-  if (!isLoaded || booking === undefined) {
+  if (booking === undefined) {
     return (
       <div className="min-h-screen bg-[#f7f9fb] dark:bg-slate-950">
         <TopBar title="Loading Details..." />

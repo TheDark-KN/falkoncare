@@ -1,11 +1,9 @@
-import { auth, clerkClient } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
+import { ConvexHttpClient } from "convex/browser";
+import { convexAuthNextjsToken } from "@convex-dev/auth/nextjs/server";
+import { api } from "@/convex/_generated/api";
 
-// TEMPORARY admin-setup endpoint.
-// After visiting /api/make-admin?secret=falkon2024 while signed in,
-// your Clerk publicMetadata.role will be set to "admin".
-// DELETE this file once you have confirmed admin access works.
-
+const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 const SETUP_SECRET = "falkon2024";
 
 export async function GET(request: Request) {
@@ -16,26 +14,33 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const { userId } = await auth();
-  if (!userId) {
+  const token = await convexAuthNextjsToken();
+  if (!token) {
     return NextResponse.json(
-      { error: "You must be signed in first. Visit /sign-in then come back." },
+      { error: "You must be signed in first. Visit /signin then come back." },
       { status: 401 }
     );
   }
 
-  const client = await clerkClient();
-  await client.users.updateUserMetadata(userId, {
-    publicMetadata: { role: "admin" },
+  const user = await convex.query(api.users.current, {}, { token });
+  if (!user) {
+    return NextResponse.json(
+      { error: "User not found or unauthenticated." },
+      { status: 401 }
+    );
+  }
+
+  await convex.mutation(api.users.makeUserAdmin, {
+    userId: user._id,
+    secret: SETUP_SECRET,
   });
 
   return NextResponse.json({
     success: true,
-    message: `✅ User ${userId} has been granted admin role! Now sign out and sign back in, then visit /admin`,
+    message: `✅ User ${user._id} has been granted admin role in Convex!`,
     next_steps: [
-      "1. Sign out of falkoncare.com",
-      "2. Sign back in",
-      "3. Visit https://falkoncare.com/admin/surveys",
+      "1. Go to /dashboard",
+      "2. Visit /admin to access the inspection portal",
     ],
   });
 }

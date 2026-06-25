@@ -7,14 +7,12 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Icons } from "@/components/icons"
-import { useUser } from "@clerk/nextjs"
 import { useMutation, useQuery } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import { toast } from "sonner"
 import Link from "next/link"
 
 export default function ProfilePage() {
-  const { isLoaded, user: clerkUser } = useUser()
   const convexUser = useQuery(api.users.current)
   const updateProfile = useMutation(api.users.updateProfile)
 
@@ -25,13 +23,15 @@ export default function ProfilePage() {
   const [fullName, setFullName] = useState("")
   const [phoneNumber, setPhoneNumber] = useState("")
   const [address, setAddress] = useState("")
+  const [dob, setDob] = useState("")
 
   // Sync Convex data to local states when loaded
   useEffect(() => {
     if (convexUser) {
-      setFullName(convexUser.fullName || "")
-      setPhoneNumber(convexUser.phoneNumber || "")
+      setFullName(convexUser.name || convexUser.fullName || "")
+      setPhoneNumber(convexUser.phone || convexUser.phoneNumber || "")
       setAddress(convexUser.address || "")
+      setDob(convexUser.dob || "")
     }
   }, [convexUser])
 
@@ -41,9 +41,11 @@ export default function ProfilePage() {
 
     try {
       await updateProfile({
+        name: fullName.trim(),
         fullName: fullName.trim(),
         address: address.trim(),
         phoneNumber: phoneNumber.trim(),
+        dob: dob.trim(),
       })
       toast.success("Profile updated successfully")
       setIsEditing(false)
@@ -58,16 +60,17 @@ export default function ProfilePage() {
   // Calculate completeness percentage
   const calculateCompleteness = () => {
     if (!convexUser) return 0
-    let points = 25 // base point for registration
-    if (convexUser.fullName) points += 25
-    if (convexUser.phoneNumber) points += 25
-    if (convexUser.address) points += 25
+    let points = 20 // base point for registration
+    if (convexUser.name || convexUser.fullName) points += 20
+    if (convexUser.phone || convexUser.phoneNumber) points += 20
+    if (convexUser.address) points += 20
+    if (convexUser.dob) points += 20
     return points
   }
 
   const completeness = calculateCompleteness()
 
-  if (!isLoaded || convexUser === undefined) {
+  if (convexUser === undefined) {
     return (
       <div className="min-h-screen bg-[#f7f9fb] dark:bg-slate-950">
         <TopBar title="Loading Profile..." />
@@ -107,15 +110,15 @@ export default function ProfilePage() {
               <div className="flex flex-col items-center text-center">
                 <div className="relative group mb-6">
                   <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-slate-100 dark:border-slate-800 relative">
-                    {convexUser.imageUrl || clerkUser?.imageUrl ? (
+                    {convexUser.image || convexUser.imageUrl ? (
                       <img
                         alt="User Profile"
                         className="w-full h-full object-cover"
-                        src={convexUser.imageUrl || clerkUser?.imageUrl}
+                        src={convexUser.image || convexUser.imageUrl}
                       />
                     ) : (
                       <div className="w-full h-full bg-primary/10 flex items-center justify-center text-primary font-headline font-bold text-4xl">
-                        {(convexUser.fullName || clerkUser?.fullName || "U")[0]}
+                        {(convexUser.name || convexUser.fullName || "U")[0]}
                       </div>
                     )}
                   </div>
@@ -125,7 +128,7 @@ export default function ProfilePage() {
                 </div>
 
                 <h3 className="text-xl font-headline font-bold text-sky-900 dark:text-white">
-                  {convexUser.fullName || clerkUser?.fullName || "User"}
+                  {convexUser.name || convexUser.fullName || "User"}
                 </h3>
                 <p className="text-xs text-slate-400 font-bold uppercase tracking-wider mt-1">
                   Premium Member
@@ -233,11 +236,13 @@ export default function ProfilePage() {
                         />
                       </div>
                       <div className="space-y-1.5">
-                        <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider font-headline px-1">User ID</label>
+                        <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider font-headline px-1">Date of Birth</label>
                         <Input
-                          value={convexUser.clerkId.slice(0, 15) + "..."}
-                          disabled
-                          className="bg-slate-100 dark:bg-slate-950 border-none rounded-xl py-6 font-headline text-slate-500 cursor-not-allowed"
+                          type="date"
+                          value={dob}
+                          onChange={(e) => setDob(e.target.value)}
+                          disabled={isSaving}
+                          className="bg-slate-50 border-none rounded-xl py-6 font-headline"
                         />
                       </div>
                     </div>
@@ -250,6 +255,15 @@ export default function ProfilePage() {
                         disabled={isSaving}
                         className="bg-slate-50 border-none rounded-xl font-headline"
                         rows={3}
+                      />
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider font-headline px-1">User ID</label>
+                      <Input
+                        value={convexUser._id}
+                        disabled
+                        className="bg-slate-100 dark:bg-slate-950 border-none rounded-xl py-6 font-headline text-slate-500 cursor-not-allowed"
                       />
                     </div>
 
@@ -272,9 +286,10 @@ export default function ProfilePage() {
                         type="button"
                         variant="outline"
                         onClick={() => {
-                          setFullName(convexUser.fullName || "")
-                          setPhoneNumber(convexUser.phoneNumber || "")
+                          setFullName(convexUser.name || convexUser.fullName || "")
+                          setPhoneNumber(convexUser.phone || convexUser.phoneNumber || "")
                           setAddress(convexUser.address || "")
+                          setDob(convexUser.dob || "")
                           setIsEditing(false)
                         }}
                         disabled={isSaving}
@@ -289,25 +304,37 @@ export default function ProfilePage() {
                     <div className="space-y-1.5">
                       <label className="text-[10px] font-black text-slate-400 uppercase tracking-wider font-headline px-1">Full Name</label>
                       <div className="px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl text-sm text-sky-900 dark:text-slate-200 font-bold font-headline">
-                        {convexUser.fullName || "Not set"}
+                        {convexUser.name || convexUser.fullName || "Not set"}
                       </div>
                     </div>
                     <div className="space-y-1.5">
                       <label className="text-[10px] font-black text-slate-400 uppercase tracking-wider font-headline px-1">Email Address</label>
                       <div className="px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl text-sm text-sky-900 dark:text-slate-200 font-bold font-headline">
-                        {convexUser.email}
+                        {convexUser.email || "Not set"}
                       </div>
                     </div>
                     <div className="space-y-1.5">
                       <label className="text-[10px] font-black text-slate-400 uppercase tracking-wider font-headline px-1">Phone Number</label>
                       <div className="px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl text-sm text-sky-900 dark:text-slate-200 font-bold font-headline">
-                        {convexUser.phoneNumber || "Not set"}
+                        {convexUser.phone || convexUser.phoneNumber || "Not set"}
                       </div>
                     </div>
                     <div className="space-y-1.5">
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-wider font-headline px-1">Date of Birth</label>
+                      <div className="px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl text-sm text-sky-900 dark:text-slate-200 font-bold font-headline">
+                        {convexUser.dob || "Not set"}
+                      </div>
+                    </div>
+                    <div className="space-y-1.5 md:col-span-2">
                       <label className="text-[10px] font-black text-slate-400 uppercase tracking-wider font-headline px-1">Default Address</label>
-                      <div className="px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl text-sm text-sky-900 dark:text-slate-200 font-bold font-headline min-h-[46px] leading-relaxed">
+                      <div className="px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800 rounded-xl text-sm text-sky-900 dark:text-slate-200 font-bold font-headline min-h-[46px] leading-relaxed">
                         {convexUser.address || "Not set"}
+                      </div>
+                    </div>
+                    <div className="space-y-1.5 md:col-span-2">
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-wider font-headline px-1">User ID</label>
+                      <div className="px-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800 rounded-xl text-sm text-sky-900 dark:text-slate-200 font-bold font-headline">
+                        {convexUser._id}
                       </div>
                     </div>
                   </div>
@@ -352,7 +379,7 @@ export default function ProfilePage() {
                   <Icons.shield className="w-5 h-5 text-primary" />
                   <div>
                     <p className="font-bold">Managed Authentication</p>
-                    <p className="text-xs text-slate-400 mt-0.5">Your sign-in information and passwords are securely managed by Clerk.</p>
+                    <p className="text-xs text-slate-400 mt-0.5">Your sign-in information and passwords are securely managed by Convex Auth.</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 text-slate-600 dark:text-slate-350 pt-2">

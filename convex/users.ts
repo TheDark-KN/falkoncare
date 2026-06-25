@@ -1,9 +1,8 @@
 import { v } from "convex/values";
 import { mutation, query, internalMutation } from "./_generated/server";
+import { getAuthUserId } from "@convex-dev/auth/server";
 
-// Diagnostic: returns the raw Convex auth identity. Useful from the client
-// to verify that the Clerk → Convex JWT pipeline is wired up correctly.
-// Returns { authenticated: false } when there is no signed-in user.
+// Diagnostic: returns the raw Convex auth identity.
 export const whoami = query({
   args: {},
   handler: async (ctx: any) => {
@@ -24,155 +23,21 @@ export const whoami = query({
   },
 });
 
-// Get current user from Clerk
+// Get current user from Convex Auth
 export const current = query({
   args: {},
   handler: async (ctx: any) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) {
       return null;
     }
 
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_clerk_id", (q: any) => q.eq("clerkId", identity.subject))
-      .first();
-
+    const user = await ctx.db.get(userId);
     if (!user) {
-      // Return basic info if user not found in our table
-      return {
-        clerkId: identity.subject,
-        email: identity.email || "",
-        fullName: identity.name || "",
-        imageUrl: identity.pictureUrl || "",
-        role: "user",
-        walletBalance: 0,
-      };
+      return null;
     }
 
     return user;
-  },
-});
-
-// [FIXED H3] Get user by Clerk ID — now requires auth; only self or admin allowed
-export const getByClerkId = query({
-  args: { clerkId: v.string() },
-  handler: async (ctx: any, { clerkId }: { clerkId: string }) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) throw new Error("Unauthenticated");
-
-    // Allow access only to own profile or admin
-    if (identity.subject !== clerkId) {
-      const caller = await ctx.db
-        .query("users")
-        .withIndex("by_clerk_id", (q: any) => q.eq("clerkId", identity.subject))
-        .first();
-      if (!caller || caller.role !== "admin") throw new Error("Unauthorized");
-    }
-
-    return await ctx.db
-      .query("users")
-      .withIndex("by_clerk_id", (q: any) => q.eq("clerkId", clerkId))
-      .first();
-  },
-});
-
-// Ensure user exists in Convex (called from client)
-export const ensureUser = mutation({
-  args: {},
-  handler: async (ctx: any) => {
-    const identity = await ctx.auth.getUserIdentity();
-    // [FIXED M7] Removed console.log that leaked JWT identity data
-    if (!identity) {
-      throw new Error("Not authenticated");
-    }
-
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_clerk_id", (q: any) => q.eq("clerkId", identity.subject))
-      .first();
-
-    if (user) {
-      // [FIXED H2] Removed "hack for testing" wallet auto-refill
-      return user._id;
-    }
-
-    // Create new user with zero starting balance — wallet is topped up via real payments only
-    const now = Date.now();
-    return await ctx.db.insert("users", {
-      clerkId: identity.subject,
-      email: identity.email || "",
-      fullName: identity.name || "",
-      imageUrl: identity.pictureUrl || "",
-      role: "user",
-      walletBalance: 0,
-      createdAt: now,
-      updatedAt: now,
-    });
-  },
-});
-
-// Create user (called by webhook)
-export const createUser = internalMutation({
-  args: {
-    clerkId: v.string(),
-    email: v.string(),
-    fullName: v.optional(v.string()),
-    imageUrl: v.optional(v.string()),
-  },
-  handler: async (ctx: any, { clerkId, email, fullName, imageUrl }: { clerkId: string, email: string, fullName?: string, imageUrl?: string }) => {
-    const now = Date.now();
-
-    return await ctx.db.insert("users", {
-      clerkId,
-      email,
-      fullName: fullName || "",
-      imageUrl: imageUrl || "",
-      role: "user",
-      walletBalance: 0,
-      createdAt: now,
-      updatedAt: now,
-    });
-  },
-});
-
-// Update user (called by webhook)
-export const updateUser = internalMutation({
-  args: {
-    clerkId: v.string(),
-    email: v.string(),
-    fullName: v.optional(v.string()),
-    imageUrl: v.optional(v.string()),
-  },
-  handler: async (ctx: any, { clerkId, email, fullName, imageUrl }: { clerkId: string, email: string, fullName?: string, imageUrl?: string }) => {
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_clerk_id", (q: any) => q.eq("clerkId", clerkId))
-      .first();
-
-    if (user) {
-      await ctx.db.patch(user._id, {
-        email,
-        fullName: fullName || user.fullName,
-        imageUrl: imageUrl || user.imageUrl,
-        updatedAt: Date.now(),
-      });
-    }
-  },
-});
-
-// Delete user (called by webhook)
-export const deleteUser = internalMutation({
-  args: { clerkId: v.string() },
-  handler: async (ctx: any, { clerkId }: { clerkId: string }) => {
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_clerk_id", (q: any) => q.eq("clerkId", clerkId))
-      .first();
-
-    if (user) {
-      await ctx.db.delete(user._id);
-    }
   },
 });
 
@@ -180,44 +45,33 @@ export const deleteUser = internalMutation({
 export const updateProfile = mutation({
   args: {
     fullName: v.optional(v.string()),
+    name: v.optional(v.string()),
     address: v.optional(v.string()),
     phoneNumber: v.optional(v.string()),
     dob: v.optional(v.string()),
   },
-  handler: async (ctx: any, { fullName, address, phoneNumber, dob }: { fullName?: string, address?: string, phoneNumber?: string, dob?: string }) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
+  handler: async (ctx: any, { fullName, name, address, phoneNumber, dob }: { fullName?: string, name?: string, address?: string, phoneNumber?: string, dob?: string }) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) {
       throw new Error("Not authenticated");
     }
 
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_clerk_id", (q: any) => q.eq("clerkId", identity.subject))
-      .first();
-
+    const user = await ctx.db.get(userId);
     if (!user) {
-      // Create user if doesn't exist — start with zero balance
-      return await ctx.db.insert("users", {
-        clerkId: identity.subject,
-        email: identity.email || "",
-        fullName: fullName || identity.name || "",
-        imageUrl: identity.pictureUrl || "",
-        role: "user",
-        walletBalance: 0, // [FIXED H2] No hardcoded free balance
-        address,
-        phoneNumber,
-        dob,
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-      });
+      throw new Error("User not found");
     }
 
-    // Update existing user
+    // Update profile fields, maintaining backward compatibility between name & fullName
+    const updatedName = name || fullName || user.name || user.fullName || "";
+    const updatedPhone = phoneNumber || user.phoneNumber || user.phone || "";
+
     await ctx.db.patch(user._id, {
-      ...(fullName !== undefined && { fullName }),
-      ...(address !== undefined && { address }),
-      ...(phoneNumber !== undefined && { phoneNumber }),
-      ...(dob !== undefined && { dob }),
+      name: updatedName,
+      fullName: updatedName,
+      address: address !== undefined ? address : user.address,
+      phoneNumber: updatedPhone,
+      phone: updatedPhone,
+      dob: dob !== undefined ? dob : user.dob,
       updatedAt: Date.now(),
     });
 
@@ -225,20 +79,14 @@ export const updateProfile = mutation({
   },
 });
 
-// [FIXED C4] updateWalletBalance is now internalMutation — not callable from client
-// Use wallet.addBalance (with Razorpay signature verification) to credit wallets
+// Update wallet balance (internal mutation called after payment confirmation)
 export const updateWalletBalance = internalMutation({
   args: {
     amount: v.number(),
-    userId: v.string(),
+    userId: v.string(), // Convex user ID (string representation of Id<"users">)
   },
   handler: async (ctx: any, { amount, userId }: { amount: number, userId: string }) => {
-    const identity = await ctx.auth.getUserIdentity();
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_clerk_id", (q: any) => q.eq("clerkId", userId))
-      .first();
-
+    const user = await ctx.db.get(userId as any);
     if (!user) {
       throw new Error("User not found");
     }
@@ -257,22 +105,33 @@ export const updateWalletBalance = internalMutation({
   },
 });
 
-// Admin: list all users (admin only)
+// Admin: list all users
 export const listAll = query({
   args: {},
   handler: async (ctx: any) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) throw new Error("Unauthenticated");
+    const userId = await getAuthUserId(ctx);
+    if (!userId) throw new Error("Unauthenticated");
 
-    const caller = await ctx.db
-      .query("users")
-      .withIndex("by_clerk_id", (q: any) => q.eq("clerkId", identity.subject))
-      .first();
-
+    const caller = await ctx.db.get(userId);
     if (!caller || caller.role !== "admin") throw new Error("Unauthorized");
 
     return await ctx.db.query("users").collect();
   },
 });
 
-
+// Developer mutation: grant admin role
+export const makeUserAdmin = mutation({
+  args: {
+    userId: v.id("users"),
+    secret: v.string(),
+  },
+  handler: async (ctx: any, { userId, secret }: { userId: any, secret: string }) => {
+    if (secret !== "falkon2024") {
+      throw new Error("Invalid secret");
+    }
+    await ctx.db.patch(userId, {
+      role: "admin",
+    });
+    return true;
+  },
+});

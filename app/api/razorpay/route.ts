@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import Razorpay from "razorpay";
-import { auth } from "@clerk/nextjs/server";
+import { ConvexHttpClient } from "convex/browser";
+import { convexAuthNextjsToken } from "@convex-dev/auth/nextjs/server";
+import { api } from "@/convex/_generated/api";
+
+const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 
 // Simple in-memory rate limiter (resets per serverless invocation; use Redis/Upstash for production)
 const requestCounts = new Map<string, { count: number; resetAt: number }>();
@@ -23,10 +27,16 @@ function isRateLimited(userId: string): boolean {
 export async function POST(req: Request) {
   try {
     // [FIXED C8 - Auth] Require authenticated session
-    const { userId } = await auth();
-    if (!userId) {
+    const token = await convexAuthNextjsToken();
+    if (!token) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+
+    const user = await convex.query(api.users.current, {}, { token });
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const userId = user._id;
 
     // [FIXED M4] Basic rate limiting per user
     if (isRateLimited(userId)) {

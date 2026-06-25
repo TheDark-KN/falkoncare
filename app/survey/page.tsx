@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useCallback, useEffect, useMemo } from "react";
-import { useUser } from "@clerk/nextjs";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { toast } from "sonner";
@@ -243,7 +242,8 @@ const successVariants = {
 // Main Survey Page
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 function SurveyPageContent() {
-  const { user, isLoaded } = useUser();
+  const user = useQuery(api.users.current);
+  const isLoaded = user !== undefined;
   const submitSurvey = useMutation(api.surveys.submitSurvey);
   const generateUploadUrl = useMutation(api.surveys.generateUploadUrl);
 
@@ -256,8 +256,8 @@ function SurveyPageContent() {
   const societies: SocietyOption[] =
     (societiesResult as SocietyOption[] | undefined) ?? [];
 
-  const surveyorName = user?.fullName ?? user?.firstName ?? "Surveyor";
-  const surveyorId = user?.id ?? "";
+  const surveyorName = user?.name ?? user?.fullName ?? "Surveyor";
+  const surveyorId = user?._id ?? "";
 
   const [formData, setFormData] = useState<SurveyFormData>(
     getDefaultFormData(surveyorName, surveyorId)
@@ -279,12 +279,12 @@ function SurveyPageContent() {
         ...prev,
         surveyInformation: {
           ...prev.surveyInformation,
-          surveyorName: user.fullName ?? user.firstName ?? "Surveyor",
-          surveyorId: user.id,
+          surveyorName: user.name ?? user.fullName ?? "Surveyor",
+          surveyorId: user._id,
         },
         declaration: {
           ...prev.declaration,
-          signatureName: user.fullName ?? user.firstName ?? "Surveyor",
+          signatureName: user.name ?? user.fullName ?? "Surveyor",
         },
       }));
     }

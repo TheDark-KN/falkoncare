@@ -1,16 +1,13 @@
 import { v, ConvexError } from "convex/values";
 import { mutation, query } from "./_generated/server";
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Falkon Survey — Convex Backend
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+import { getAuthUserId } from "@convex-dev/auth/server";
 
 // Generate a secure upload URL for files
 export const generateUploadUrl = mutation({
   args: {},
   handler: async (ctx) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) {
       throw new ConvexError("UNAUTHENTICATED");
     }
     return await ctx.storage.generateUploadUrl();
@@ -59,13 +56,8 @@ export const submitSurvey = mutation({
     timestamp: v.number(),
   },
   handler: async (ctx: any, args: any) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      // The Clerk → Convex JWT pipeline is not working.  The most common
-      // causes are: (1) the Clerk "convex" JWT template is missing, or
-      // (2) CLERK_JWT_ISSUER_DOMAIN on the Convex deployment does not
-      // match the Clerk instance.  See `convex/auth.config.ts` for
-      // setup notes.
+    const userId = await getAuthUserId(ctx);
+    if (!userId) {
       throw new ConvexError(
         "Sign-in expired or the Convex auth pipeline is mis-configured. " +
           "Please sign out and back in, and contact the team if the issue persists."
@@ -85,7 +77,7 @@ export const submitSurvey = mutation({
 
     const surveyId = await ctx.db.insert("surveys", {
       ...args,
-      submittedBy: identity.subject,
+      submittedBy: userId,
       createdAt: Date.now(),
     });
 
@@ -93,21 +85,16 @@ export const submitSurvey = mutation({
   },
 });
 
-
 // Get all surveys (admin-only)
 export const getAll = query({
   args: {},
   handler: async (ctx: any) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) {
       throw new ConvexError("UNAUTHENTICATED");
     }
 
-    const user = await ctx.db
-      .query("users")
-      .withIndex("by_clerk_id", (q: any) => q.eq("clerkId", identity.subject))
-      .first();
-
+    const user = await ctx.db.get(userId);
     if (!user || (user.role !== "admin" && user.role !== "staff")) {
       throw new ConvexError("UNAUTHORIZED");
     }
@@ -134,14 +121,14 @@ export const getAll = query({
 export const getBySurveyor = query({
   args: {},
   handler: async (ctx: any) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) {
       return [];
     }
 
     const surveys = await ctx.db
       .query("surveys")
-      .withIndex("by_surveyor", (q: any) => q.eq("surveyorId", identity.subject))
+      .withIndex("by_surveyor", (q: any) => q.eq("surveyorId", userId))
       .order("desc")
       .collect();
 
@@ -166,8 +153,8 @@ export const getBySurveyor = query({
 export const getSocieties = query({
   args: {},
   handler: async (ctx: any) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) {
       return [];
     }
 

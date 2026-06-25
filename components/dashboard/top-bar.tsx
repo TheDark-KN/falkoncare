@@ -4,7 +4,6 @@ import { useAppStore } from "@/lib/store"
 import { Icons } from "@/components/icons"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { useUser } from "@clerk/nextjs"
 import { useQuery } from "convex/react"
 import { api } from "@/convex/_generated/api"
 
@@ -14,7 +13,6 @@ interface TopBarProps {
 }
 
 export function TopBar({ title, onMenuClick }: TopBarProps) {
-  const { user } = useUser()
   const convexUser = useQuery(api.users.current)
   const { notifications } = useAppStore()
   const unreadCount = notifications.filter((n) => !n.read).length
@@ -63,21 +61,21 @@ export function TopBar({ title, onMenuClick }: TopBarProps) {
           <div className="flex items-center gap-3 pl-4 border-l border-slate-200 dark:border-slate-800 cursor-pointer group">
             <div className="text-right hidden md:block">
               <p className="text-sm font-bold text-sky-900 dark:text-white group-hover:text-primary transition-colors font-headline">
-                {convexUser?.fullName || user?.fullName || "User"}
+                {convexUser?.name || convexUser?.fullName || "User"}
               </p>
               <p className="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">
                 {convexUser?.role === "admin" ? "Administrator" : "Customer"}
               </p>
             </div>
-            {convexUser?.imageUrl || user?.imageUrl ? (
+            {convexUser?.image || convexUser?.imageUrl ? (
               <img
-                src={convexUser?.imageUrl || user?.imageUrl}
+                src={convexUser?.image || convexUser?.imageUrl}
                 alt="Profile"
                 className="w-10 h-10 rounded-full object-cover ring-2 ring-primary/10 group-hover:ring-primary/30 transition-all"
               />
             ) : (
               <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary/20 transition-all font-headline font-bold">
-                {(convexUser?.fullName || user?.fullName || "U")[0]}
+                {(convexUser?.name || convexUser?.fullName || "U")[0]}
               </div>
             )}
           </div>

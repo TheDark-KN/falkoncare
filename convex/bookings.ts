@@ -1,5 +1,6 @@
 import { v, ConvexError } from "convex/values";
 import { mutation, query } from "./_generated/server";
+import { getAuthUserId } from "@convex-dev/auth/server";
 
 // Error constants for consistent error handling
 export const ERRORS = {
@@ -16,24 +17,21 @@ const MAX_BOOKING_AMOUNT = 50000; // ₹50,000 maximum
 
 // Internal helper: verify caller is an admin
 async function assertAdmin(ctx: { auth: any; db: any }) {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) throw new ConvexError(ERRORS.UNAUTHENTICATED);
-    const user = await ctx.db
-        .query("users")
-        .withIndex("by_clerk_id", (q: any) => q.eq("clerkId", identity.subject))
-        .first();
+    const userId = await getAuthUserId(ctx);
+    if (!userId) throw new ConvexError(ERRORS.UNAUTHENTICATED);
+    const user = await ctx.db.get(userId);
     if (!user || user.role !== "admin") throw new ConvexError(ERRORS.UNAUTHORIZED);
-    return { identity, user };
+    return { userId, user };
 }
 
 // Internal helper: verify caller is authenticated
 async function assertAuth(ctx: { auth: any }) {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) throw new ConvexError(ERRORS.UNAUTHENTICATED);
-    return identity;
+    const userId = await getAuthUserId(ctx);
+    if (!userId) throw new ConvexError(ERRORS.UNAUTHENTICATED);
+    return userId;
 }
 
-// [FIXED C5] Admin-only query to get all bookings — now requires admin role
+// Admin-only query to get all bookings
 export const get = query({
     args: {},
     handler: async (ctx: any) => {
@@ -46,18 +44,18 @@ export const get = query({
 export const getByUser = query({
     args: {},
     handler: async (ctx: any) => {
-        const identity = await ctx.auth.getUserIdentity();
-        if (!identity) {
+        const userId = await getAuthUserId(ctx);
+        if (!userId) {
             return [];
         }
         return await ctx.db
             .query("bookings")
-            .withIndex("by_user", (q: any) => q.eq("userId", identity.subject))
+            .withIndex("by_user", (q: any) => q.eq("userId", userId))
             .collect();
     },
 });
 
-// [FIXED C7-a] Get bookings by specific user ID — now requires admin role
+// Get bookings by specific user ID — requires admin role
 export const getByUserId = query({
     args: { userId: v.string() },
     handler: async (ctx: any, { userId }: { userId: string }) => {
@@ -82,12 +80,12 @@ export const create = mutation({
         paymentMethod: v.union(v.literal("cash"), v.literal("wallet"), v.literal("upi"), v.literal("card"), v.literal("netbanking")),
     },
     handler: async (ctx: any, args: any) => {
-        const identity = await ctx.auth.getUserIdentity();
-        if (!identity) {
+        const userId = await getAuthUserId(ctx);
+        if (!userId) {
             throw new ConvexError(ERRORS.UNAUTHENTICATED);
         }
 
-        // [FIXED H4] Server-side amount validation — reject tampered amounts
+        // Server-side amount validation — reject tampered amounts
         if (
             typeof args.amount !== "number" ||
             args.amount < MIN_BOOKING_AMOUNT ||
@@ -97,10 +95,7 @@ export const create = mutation({
         }
 
         // Get user to check wallet balance if paying with wallet
-        const user = await ctx.db
-            .query("users")
-            .withIndex("by_clerk_id", (q: any) => q.eq("clerkId", identity.subject))
-            .first();
+        const user = await ctx.db.get(userId);
 
         // Handle payment logic
         let paymentStatus = "pending";
@@ -117,12 +112,11 @@ export const create = mutation({
             paymentStatus = "paid";
         } else if (["upi", "card", "netbanking"].includes(args.paymentMethod as string)) {
             // Online payments via Razorpay — payment is verified server-side before this mutation
-            // The wallet.addBalance mutation handles its own verification
             paymentStatus = "pending"; // Stays pending until payment webhook confirms
         }
 
         const bookingId = await ctx.db.insert("bookings", {
-            userId: identity.subject,
+            userId: userId,
             serviceName: args.serviceName,
             date: args.date,
             time: args.time,
@@ -138,7 +132,7 @@ export const create = mutation({
     },
 });
 
-// [FIXED C6] Update booking status — now enforces admin role (TODO resolved)
+// Update booking status — enforces admin role
 export const updateStatus = mutation({
     args: {
         id: v.id("bookings"),
@@ -162,14 +156,14 @@ export const cancel = mutation({
         id: v.id("bookings"),
     },
     handler: async (ctx: any, args: any) => {
-        const identity = await assertAuth(ctx);
+        const userId = await assertAuth(ctx);
 
         const booking = await ctx.db.get(args.id);
         if (!booking) {
             throw new Error("Booking not found");
         }
 
-        if (booking.userId !== identity.subject) {
+        if (booking.userId !== userId) {
             throw new Error("Unauthorized to cancel this booking");
         }
 
@@ -179,10 +173,7 @@ export const cancel = mutation({
 
         // If paid via wallet, refund the amount
         if (booking.paymentStatus === "paid") {
-            const user = await ctx.db
-                .query("users")
-                .withIndex("by_clerk_id", (q: any) => q.eq("clerkId", identity.subject))
-                .first();
+            const user = await ctx.db.get(userId);
 
             if (user) {
                 await ctx.db.patch(user._id, {
@@ -199,24 +190,20 @@ export const cancel = mutation({
     },
 });
 
-// [FIXED C7-b] Get booking by ID — now requires auth and ownership or admin role
+// Get booking by ID — requires auth and ownership or admin role
 export const getById = query({
     args: { id: v.id("bookings") },
     handler: async (ctx: any, args: any) => {
-        const identity = await ctx.auth.getUserIdentity();
-        if (!identity) throw new ConvexError(ERRORS.UNAUTHENTICATED);
+        const userId = await getAuthUserId(ctx);
+        if (!userId) throw new ConvexError(ERRORS.UNAUTHENTICATED);
 
         const booking = await ctx.db.get(args.id);
         if (!booking) return null;
 
         // Allow access only to the booking owner or an admin
-        if (booking.userId === identity.subject) return booking;
+        if (booking.userId === userId) return booking;
 
-        const user = await ctx.db
-            .query("users")
-            .withIndex("by_clerk_id", (q: any) => q.eq("clerkId", identity.subject))
-            .first();
-
+        const user = await ctx.db.get(userId);
         if (user?.role === "admin") return booking;
 
         throw new ConvexError(ERRORS.UNAUTHORIZED);

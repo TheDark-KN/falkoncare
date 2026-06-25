@@ -15,7 +15,6 @@ import { LocationPicker } from "@/components/booking/location-picker"
 import { PaymentMethods } from "@/components/payment/payment-methods"
 import type { PaymentMethod, RazorpayResponse } from "@/lib/types"
 import Link from "next/link"
-import { useUser } from "@clerk/nextjs"
 import { useMutation, useQuery, useConvexAuth } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import Script from "next/script"
@@ -23,17 +22,16 @@ import Script from "next/script"
 export default function ServiceBookingPage() {
   const params = useParams()
   const router = useRouter()
-  const { user: clerkUser, isLoaded } = useUser()
-  const { isAuthenticated } = useConvexAuth()
+  const { isLoading: isAuthLoading, isAuthenticated } = useConvexAuth()
 
   // Use Convex for user data and wallet balance
   const userData = useQuery(api.users.current)
   const user = userData ? {
-    clerkId: userData.clerkId,
+    _id: userData._id,
     email: userData.email,
-    fullName: userData.fullName || "",
+    fullName: userData.name || userData.fullName || "",
     walletBalance: userData.walletBalance || 0,
-    phoneNumber: userData.phoneNumber || "",
+    phoneNumber: userData.phone || userData.phoneNumber || "",
   } : null
 
   const service = serviceItems.find((s) => s.id === params.serviceId)
@@ -80,7 +78,7 @@ export default function ServiceBookingPage() {
   // Redirect to /complete-profile if profile is incomplete (no phone or DOB)
   useEffect(() => {
     if (userData) {
-      if (!userData.phoneNumber || !userData.dob) {
+      if (!(userData.phone || userData.phoneNumber) || !userData.dob) {
         toast.info("Please complete your profile to book a service.")
         router.push("/complete-profile")
       }
@@ -210,7 +208,7 @@ export default function ServiceBookingPage() {
       return
     }
 
-    if (!isLoaded || !isAuthenticated) {
+    if (!isAuthenticated) {
       toast.error("Please log in to book a service")
       return
     }
@@ -228,8 +226,8 @@ export default function ServiceBookingPage() {
       : ""
     const finalAddress = `${selectedAddress}${locationMetadata}`
 
-    const userEmail = clerkUser?.emailAddresses?.[0]?.emailAddress || user?.email || "user@example.com"
-    const userPhone = user?.phoneNumber || clerkUser?.primaryPhoneNumber?.phoneNumber || "7011365481"
+    const userEmail = user?.email || "user@example.com"
+    const userPhone = user?.phoneNumber || "7011365481"
 
     // ONLINE PAYMENT FLOW (Razorpay)
     if (["upi", "card", "netbanking"].includes(selectedPaymentMethod)) {
@@ -280,7 +278,7 @@ export default function ServiceBookingPage() {
             }
           },
           prefill: {
-            name: fullName || clerkUser?.fullName || "User",
+            name: fullName || user?.fullName || "User",
             email: userEmail,
             contact: userPhone,
           },
@@ -629,11 +627,11 @@ export default function ServiceBookingPage() {
                 <div className="space-y-3.5 text-sm font-headline font-semibold text-slate-600 dark:text-slate-350">
                   <div className="flex justify-between">
                     <span className="text-slate-400">Customer Name</span>
-                    <span className="text-slate-900 dark:text-slate-150">{fullName || clerkUser?.fullName || "User"}</span>
+                    <span className="text-slate-900 dark:text-slate-150">{fullName || user?.fullName || "User"}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-slate-400">Registered Mobile</span>
-                    <span className="text-slate-900 dark:text-slate-150">{user?.phoneNumber || clerkUser?.primaryPhoneNumber?.phoneNumber || "7011365481"}</span>
+                    <span className="text-slate-900 dark:text-slate-150">{user?.phoneNumber || "7011365481"}</span>
                   </div>
                   {selectedTankSize && (
                     <div className="flex justify-between">

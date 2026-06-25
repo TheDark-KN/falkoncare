@@ -6,7 +6,6 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Icons } from "@/components/icons"
 import Link from "next/link"
-import { useUser } from "@clerk/nextjs"
 import { useQuery } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import type { Doc } from "@/convex/_generated/dataModel"
@@ -23,11 +22,10 @@ function formatDate(value: number) {
 }
 
 export default function DashboardPage() {
-  const { isLoaded, user } = useUser()
   const bookings = useQuery(api.bookings.getByUser)
   const convexUser = useQuery(api.users.current)
 
-  const isLoading = !isLoaded || bookings === undefined || convexUser === undefined
+  const isLoading = bookings === undefined || convexUser === undefined
 
   // Calculate dynamic stats
   const stats = useMemo(() => {
@@ -120,7 +118,7 @@ export default function DashboardPage() {
         {/* Welcome Block */}
         <div>
           <h2 className="text-3xl font-headline font-black text-sky-900 dark:text-white tracking-tight">
-            Welcome back, {convexUser?.fullName?.split(" ")[0] || user?.firstName || "Aryan"}!
+            Welcome back, {convexUser?.name?.split(" ")[0] || convexUser?.fullName?.split(" ")[0] || "Aryan"}!
           </h2>
           <p className="text-slate-500 dark:text-slate-400 mt-1 font-medium font-headline">
             Your water hygiene status is currently{" "}
