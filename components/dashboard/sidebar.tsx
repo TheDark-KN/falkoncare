@@ -63,31 +63,34 @@ export function Sidebar({ userRole }: SidebarProps) {
 
       <aside
         className={cn(
-          "fixed left-0 top-0 h-screen bg-card border-r border-border flex flex-col transition-all duration-300 z-40",
+          "fixed left-0 top-0 h-screen bg-slate-50 dark:bg-slate-950 border-r border-slate-200/50 dark:border-slate-800/50 flex flex-col transition-all duration-300 z-40 p-4",
           collapsed ? "-translate-x-full lg:translate-x-0 lg:w-16" : "w-64",
         )}
       >
-        {/* Logo */}
-        <div className="h-16 flex items-center justify-between px-4 border-b border-border">
-          {!collapsed && (
-            <Link href="/" className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                 <img src="/icon.png" alt="Falkon Care" className="w-6 h-6 object-contain" />
+        {/* Brand Area / Logo */}
+        <div className="flex items-center justify-between mb-8 px-2">
+          <Link href="/" className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white">
+              <Icons.droplets className="w-5 h-5 fill-white" />
+            </div>
+            {!collapsed && (
+              <div>
+                <h1 className="text-lg font-black text-sky-900 dark:text-white leading-tight font-headline">Falkon Care</h1>
+                <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold font-headline">Water Hygiene Pro</p>
               </div>
-              <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/80">Falkon Care</span>
-            </Link>
-          )}
+            )}
+          </Link>
           <button
             onClick={handleToggle}
-            className="p-2 hover:bg-muted rounded-lg text-muted-foreground"
+            className="p-1.5 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg text-slate-500"
           >
-            {collapsed ? <Icons.chevronRight className="w-5 h-5" /> : <Icons.arrowLeft className="w-5 h-5" />}
+            {collapsed ? <Icons.chevronRight className="w-4 h-4" /> : <Icons.arrowLeft className="w-4 h-4" />}
           </button>
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 py-4 overflow-y-auto">
-          <ul className="space-y-1 px-2">
+        <nav className="flex-1 space-y-1">
+          <ul className="space-y-1">
             {navItems.map((item) => {
               const isActive = pathname === item.href
               const IconComponent = item.icon
@@ -98,10 +101,10 @@ export function Sidebar({ userRole }: SidebarProps) {
                   <Link
                     href={item.href}
                     className={cn(
-                      "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors relative",
+                      "flex items-center gap-3 px-4 py-3 rounded-lg font-headline text-sm font-semibold transition-all duration-300 ease-in-out relative",
                       isActive
-                        ? "bg-primary text-primary-foreground"
-                        : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                        ? "bg-sky-50 dark:bg-sky-900/20 text-sky-700 dark:text-sky-300"
+                        : "text-slate-500 dark:text-slate-400 hover:text-sky-600 dark:hover:text-sky-300 hover:bg-slate-200/50 dark:hover:bg-slate-800/50",
                     )}
                   >
                     <IconComponent className="w-5 h-5 flex-shrink-0" />
@@ -123,12 +126,21 @@ export function Sidebar({ userRole }: SidebarProps) {
           </ul>
         </nav>
 
-        {/* Logout */}
-        <div className="p-4 border-t border-border">
+        {/* New Cleaning Job CTA & Logout */}
+        <div className="space-y-4 pt-4 border-t border-slate-200/50 dark:border-slate-800/50">
+          {!collapsed && (
+            <Link href="/dashboard/services">
+              <Button className="w-full py-5 bg-gradient-to-br from-primary to-primary/80 hover:from-primary/95 hover:to-primary/75 text-white rounded-xl font-headline font-bold text-sm shadow-lg shadow-primary/20 active:scale-95 duration-200 flex items-center justify-center gap-2 border-0">
+                <Icons.plus className="w-4 h-4" />
+                New Cleaning Job
+              </Button>
+            </Link>
+          )}
+
           <Button
             variant="ghost"
             className={cn(
-              "w-full justify-start gap-3 text-muted-foreground hover:text-destructive hover:bg-destructive/10",
+              "w-full justify-start gap-3 text-slate-500 hover:text-destructive hover:bg-destructive/10 font-headline font-semibold",
               collapsed && "justify-center px-2",
             )}
             onClick={handleLogout}
