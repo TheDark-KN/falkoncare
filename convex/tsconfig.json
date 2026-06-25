@@ -22,6 +22,8 @@
   },
   "include": [
     "./auth.config.ts",
+    "./auth.ts",
+    "./ResendOTP.ts",
     "./schema.ts",
     "./bookings.ts",
     "./http.ts",
