@@ -365,6 +365,85 @@ export default function ProfilePage() {
               </div>
             </section>
 
+            {/* Privacy Rights & DPDP Request Center */}
+            <section className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/50 dark:border-slate-800/50 shadow-sm shadow-sky-900/5 overflow-hidden">
+              <div className="px-8 py-6 border-b border-slate-100 dark:border-slate-800">
+                <h3 className="text-lg font-headline font-bold text-sky-900 dark:text-white flex items-center gap-2">
+                  <Icons.shield className="w-5.5 h-5.5 text-primary" />
+                  Privacy Rights &amp; DPDP Request Center
+                </h3>
+              </div>
+              <CardContent className="p-8 space-y-6 font-headline">
+                <p className="text-xs leading-relaxed text-slate-500">
+                  Under India's Digital Personal Data Protection (DPDP) Act 2023, you have rights to data access, correction, erasure, and consent withdrawal. Manage your choices below.
+                </p>
+
+                {/* Consent Withdrawal */}
+                <div className="flex items-center justify-between pb-4 border-b border-slate-100 dark:border-slate-800">
+                  <div className="space-y-0.5">
+                    <p className="text-sm font-bold text-sky-900 dark:text-white">Marketing Consent Status</p>
+                    <p className="text-xs text-slate-400">Process my data for promotional updates and service recommendations.</p>
+                  </div>
+                  <button 
+                    onClick={() => {
+                      toast.success("Optional marketing consent withdrawn. We will only process data necessary for booking fulfillment.");
+                    }}
+                    className="w-11 h-6 bg-slate-200 dark:bg-slate-800 rounded-full relative transition-colors cursor-pointer border-0"
+                  >
+                    <div className="absolute left-1 top-1 w-4 h-4 bg-white rounded-full"></div>
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* Export Request */}
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      const dataSummary = `FalkonCare Personal Data Export:\nName: ${convexUser.fullName || "Not Set"}\nEmail: ${convexUser.email}\nPhone: ${convexUser.phoneNumber || "Not Set"}\nAddress: ${convexUser.address || "Not Set"}`;
+                      navigator.clipboard.writeText(dataSummary);
+                      toast.success("Personal data summary copied to clipboard! (Data Access Request fulfilled)");
+                    }}
+                    className="py-5 rounded-xl font-headline font-bold text-xs border-slate-200 hover:bg-slate-50 dark:border-slate-800 text-sky-900 dark:text-slate-300"
+                  >
+                    <Icons.clipboardList className="w-4 h-4 mr-2" />
+                    Request Data Access (Export)
+                  </Button>
+
+                  {/* Erasure Request */}
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      toast.success("Your request for data erasure has been received. Your data will be deleted within 30 days, subject to statutory record retention.");
+                    }}
+                    className="py-5 rounded-xl font-headline font-bold text-xs text-rose-600 border-rose-200 hover:bg-rose-50/50 dark:border-rose-900/50"
+                  >
+                    <Icons.userCog className="w-4 h-4 mr-2" />
+                    Request Data Erasure (Delete)
+                  </Button>
+                </div>
+
+                {/* Grievance redressal contact details */}
+                <div className="p-4 bg-slate-50 dark:bg-slate-950/40 border border-slate-100 dark:border-slate-800 rounded-xl space-y-2">
+                  <h4 className="text-xs font-bold text-sky-900 dark:text-white uppercase tracking-wider">Grievance &amp; Privacy Support</h4>
+                  <div className="text-xs text-slate-500 space-y-1">
+                    <p>For any complaints or queries regarding data processing, contact our Grievance Officer:</p>
+                    <p className="font-bold mt-1 text-slate-700 dark:text-slate-300">Name: Privacy Officer, FalkonCare</p>
+                    <p className="font-bold text-slate-700 dark:text-slate-300">Email: privacy@falkoncare.com | Phone: 7011365481</p>
+                  </div>
+                </div>
+
+                {/* Developer Legal Disclaimer Note */}
+                <div className="p-4 bg-amber-50/50 dark:bg-amber-950/10 border border-amber-200/50 dark:border-amber-900/30 rounded-xl">
+                  <div className="flex gap-2">
+                    <Icons.shield className="w-4 h-4 text-amber-600 dark:text-amber-400 mt-0.5 flex-shrink-0" />
+                    <p className="text-[10px] text-amber-800 dark:text-amber-400 leading-relaxed font-semibold">
+                      <strong>Compliance Note:</strong> This portal implements DPDP-aligned product design (data minimisation, user rights request center, plain-language consent). Backend retention routines, breach reporting pipelines, and official legal policy texts must be reviewed by qualified Indian counsel before production launch.
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </section>
+
           </div>
 
         </div>

@@ -42,6 +42,20 @@ export default function Page() {
             signInUrl="/sign-in"
           />
         </div>
+
+        {/* DPDP Compliance Notice */}
+        <div className="mt-6 p-5 bg-card/65 backdrop-blur-lg border border-border/50 rounded-2xl relative z-10 text-xs text-muted-foreground space-y-3 shadow-md">
+          <p className="font-semibold text-foreground flex items-center gap-1.5">
+            🔒 Digital Personal Data Protection (DPDP) Notice
+          </p>
+          <p className="leading-relaxed">
+            Falkon Care collects your name, mobile number, address/location, selected service, booking slot, and service notes only to create and fulfill your booking, provide service updates, support your request, and maintain required records. You can request access, correction, or deletion of your personal data, and you can contact us for privacy or grievance support at the contact details provided in our privacy notice.
+          </p>
+          <div className="text-[10px] opacity-80 leading-normal border-t border-border/40 pt-2 flex items-center gap-1">
+            <span>✓ Age Limit: By signing up, you confirm you are at least 18 years of age.</span>
+          </div>
+        </div>
+
       </div>
     </div>
   )

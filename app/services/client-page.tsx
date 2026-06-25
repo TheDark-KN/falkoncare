@@ -66,9 +66,9 @@ export function ServicesPageClient() {
                   </Button>
                 </Link>
                 <Button size="lg" variant="outline" className="h-14 px-8 text-lg border-primary/20 hover:bg-primary/5 text-foreground hover:text-primary transition-all hover:-translate-y-1 w-full sm:w-auto shadow-sm" asChild>
-                  <a href="tel:+919876543210">
+                  <a href="tel:+917011365481">
                     <Icons.phone className="w-5 h-5 mr-2" />
-                    Call +91 98765 43210
+                    Call +91 70113 65481
                   </a>
                 </Button>
               </div>
@@ -388,7 +388,7 @@ export function ServicesPageClient() {
                   </Button>
                 </Link>
                 <Button size="lg" variant="outline" className="text-lg h-14 px-8 border-white/30 hover:bg-white/10 text-white transition-all hover:-translate-y-1" asChild>
-                  <a href="tel:+919876543210">
+                  <a href="tel:+917011365481">
                     <Icons.phone className="w-5 h-5 mr-2" />
                     Call Now
                   </a>

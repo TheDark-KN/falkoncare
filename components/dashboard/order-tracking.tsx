@@ -41,7 +41,7 @@ const mockBookingData: BookingStatus = {
   status: 'in-transit',
   estimatedDelivery: '2023-06-15T14:30:00',
   driverName: 'Amit Sharma',
-  driverPhone: '+91 9876543210',
+  driverPhone: '+91 7011365481',
   vehicleNumber: 'DL01AB1234',
 }
 

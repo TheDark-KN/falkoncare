@@ -102,7 +102,7 @@ export default function RootLayout({
                 "longitude": "77.2090"
               },
               "url": "https://falkoncare.com",
-              "telephone": "+919876543210",
+              "telephone": "+917011365481",
               "priceRange": "₹₹",
               "openingHoursSpecification": {
                 "@type": "OpeningHoursSpecification",

@@ -297,12 +297,12 @@ export default function BookingDetailsPage() {
 
                   {/* Actions buttons */}
                   <div className="w-full grid grid-cols-2 gap-3 pt-2">
-                    <a href={`tel:+919876543210`} className="flex-1">
+                    <a href={`tel:+917011365481`} className="flex-1">
                       <Button variant="outline" className="w-full rounded-xl py-5 font-headline font-bold flex items-center justify-center gap-1.5">
                         <Icons.phone className="w-4 h-4" /> Call
                       </Button>
                     </a>
-                    <a href={`https://wa.me/919876543210`} className="flex-1" target="_blank" rel="noreferrer">
+                    <a href={`https://wa.me/917011365481`} className="flex-1" target="_blank" rel="noreferrer">
                       <Button variant="outline" className="w-full rounded-xl py-5 font-headline font-bold flex items-center justify-center gap-1.5">
                         <Icons.messageCircle className="w-4 h-4" /> Chat
                       </Button>
@@ -374,7 +374,7 @@ export default function BookingDetailsPage() {
                     </Button>
                   )}
 
-                  <Link href={`https://wa.me/919876543210?text=I%20need%20help%20with%20booking%20%23${booking._id}`} target="_blank" rel="noreferrer" className="block">
+                  <Link href={`https://wa.me/917011365481?text=I%20need%20help%20with%20booking%20%23${booking._id}`} target="_blank" rel="noreferrer" className="block">
                     <Button
                       variant="outline"
                       className="w-full py-5 rounded-xl font-headline font-bold text-slate-600 hover:text-sky-900 dark:text-slate-300 dark:hover:text-white border-slate-200 hover:bg-slate-50 dark:border-slate-800 flex items-center justify-center gap-2"

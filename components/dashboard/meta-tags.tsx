@@ -63,7 +63,7 @@ const MetaTags = () => {
           "@type": "LocalBusiness",
           "name": "WaterTank Booking",
           "image": "https://www.watertankbooking.com/images/logo.png",
-          "telephone": "+91-9876543210",
+          "telephone": "+91-7011365481",
           "email": "info@watertankbooking.com",
           "address": {
             "@type": "PostalAddress",

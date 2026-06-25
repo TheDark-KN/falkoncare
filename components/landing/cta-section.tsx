@@ -61,7 +61,7 @@ export function CTASection() {
                 className="w-full h-14 px-8 text-lg border-2 border-white/40 text-white hover:bg-white/10 hover:border-white bg-transparent transition-all hover:-translate-y-1 rounded-xl group"
               >
                 <Icons.phone className="w-5 h-5 mr-3 group-hover:scale-110 transition-transform" />
-                Call +91 9876543210
+                Call +91 70113 65481
               </Button>
             </a>
           </div>

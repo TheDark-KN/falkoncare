@@ -148,7 +148,7 @@ const ContactSupport = () => {
                   <span className="text-xl">📞</span>
                   <div>
                     <h4 className="font-semibold text-foreground text-sm">Phone Support</h4>
-                    <a href="tel:+91-9876543210" className="text-primary hover:underline text-sm">+91-9876543210</a>
+                    <a href="tel:+91-7011365481" className="text-primary hover:underline text-sm">+91-7011365481</a>
                     <p className="text-xs text-muted-foreground">Available 24/7 for emergencies</p>
                   </div>
                 </div>
@@ -184,7 +184,7 @@ const ContactSupport = () => {
         <div className="mt-10 p-6 rounded-2xl bg-gradient-to-r from-red-500/10 to-orange-500/10 border border-red-500/20 text-center">
           <h3 className="text-xl font-bold text-foreground mb-2">Emergency Support</h3>
           <p className="text-muted-foreground mb-4">Our emergency team is available 24/7 for urgent issues.</p>
-          <a href="tel:+91-9876543210">
+          <a href="tel:+91-7011365481">
             <Button className="bg-red-500 hover:bg-red-600 text-white">
               <Icons.phone className="w-4 h-4 mr-2" />
               Call Emergency Support
