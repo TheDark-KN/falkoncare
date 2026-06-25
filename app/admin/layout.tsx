@@ -20,7 +20,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
     redirect("/signin");
   }
 
-  const user = await convex.query(api.users.current, {}, { token });
+  const user = await convex.query(api.users.current, { token });
   if (!user || user.role !== "admin") {
     redirect("/dashboard");
   }

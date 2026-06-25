@@ -4,18 +4,27 @@ import { v } from "convex/values";
 
 export default defineSchema({
   ...authTables,
-  users: authTables.users
+  users: defineTable({
+    email: v.string(),
+    emailVerificationTime: v.optional(v.number()),
+    phone: v.optional(v.string()),
+    phoneVerificationTime: v.optional(v.number()),
+    isAnonymous: v.optional(v.boolean()),
+    name: v.optional(v.string()),
+    image: v.optional(v.string()),
+    imageStorageId: v.optional(v.id("_storage")),
+    dob: v.optional(v.string()),
+    role: v.optional(v.union(v.literal("admin"), v.literal("user"), v.literal("staff"), v.literal("customer"))),
+    profileComplete: v.optional(v.boolean()),
+    walletBalance: v.optional(v.number()),
+    address: v.optional(v.string()),
+    processedPaymentIds: v.optional(v.array(v.string())),
+    imageUrl: v.optional(v.string()),
+  })
     .index("email", ["email"])
-    .extend({
-      phone: v.optional(v.string()),
-      dob: v.optional(v.string()),
-      role: v.optional(v.union(v.literal("admin"), v.literal("user"), v.literal("staff"), v.literal("customer"))),
-      profileComplete: v.optional(v.boolean()),
-      walletBalance: v.optional(v.number()),
-      address: v.optional(v.string()),
-      processedPaymentIds: v.optional(v.array(v.string())),
-      imageUrl: v.optional(v.string()),
-    }),
+    .index("emailVerificationTime", ["emailVerificationTime"])
+    .index("phone", ["phone"])
+    .index("phoneVerificationTime", ["phoneVerificationTime"]),
 
   surveys: defineTable({
     surveyorId: v.string(),
