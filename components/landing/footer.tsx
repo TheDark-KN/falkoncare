@@ -39,7 +39,7 @@ export function Footer() {
             <div className="space-y-4">
               <h5 className="text-xs font-bold uppercase tracking-widest text-sky-800 dark:text-sky-500 font-headline">Contact Info</h5>
               <ul className="space-y-2 text-xs">
-                <li className="text-slate-500 flex items-center gap-1.5"><Icons.phone className="w-3.5 h-3.5 text-primary" /><a href="tel:+919876543210" className="hover:text-primary">+91 98765 43210</a></li>
+                <li className="text-slate-500 flex items-center gap-1.5"><Icons.phone className="w-3.5 h-3.5 text-primary" /><a href="tel:+91 7011365481" className="hover:text-primary">+91 98765 43210</a></li>
                 <li className="text-slate-500 flex items-center gap-1.5"><Icons.mail className="w-3.5 h-3.5 text-primary" /><a href="mailto:support@falkoncare.com" className="hover:text-primary">support@falkoncare.com</a></li>
               </ul>
             </div>
