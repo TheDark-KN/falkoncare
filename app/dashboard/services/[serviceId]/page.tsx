@@ -77,6 +77,16 @@ export default function ServiceBookingPage() {
     }
   }, [userData])
 
+  // Redirect to /complete-profile if profile is incomplete (no phone or DOB)
+  useEffect(() => {
+    if (userData) {
+      if (!userData.phoneNumber || !userData.dob) {
+        toast.info("Please complete your profile to book a service.")
+        router.push("/complete-profile")
+      }
+    }
+  }, [userData, router])
+
   const timeSlots = ["09:00 AM", "11:00 AM", "01:00 PM", "03:00 PM", "05:00 PM"]
 
   // Calculate price

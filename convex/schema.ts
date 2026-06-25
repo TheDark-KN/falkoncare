@@ -88,6 +88,7 @@ export default defineSchema({
         walletBalance: v.optional(v.number()),
         address: v.optional(v.string()),
         phoneNumber: v.optional(v.string()),
+        dob: v.optional(v.string()),
         createdAt: v.number(),
         updatedAt: v.number(),
         // [FIXED C3] Tracks processed Razorpay payment IDs to prevent replay attacks

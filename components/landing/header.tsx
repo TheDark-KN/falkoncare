@@ -6,7 +6,7 @@ import { Icons } from "@/components/icons"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet"
-import { SignedIn, SignedOut, UserButton, useUser } from "@clerk/nextjs"
+import { Show, UserButton, useUser } from "@clerk/nextjs"
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -86,15 +86,15 @@ export function Header() {
 
             {/* Auth Block */}
             <div className="flex items-center gap-4 pl-4 border-l border-border/60">
-              <SignedOut>
+              <Show when="signed-out">
                 <Button variant="ghost" size="sm" className="font-semibold text-sm hover:text-primary hover:bg-transparent" asChild>
                   <Link href="/sign-in">Login</Link>
                 </Button>
                 <Button className="bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-bold shadow-md hover:shadow-lg rounded-xl transition-all" size="sm" asChild>
                   <Link href="/sign-up">Sign Up</Link>
                 </Button>
-              </SignedOut>
-              <SignedIn>
+              </Show>
+              <Show when="signed-in">
                 {isAdmin && (
                   <Link
                     href="/admin"
@@ -122,14 +122,13 @@ export function Header() {
                   <Link href="/dashboard">Dashboard</Link>
                 </Button>
                 <UserButton
-                  afterSignOutUrl="/"
                   appearance={{
                     elements: {
                       avatarBox: "w-8.5 h-8.5 border border-primary/20",
                     },
                   }}
                 />
-              </SignedIn>
+              </Show>
             </div>
           </nav>
 
@@ -194,15 +193,15 @@ export function Header() {
                   </nav>
                   
                   <div className="flex flex-col gap-3 pt-4 border-t border-border/60">
-                    <SignedOut>
+                    <Show when="signed-out">
                       <Button variant="outline" className="w-full font-semibold justify-center rounded-xl" asChild>
                         <Link href="/sign-in" onClick={() => setMobileMenuOpen(false)}>Login</Link>
                       </Button>
                       <Button className="w-full bg-primary text-primary-foreground font-bold justify-center rounded-xl shadow-md" asChild>
                         <Link href="/sign-up" onClick={() => setMobileMenuOpen(false)}>Sign Up</Link>
                       </Button>
-                    </SignedOut>
-                    <SignedIn>
+                    </Show>
+                    <Show when="signed-in">
                       {isAdmin && (
                         <Link
                           href="/admin"
@@ -226,9 +225,9 @@ export function Header() {
                         <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)}>Dashboard</Link>
                       </Button>
                       <div className="flex items-center justify-center py-2">
-                        <UserButton afterSignOutUrl="/" />
+                        <UserButton />
                       </div>
-                    </SignedIn>
+                    </Show>
                   </div>
                 </div>
               </SheetContent>

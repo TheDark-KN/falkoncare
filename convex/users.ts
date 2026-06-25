@@ -182,8 +182,9 @@ export const updateProfile = mutation({
     fullName: v.optional(v.string()),
     address: v.optional(v.string()),
     phoneNumber: v.optional(v.string()),
+    dob: v.optional(v.string()),
   },
-  handler: async (ctx: any, { fullName, address, phoneNumber }: { fullName?: string, address?: string, phoneNumber?: string }) => {
+  handler: async (ctx: any, { fullName, address, phoneNumber, dob }: { fullName?: string, address?: string, phoneNumber?: string, dob?: string }) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) {
       throw new Error("Not authenticated");
@@ -205,6 +206,7 @@ export const updateProfile = mutation({
         walletBalance: 0, // [FIXED H2] No hardcoded free balance
         address,
         phoneNumber,
+        dob,
         createdAt: Date.now(),
         updatedAt: Date.now(),
       });
@@ -215,6 +217,7 @@ export const updateProfile = mutation({
       ...(fullName !== undefined && { fullName }),
       ...(address !== undefined && { address }),
       ...(phoneNumber !== undefined && { phoneNumber }),
+      ...(dob !== undefined && { dob }),
       updatedAt: Date.now(),
     });
 
