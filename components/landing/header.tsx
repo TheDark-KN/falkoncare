@@ -205,41 +205,55 @@ export function Header() {
                   </nav>
                   
                   <div className="flex flex-col gap-3 pt-4 border-t border-border/60">
-                    <Show when="signed-out">
-                      <Button variant="outline" className="w-full font-semibold justify-center rounded-xl" asChild>
-                        <Link href="/sign-in" onClick={() => setMobileMenuOpen(false)}>Login</Link>
-                      </Button>
-                      <Button className="w-full bg-primary text-primary-foreground font-bold justify-center rounded-xl shadow-md" asChild>
-                        <Link href="/sign-up" onClick={() => setMobileMenuOpen(false)}>Sign Up</Link>
-                      </Button>
-                    </Show>
-                    <Show when="signed-in">
-                      {isAdmin && (
+                    {!isAuthLoading && !isAuthenticated && (
+                      <>
+                        <Button variant="outline" className="w-full font-semibold justify-center rounded-xl" asChild>
+                          <Link href="/signin" onClick={() => setMobileMenuOpen(false)}>Login</Link>
+                        </Button>
+                        <Button className="w-full bg-primary text-primary-foreground font-bold justify-center rounded-xl shadow-md" asChild>
+                          <Link href="/signup" onClick={() => setMobileMenuOpen(false)}>Sign Up</Link>
+                        </Button>
+                      </>
+                    )}
+                    {!isAuthLoading && isAuthenticated && (
+                      <>
+                        {isAdmin && (
+                          <Link
+                            href="/admin"
+                            className={`px-4 py-3 rounded-xl font-medium flex items-center justify-between ${
+                              pathname.startsWith("/admin") ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-muted/50"
+                            }`}
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            Admin
+                            <Icons.shield className="w-4 h-4" />
+                          </Link>
+                        )}
                         <Link
-                          href="/admin"
-                          className={`px-4 py-3 rounded-xl font-medium flex items-center justify-between ${
-                            pathname.startsWith("/admin") ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-muted/50"
-                          }`}
+                          href="/dashboard/bookings"
+                          className="px-4 py-3 rounded-xl font-medium text-muted-foreground hover:bg-muted/50 flex items-center justify-between"
                           onClick={() => setMobileMenuOpen(false)}
                         >
-                          Admin
-                          <Icons.shield className="w-4 h-4" />
+                          My Bookings
                         </Link>
-                      )}
-                      <Link
-                        href="/dashboard/bookings"
-                        className="px-4 py-3 rounded-xl font-medium text-muted-foreground hover:bg-muted/50 flex items-center justify-between"
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
-                        My Bookings
-                      </Link>
-                      <Button variant="outline" className="w-full font-semibold justify-center rounded-xl" asChild>
-                        <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)}>Dashboard</Link>
-                      </Button>
-                      <div className="flex items-center justify-center py-2">
-                        <UserButton />
-                      </div>
-                    </Show>
+                        <Button variant="outline" className="w-full font-semibold justify-center rounded-xl" asChild>
+                          <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)}>Dashboard</Link>
+                        </Button>
+                        <Link href="/dashboard/profile" className="flex items-center justify-center py-2" onClick={() => setMobileMenuOpen(false)}>
+                          {convexUser?.image || convexUser?.imageUrl ? (
+                            <img
+                              src={convexUser?.image || convexUser?.imageUrl}
+                              alt="Profile"
+                              className="w-9 h-9 rounded-full object-cover border border-primary/20"
+                            />
+                          ) : (
+                            <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-primary font-headline font-bold text-sm">
+                              {(convexUser?.name || convexUser?.fullName || "U")[0]}
+                            </div>
+                          )}
+                        </Link>
+                      </>
+                    )}
                   </div>
                 </div>
               </SheetContent>

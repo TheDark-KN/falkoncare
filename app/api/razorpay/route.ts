@@ -4,8 +4,6 @@ import { ConvexHttpClient } from "convex/browser";
 import { convexAuthNextjsToken } from "@convex-dev/auth/nextjs/server";
 import { api } from "@/convex/_generated/api";
 
-const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
-
 // Simple in-memory rate limiter (resets per serverless invocation; use Redis/Upstash for production)
 const requestCounts = new Map<string, { count: number; resetAt: number }>();
 const RATE_LIMIT_WINDOW_MS = 60 * 1000; // 1 minute
@@ -32,7 +30,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const user = await convex.query(api.users.current, {}, { token });
+    const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
+    convex.setAuth(token);
+
+    const user = await convex.query(api.users.current);
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

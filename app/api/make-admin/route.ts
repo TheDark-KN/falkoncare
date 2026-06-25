@@ -3,7 +3,6 @@ import { ConvexHttpClient } from "convex/browser";
 import { convexAuthNextjsToken } from "@convex-dev/auth/nextjs/server";
 import { api } from "@/convex/_generated/api";
 
-const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 const SETUP_SECRET = "falkon2024";
 
 export async function GET(request: Request) {
@@ -22,7 +21,10 @@ export async function GET(request: Request) {
     );
   }
 
-  const user = await convex.query(api.users.current, {}, { token });
+  const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
+  convex.setAuth(token);
+
+  const user = await convex.query(api.users.current);
   if (!user) {
     return NextResponse.json(
       { error: "User not found or unauthenticated." },

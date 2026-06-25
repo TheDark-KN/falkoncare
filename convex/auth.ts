@@ -17,31 +17,17 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
   providers: [
     Password({
       profile(params) {
-        if (params.flow === "signUp") {
-          const { error, data } = ProfileSchema.safeParse({
-            name: params.name,
-            phone: params.phone,
-            dob: params.dob,
-          });
-          if (error) {
-            throw new ConvexError(error.flatten().fieldErrors);
-          }
-          return {
-            email: params.email as string,
-            name: data.name,
-            phone: data.phone,
-            dob: data.dob,
-            role: "customer",
-            profileComplete: true,
-          };
-        }
+        const name = typeof params.name === "string" ? params.name : undefined;
+        const phone = typeof params.phone === "string" ? params.phone : undefined;
+        const dob = typeof params.dob === "string" ? params.dob : undefined;
+
         return {
           email: params.email as string,
-          name: params.name as string | undefined,
-          phone: params.phone as string | undefined,
-          dob: params.dob as string | undefined,
-          role: "customer",
-          profileComplete: true,
+          ...(name !== undefined && { name }),
+          ...(phone !== undefined && { phone }),
+          ...(dob !== undefined && { dob }),
+          role: "customer" as const,
+          profileComplete: true as const,
         };
       },
     }),
