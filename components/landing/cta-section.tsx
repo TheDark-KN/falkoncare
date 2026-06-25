@@ -54,7 +54,7 @@ export function CTASection() {
                 <Icons.arrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
-            <a href="tel:+919876543210" className="w-full sm:w-auto">
+            <a href="tel:+91 70113 65481" className="w-full sm:w-auto">
               <Button
                 size="lg"
                 variant="outline"
