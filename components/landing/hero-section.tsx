@@ -47,28 +47,27 @@ export function HeroSection({
   }
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-slate-900 via-slate-800 to-background text-white py-16 md:py-28">
+    <section className="relative min-h-[750px] lg:min-h-[850px] flex items-center overflow-hidden px-4 sm:px-6 lg:px-12 py-16 md:py-24 bg-surface-container-low" id="hero">
       {/* Background visual detail */}
-      <div className="absolute inset-0 pointer-events-none opacity-30">
-        <div className="absolute -top-1/4 -right-1/4 w-[50rem] h-[50rem] bg-gradient-to-br from-primary/30 to-teal-500/20 blur-[120px] rounded-full" />
-        <div className="absolute -bottom-1/4 -left-1/4 w-[40rem] h-[40rem] bg-gradient-to-tr from-accent/20 to-transparent blur-[120px] rounded-full" />
+      <div className="absolute inset-0 pointer-events-none opacity-20">
+        <div className="absolute -top-1/4 -right-1/4 w-[50rem] h-[50rem] bg-gradient-to-br from-primary/20 to-secondary/10 blur-[120px] rounded-full" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid md:grid-cols-12 gap-12 items-center">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           
-          {/* Left Column: Headline and Search */}
-          <div className="md:col-span-7 flex flex-col space-y-6 md:space-y-8 text-left">
+          {/* Left Column: Headline, Description and Search */}
+          <div className="space-y-6 sm:space-y-8 text-left">
             
             {/* Trust Indicator / Rating Badge */}
             <motion.div
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="inline-flex items-center gap-2 w-fit px-3 py-1.5 bg-white/10 backdrop-blur-md border border-white/10 rounded-full text-xs sm:text-sm font-semibold"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-secondary-container text-on-secondary-container rounded-full text-xs font-bold tracking-wider uppercase"
             >
-              <Icons.star className="w-4 h-4 text-amber-400 fill-amber-400" />
-              <span>4.8 Rating (10,000+ Bookings in Delhi NCR)</span>
+              <Icons.shield className="w-3.5 h-3.5" />
+              <span>Delhi NCR's Leading Hygiene Partner</span>
             </motion.div>
 
             {/* Headline */}
@@ -76,12 +75,9 @@ export function HeroSection({
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.1 }}
-              className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.1] text-white"
+              className="text-4xl sm:text-5xl lg:text-6xl font-headline font-extrabold text-on-background leading-[1.1] -tracking-[0.03em]"
             >
-              Home services, <br />
-              <span className="text-primary font-extrabold bg-gradient-to-r from-cyan-400 to-teal-300 bg-clip-text text-transparent">
-                on demand.
-              </span>
+              Professional <span className="gradient-text">Water Tank</span> Cleaning Service
             </motion.h1>
 
             {/* Sub-headline */}
@@ -89,17 +85,44 @@ export function HeroSection({
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-base sm:text-lg text-slate-350 max-w-xl text-slate-300 font-medium leading-relaxed"
+              className="text-base sm:text-lg md:text-xl text-on-surface-variant max-w-xl leading-relaxed"
             >
-              Get certified water tank cleaning, pipe maintenance, and water quality testing professionals right at your doorstep.
+              Pure water starts with a pristine tank. We utilize medical-grade sterilization and 6-stage cleaning to ensure your family's health.
             </motion.p>
 
-            {/* Unified Search Widget - styled like Urban Company */}
+            {/* CTAs */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.25 }}
+              className="flex flex-wrap gap-4 pt-2"
+            >
+              <button 
+                onClick={() => {
+                  const el = document.getElementById("services");
+                  el?.scrollIntoView({ behavior: "smooth" });
+                }}
+                className="bg-primary text-white px-8 py-4 rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all text-sm sm:text-base"
+              >
+                Book Now
+              </button>
+              <button 
+                onClick={() => {
+                  const el = document.getElementById("pricing");
+                  el?.scrollIntoView({ behavior: "smooth" });
+                }}
+                className="bg-surface-container-high text-on-surface hover:bg-surface-container-highest px-8 py-4 rounded-xl font-bold transition-colors text-sm sm:text-base"
+              >
+                View Packages
+              </button>
+            </motion.div>
+
+            {/* Unified Search Widget */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="w-full max-w-xl bg-white text-slate-900 rounded-2xl shadow-2xl p-2 flex flex-col sm:flex-row gap-2 border border-slate-200"
+              className="w-full max-w-xl bg-white text-slate-900 rounded-2xl shadow-xl p-2 flex flex-col sm:flex-row gap-2 border border-slate-200"
             >
               {/* Location Picker */}
               <div className="flex items-center gap-2 px-3 py-2.5 sm:border-r border-slate-200 cursor-pointer hover:bg-slate-50 rounded-xl transition-colors shrink-0">
@@ -116,7 +139,7 @@ export function HeroSection({
                   value={searchInput}
                   onChange={handleInputChange}
                   placeholder="Search for tank cleaning, filter, UV..."
-                  className="w-full bg-transparent border-none outline-none focus:ring-0 text-sm font-semibold text-slate-800 placeholder:text-slate-450 placeholder:text-slate-400"
+                  className="w-full bg-transparent border-none outline-none focus:ring-0 text-sm font-semibold text-slate-800 placeholder:text-slate-400"
                 />
                 {searchInput && (
                   <button
@@ -136,15 +159,15 @@ export function HeroSection({
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.45 }}
-              className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-slate-350 text-slate-400"
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-slate-500"
             >
               <span className="font-medium">Suggestions:</span>
               {["Premium", "Basic", "Sump", "Filter", "Water quality"].map((suggest) => (
                 <button
                   key={suggest}
                   onClick={() => handleSuggestionClick(suggest)}
-                  className="px-3 py-1 bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all rounded-full font-semibold text-slate-200 text-xs"
+                  className="px-3 py-1 bg-white border border-slate-200 hover:bg-slate-50 transition-all rounded-full font-semibold text-slate-700 text-xs"
                 >
                   {suggest}
                 </button>
@@ -153,70 +176,27 @@ export function HeroSection({
 
           </div>
 
-          {/* Right Column: Category App-Grid */}
-          <div className="md:col-span-5 flex flex-col justify-center items-center">
-            <motion.div
-              variants={containerVariants}
-              initial="hidden"
-              animate="show"
-              className="w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 rounded-[32px] p-6 sm:p-8 shadow-2xl relative overflow-hidden"
-            >
-              {/* Background gradient accent inside box */}
-              <div className="absolute -top-12 -left-12 w-28 h-28 bg-primary/20 rounded-full blur-2xl" />
-              <div className="absolute -bottom-12 -right-12 w-28 h-28 bg-accent/20 rounded-full blur-2xl" />
-
-              <h3 className="text-center font-bold text-slate-300 text-sm uppercase tracking-wider mb-6 relative z-10">
-                Select a Service Category
-              </h3>
-
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 relative z-10 justify-items-center">
-                {serviceCategories.map((category) => {
-                  const IconComponent = getServiceIcon(category.icon)
-                  const isSelected = selectedCategory === category.id
-
-                  return (
-                    <motion.button
-                      key={category.id}
-                      variants={itemVariants}
-                      whileHover={{ scale: 1.05, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => onSelectCategory(category.id)}
-                      className={`flex flex-col items-center justify-center w-[110px] h-[110px] rounded-2xl border transition-all duration-300 p-2 text-center relative ${
-                        isSelected
-                          ? "bg-primary border-primary shadow-lg shadow-primary/30 text-white"
-                          : "bg-white/10 border-white/10 hover:bg-white/15 hover:border-white/25 text-slate-200 hover:text-white"
-                      }`}
-                    >
-                      <div className={`p-2 rounded-xl mb-2 transition-colors ${
-                        isSelected ? "bg-white/20" : "bg-white/10 group-hover:bg-white/15"
-                      }`}>
-                        <IconComponent className={`w-6 h-6 ${isSelected ? "text-white" : "text-primary"}`} />
-                      </div>
-                      <span className="text-[11px] sm:text-xs font-bold leading-tight line-clamp-2">
-                        {category.name}
-                      </span>
-                    </motion.button>
-                  )
-                })}
-
-                {/* Reset Filter Button */}
-                {selectedCategory && (
-                  <motion.button
-                    variants={itemVariants}
-                    whileHover={{ scale: 1.05 }}
-                    onClick={() => onSelectCategory(null)}
-                    className="flex flex-col items-center justify-center w-[110px] h-[110px] rounded-2xl border border-dashed border-white/20 bg-transparent text-slate-350 hover:bg-white/5 hover:border-white/40 transition-all p-2 text-center text-slate-400 hover:text-white"
-                  >
-                    <div className="p-2 rounded-xl bg-white/5 mb-2">
-                      <Icons.x className="w-6 h-6 text-slate-450 text-slate-400" />
-                    </div>
-                    <span className="text-[11px] sm:text-xs font-bold leading-tight">
-                      All Services
-                    </span>
-                  </motion.button>
-                )}
+          {/* Right Column: Filtration System Mockup Image */}
+          <div className="relative w-full">
+            <div className="absolute -inset-10 bg-primary/5 rounded-full blur-3xl"></div>
+            <div className="relative rounded-2xl overflow-hidden shadow-2xl transform rotate-1 hover:rotate-0 transition-transform duration-500 max-w-lg mx-auto">
+              <img 
+                alt="Clean water tank installation" 
+                className="w-full h-[350px] sm:h-[450px] md:h-[500px] object-cover" 
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCaQ-ftuIguz6W9rf5LIKdI4R-nMvBW22WwLB_vIECtJggsDuf0bPbwBsstBWkY8sx8M9j1L_LI3TDFT97Q6g6_eCOrP9AZJZxumQ0uFPO2K1p-qIiCvCcM_LaoZ4XmJSd-ORb3bQsSTN0hUYjHJIwWInB2eH43GoBCoa5zmH3-2zqJfbhF_wShIQINkpzsThsr8HY0aZBGGtdKNFkdGl9JIOM4sgIB9NwpU4_aKg5QbnLra21CvRN5Wt6JzzPe877kBzq2j_dlW94"
+              />
+              <div className="absolute bottom-6 left-6 right-6 bg-white/80 backdrop-blur-md p-6 rounded-xl border border-white/20 shadow-lg">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center">
+                    <Icons.droplets className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-primary uppercase">Current Water Purity</p>
+                    <p className="text-xl font-bold text-on-background">99.8% Bacteria Free</p>
+                  </div>
+                </div>
               </div>
-            </motion.div>
+            </div>
           </div>
 
         </div>

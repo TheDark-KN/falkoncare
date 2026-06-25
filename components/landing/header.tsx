@@ -22,7 +22,7 @@ export function Header() {
   const isActive = (path: string) => pathname === path
 
   return (
-    <header className="sticky top-0 z-50 bg-background/90 backdrop-blur-md border-b border-border/40 shadow-sm transition-all duration-350">
+    <header className="fixed top-0 w-full z-50 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl shadow-sm shadow-sky-900/5 border-b border-slate-200/50 transition-all duration-350">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
           
@@ -36,12 +36,12 @@ export function Header() {
                   className="w-full h-full object-contain"
                 />
               </div>
-              <span className="text-xl md:text-2xl font-black bg-gradient-to-r from-primary via-primary/90 to-foreground bg-clip-text text-transparent">
+              <span className="text-xl md:text-2xl font-black bg-gradient-to-r from-primary via-primary/90 to-foreground bg-clip-text text-transparent font-headline">
                 Falkon Care
               </span>
             </Link>
             
-            {/* Location selector, styled like Urban Company */}
+            {/* Location selector */}
             <div className="flex items-center gap-1.5 px-3 py-1.5 bg-muted/65 hover:bg-muted/80 text-foreground text-xs sm:text-sm font-semibold rounded-full cursor-pointer transition-colors border border-border/30">
               <Icons.mapPin className="w-3.5 h-3.5 text-primary" />
               <span>Delhi NCR</span>
@@ -50,20 +50,38 @@ export function Header() {
           </div>
 
           {/* Desktop Navigation - Right */}
-          <nav className="hidden md:flex items-center gap-6 lg:gap-8">
+          <nav className="hidden md:flex items-center gap-6 lg:gap-8 font-headline text-sm font-medium">
             <Link
-              href="/about"
-              className={`text-sm font-semibold transition-colors hover:text-primary ${
-                isActive("/about") ? "text-primary" : "text-muted-foreground"
+              href="/"
+              className={`text-slate-650 hover:text-primary transition-colors ${
+                pathname === "/" ? "text-primary font-bold border-b-2 border-primary" : "text-muted-foreground"
               }`}
             >
-              Register as Partner
+              Home
             </Link>
             <Link
-              href="/#faq"
-              className="text-sm font-semibold text-muted-foreground transition-colors hover:text-primary"
+              href="/#features"
+              className="text-muted-foreground hover:text-primary transition-colors px-2 py-1 rounded"
             >
-              Help
+              Features
+            </Link>
+            <Link
+              href="/#how-it-works"
+              className="text-muted-foreground hover:text-primary transition-colors px-2 py-1 rounded"
+            >
+              Process
+            </Link>
+            <Link
+              href="/#pricing"
+              className="text-muted-foreground hover:text-primary transition-colors px-2 py-1 rounded"
+            >
+              Pricing
+            </Link>
+            <Link
+              href="/#contact"
+              className="text-muted-foreground hover:text-primary transition-colors px-2 py-1 rounded"
+            >
+              Contact
             </Link>
 
             {/* Auth Block */}
@@ -81,7 +99,7 @@ export function Header() {
                   <Link
                     href="/admin"
                     className={`text-sm font-semibold transition-colors hover:text-primary ${
-                      pathname.startsWith("/admin") ? "text-primary" : "text-muted-foreground"
+                      pathname.startsWith("/admin") ? "text-primary font-bold" : "text-muted-foreground"
                     }`}
                   >
                     Admin
@@ -90,7 +108,7 @@ export function Header() {
                 <Link
                   href="/dashboard/bookings"
                   className={`text-sm font-semibold transition-colors hover:text-primary ${
-                    isActive("/dashboard/bookings") ? "text-primary" : "text-muted-foreground"
+                    isActive("/dashboard/bookings") ? "text-primary font-bold" : "text-muted-foreground"
                   }`}
                 >
                   My Bookings

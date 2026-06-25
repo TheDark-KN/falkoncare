@@ -49,6 +49,19 @@ module.exports = {
           '5': 'hsl(var(--chart-5))',
         },
         success: 'hsl(var(--success))',
+        "surface-container-lowest": "#ffffff",
+        "surface-container-low": "#f2f4f6",
+        "surface-container": "#eceef0",
+        "surface-container-high": "#e6e8ea",
+        "surface-container-highest": "#e0e3e5",
+        "on-background": "#191c1e",
+        "on-surface": "#191c1e",
+        "on-surface-variant": "#3f4850",
+        "on-primary-container": "#fdfcff",
+        "primary-container": "#007bb9",
+        "secondary-container": "#86f2e4",
+        "on-secondary-container": "#006f66",
+        "outline-variant": "#bfc7d2",
       },
       borderRadius: {
         lg: 'var(--radius)',
@@ -56,8 +69,11 @@ module.exports = {
         sm: 'calc(var(--radius) - 4px)',
       },
       fontFamily: {
-        sans: ['var(--font-roboto)', 'system-ui', 'sans-serif'],
-        display: ['var(--font-poppins)', 'system-ui', 'sans-serif'],
+        sans: ['var(--font-public-sans)', 'system-ui', 'sans-serif'],
+        display: ['var(--font-plus-jakarta-sans)', 'system-ui', 'sans-serif'],
+        headline: ['var(--font-plus-jakarta-sans)', 'system-ui', 'sans-serif'],
+        body: ['var(--font-public-sans)', 'system-ui', 'sans-serif'],
+        label: ['var(--font-public-sans)', 'system-ui', 'sans-serif'],
       },
       keyframes: {
         "accordion-down": {

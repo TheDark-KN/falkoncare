@@ -5,131 +5,51 @@ import Link from "next/link"
 
 export function Footer() {
   return (
-    <footer className="bg-foreground text-background py-12">
-      <div className="container mx-auto px-4">
-        <div className="grid md:grid-cols-4 gap-8">
-          {/* Brand */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <div className="relative w-10 h-10">
-                <img 
-                  src="/Gemini_Generated_Image_rwpfd0rwpfd0rwpf.png" 
-                  alt="Falkon Care Logo" 
-                  className="w-full h-full object-contain"
-                />
-              </div>
-              <span className="text-xl font-bold">Falkon Care</span>
-            </div>
-            <p className="text-background/70 text-sm">
-              Professional water tank cleaning services in Delhi NCR. Trusted by 10,000+ customers across Delhi, Noida, Gurgaon, Faridabad & Ghaziabad.
+    <footer className="bg-slate-50 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 py-16 text-slate-600 dark:text-slate-400">
+      <div className="max-w-7xl mx-auto px-8">
+        <div className="flex flex-col md:flex-row justify-between items-start mb-12 gap-12">
+          <div className="max-w-xs">
+            <span className="text-2xl font-black text-sky-900 dark:text-white font-headline block mb-4">Falkon Care</span>
+            <p className="font-sans text-xs text-slate-500 leading-relaxed mb-3">
+              Redefining hygiene standards through technology and professional dedication. Pure Water. Pure Professionalism.
             </p>
-            <p className="text-background/60 text-xs">
+            <p className="text-[10px] text-slate-400">
               <span className="font-semibold">Falkon Futurex Private Limited</span>
               <br />
               CIN: U39000DL2025PTC451909
             </p>
           </div>
-
-          {/* Services */}
-          <div>
-            <h4 className="font-semibold mb-4">Our Services</h4>
-            <ul className="space-y-2 text-sm text-background/70">
-              <li>
-                <Link href="/services" className="hover:text-primary transition-colors">
-                  Water Tank Cleaning Delhi
-                </Link>
-              </li>
-              <li>
-                <Link href="/services" className="hover:text-primary transition-colors">
-                  Tank Cleaning Noida
-                </Link>
-              </li>
-              <li>
-                <Link href="/services" className="hover:text-primary transition-colors">
-                  Tank Cleaning Gurgaon
-                </Link>
-              </li>
-              <li>
-                <Link href="/services" className="hover:text-primary transition-colors">
-                  Residential Tank Cleaning
-                </Link>
-              </li>
-              <li>
-                <Link href="/services" className="hover:text-primary transition-colors">
-                  Commercial Tank Cleaning
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Service Areas */}
-          <div>
-            <h4 className="font-semibold mb-4">Service Areas</h4>
-            <ul className="space-y-2 text-sm text-background/70">
-              <li>
-                <Link href="/services" className="hover:text-primary transition-colors">
-                  Delhi (All Areas)
-                </Link>
-              </li>
-              <li>
-                <Link href="/services" className="hover:text-primary transition-colors">
-                  Noida & Greater Noida
-                </Link>
-              </li>
-              <li>
-                <Link href="/services" className="hover:text-primary transition-colors">
-                  Gurgaon (Gurugram)
-                </Link>
-              </li>
-              <li>
-                <Link href="/services" className="hover:text-primary transition-colors">
-                  Faridabad
-                </Link>
-              </li>
-              <li>
-                <Link href="/services" className="hover:text-primary transition-colors">
-                  Ghaziabad
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Contact */}
-          <div>
-            <h4 className="font-semibold mb-4">Contact Falkon Care</h4>
-            <ul className="space-y-3 text-sm text-background/70">
-              <li className="flex items-center gap-2">
-                <Icons.phone className="w-4 h-4" />
-                <a href="tel:+919876543210" className="hover:text-primary">+91 98765 43210</a>
-              </li>
-              <li className="flex items-center gap-2">
-                <Icons.mail className="w-4 h-4" />
-                <a href="mailto:support@falkoncare.com" className="hover:text-primary">support@falkoncare.com</a>
-              </li>
-              <li className="flex items-start gap-2">
-                <Icons.mapPin className="w-4 h-4 mt-0.5" />
-                <span>South West Delhi, New Delhi, India - 110001</span>
-              </li>
-            </ul>
-            <div className="mt-4 pt-4 border-t border-background/10">
-              <h5 className="font-semibold text-xs mb-2">Quick Links</h5>
-              <ul className="space-y-1 text-xs text-background/60">
-                <li><Link href="/about" className="hover:text-primary">About Us</Link></li>
-                <li><Link href="/careers" className="hover:text-primary">Careers</Link></li>
-                <li><Link href="/privacy-policy" className="hover:text-primary">Privacy Policy</Link></li>
-                <li><Link href="/terms-of-service" className="hover:text-primary">Terms of Service</Link></li>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-12">
+            <div className="space-y-4">
+              <h5 className="text-xs font-bold uppercase tracking-widest text-sky-800 dark:text-sky-500 font-headline">Quick Links</h5>
+              <ul className="space-y-2 text-xs">
+                <li><Link className="text-slate-500 hover:text-sky-500 transition-colors" href="/privacy-policy">Privacy Policy</Link></li>
+                <li><Link className="text-slate-500 hover:text-sky-500 transition-colors" href="/terms-of-service">Terms of Service</Link></li>
+                <li><Link className="text-slate-500 hover:text-sky-500 transition-colors" href="/about">About Us</Link></li>
+              </ul>
+            </div>
+            <div className="space-y-4">
+              <h5 className="text-xs font-bold uppercase tracking-widest text-sky-800 dark:text-sky-500 font-headline">Services</h5>
+              <ul className="space-y-2 text-xs">
+                <li><Link className="text-slate-500 hover:text-sky-500 transition-colors" href="/services">Chemical Safety</Link></li>
+                <li><Link className="text-slate-500 hover:text-sky-500 transition-colors" href="/services">Tank Restoration</Link></li>
+                <li><Link className="text-slate-500 hover:text-sky-500 transition-colors" href="/services">UV Treatment</Link></li>
+              </ul>
+            </div>
+            <div className="space-y-4">
+              <h5 className="text-xs font-bold uppercase tracking-widest text-sky-800 dark:text-sky-500 font-headline">Contact Info</h5>
+              <ul className="space-y-2 text-xs">
+                <li className="text-slate-500 flex items-center gap-1.5"><Icons.phone className="w-3.5 h-3.5 text-primary" /><a href="tel:+919876543210" className="hover:text-primary">+91 98765 43210</a></li>
+                <li className="text-slate-500 flex items-center gap-1.5"><Icons.mail className="w-3.5 h-3.5 text-primary" /><a href="mailto:support@falkoncare.com" className="hover:text-primary">support@falkoncare.com</a></li>
               </ul>
             </div>
           </div>
         </div>
-
-        <div className="border-t border-background/10 mt-8 pt-8 text-center text-sm text-background/50">
-          <p className="mb-2">
-            &copy; {new Date().getFullYear()} Falkon Care - Falkon Futurex Private Limited. All rights reserved.
-          </p>
-          <p className="text-xs">
-            CIN: U39000DL2025PTC451909 | Professional Water Tank Cleaning Service in Delhi NCR
-          </p>
+        <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-slate-200/50">
+          <p className="font-sans text-xs text-slate-400">© {new Date().getFullYear()} Falkon Care. Pure Water. Pure Professionalism.</p>
+          <div className="flex gap-6 mt-4 md:mt-0">
+            <span className="font-sans text-[10px] text-slate-400 uppercase tracking-tighter">Powered by CleanTech</span>
+          </div>
         </div>
       </div>
     </footer>

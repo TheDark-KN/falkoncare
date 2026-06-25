@@ -9,38 +9,38 @@
   /* Saffron #FFC64F -> 41 100% 65% */
   /* Gunmetal #20373B -> 189 30% 18% */
 
-  --primary: 190 36% 49%;
+  --primary: 201 100% 29%;
   --primary-foreground: 0 0% 100%;
 
-  --secondary: 193 62% 85%;
-  --secondary-foreground: 189 30% 18%;
+  --secondary: 175 100% 21%;
+  --secondary-foreground: 0 0% 100%;
 
   --accent: 41 100% 65%;
-  --accent-foreground: 189 30% 18%;
+  --accent-foreground: 204 8% 11%;
 
   /* Very light tint of light blue for cards/bg */
-  --background: 193 40% 98%;
-  --foreground: 189 30% 18%;
+  --background: 210 20% 98%;
+  --foreground: 204 8% 11%;
   
   --card: 0 0% 100%;
-  --card-foreground: 189 30% 18%;
+  --card-foreground: 204 8% 11%;
   
   --popover: 0 0% 100%;
-  --popover-foreground: 189 30% 18%;
+  --popover-foreground: 204 8% 11%;
 
-  --muted: 193 40% 92%;
-  --muted-foreground: 189 20% 45%;
+  --muted: 210 10% 92%;
+  --muted-foreground: 204 8% 35%;
   
   --success: 142 76% 36%;
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 98%;
 
-  --border: 190 30% 85%;
-  --input: 190 30% 85%;
-  --ring: 190 36% 49%;
+  --border: 210 10% 88%;
+  --input: 210 10% 88%;
+  --ring: 201 100% 29%;
 
-  --chart-1: 190 36% 49%;
-  --chart-2: 193 62% 85%;
+  --chart-1: 201 100% 29%;
+  --chart-2: 175 100% 21%;
   --chart-3: 41 100% 65%;
   --chart-4: 180 30% 50%;
   --chart-5: 200 40% 60%;
@@ -50,37 +50,37 @@
 
 .dark {
   color-scheme: dark;
-  --primary: 41 100% 65%;
-  --primary-foreground: 189 30% 18%;
+  --primary: 201 100% 35%;
+  --primary-foreground: 0 0% 100%;
 
-  --secondary: 190 36% 49%;
+  --secondary: 175 100% 25%;
   --secondary-foreground: 0 0% 98%;
 
-  --accent: 193 62% 85%;
-  --accent-foreground: 189 30% 18%;
+  --accent: 41 100% 65%;
+  --accent-foreground: 204 8% 11%;
 
-  --background: 189 30% 18%; /* Gunmetal */
-  --foreground: 193 62% 85%; /* Light blue */
+  --background: 204 8% 11%;
+  --foreground: 210 20% 98%;
   
-  --card: 189 30% 14%;
-  --card-foreground: 193 62% 85%;
+  --card: 204 8% 14%;
+  --card-foreground: 210 20% 98%;
   
-  --popover: 189 30% 12%;
-  --popover-foreground: 193 62% 85%;
+  --popover: 204 8% 12%;
+  --popover-foreground: 210 20% 98%;
 
-  --muted: 189 20% 25%;
-  --muted-foreground: 193 30% 65%;
+  --muted: 204 8% 25%;
+  --muted-foreground: 210 20% 75%;
   
   --destructive: 0 62% 65%;
   --destructive-foreground: 0 0% 98%;
 
-  --border: 189 20% 30%;
-  --input: 189 20% 30%;
-  --ring: 41 100% 65%;
+  --border: 204 8% 25%;
+  --input: 204 8% 25%;
+  --ring: 201 100% 35%;
 
-  --chart-1: 41 100% 65%;
-  --chart-2: 190 36% 49%;
-  --chart-3: 193 62% 85%;
+  --chart-1: 201 100% 35%;
+  --chart-2: 175 100% 25%;
+  --chart-3: 41 100% 65%;
 }
 
 @layer base {
@@ -93,7 +93,7 @@
   }
   body {
     @apply text-foreground;
-    font-family: var(--font-roboto), system-ui, sans-serif;
+    font-family: var(--font-public-sans), system-ui, sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
     background: hsl(var(--background));
     min-height: 100vh;
@@ -103,7 +103,7 @@
   }
   h1, h2, h3, h4, h5, h6 {
     @apply text-balance font-bold tracking-tight;
-    font-family: var(--font-poppins), system-ui, sans-serif;
+    font-family: var(--font-plus-jakarta-sans), system-ui, sans-serif;
   }
   p {
     @apply text-balance leading-relaxed;

@@ -1,24 +1,22 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Roboto, Poppins } from "next/font/google"
+import { Public_Sans, Plus_Jakarta_Sans } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { ConvexClientProvider } from "@/components/providers/convex-provider"
 import { Toaster } from "sonner"
 import "./globals.css"
 
-// Roboto for body text
-const roboto = Roboto({
-  weight: ['300', '400', '500', '700'],
+// Public Sans for body text
+const publicSans = Public_Sans({
   subsets: ["latin"],
-  variable: "--font-roboto",
+  variable: "--font-public-sans",
   display: 'swap',
 })
 
-// Poppins for headings
-const poppins = Poppins({
-  weight: ['400', '500', '600', '700', '800'],
+// Plus Jakarta Sans for headings
+const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  variable: "--font-poppins",
+  variable: "--font-plus-jakarta-sans",
   display: 'swap',
 })
 
@@ -156,7 +154,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${roboto.variable} ${poppins.variable} font-sans antialiased`}>
+      <body className={`${publicSans.variable} ${plusJakartaSans.variable} font-sans antialiased`}>
         <ConvexClientProvider>
           {children}
           <Toaster />
