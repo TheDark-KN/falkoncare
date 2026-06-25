@@ -6,8 +6,6 @@ import { ConvexHttpClient } from "convex/browser";
 import { convexAuthNextjsToken } from "@convex-dev/auth/nextjs/server";
 import { api } from "@/convex/_generated/api";
 
-const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
-
 // Force dynamic rendering for all admin pages
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -20,7 +18,8 @@ export default async function AdminLayout({ children }: { children: ReactNode })
     redirect("/signin");
   }
 
-  const user = await convex.query(api.users.current, {}, { authToken: token });
+  const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!, { authToken: token });
+  const user = await convex.query(api.users.current);
   if (!user || user.role !== "admin") {
     redirect("/dashboard");
   }

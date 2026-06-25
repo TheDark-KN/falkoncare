@@ -35,7 +35,14 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
             profileComplete: true,
           };
         }
-        return { email: params.email as string };
+        return {
+          email: params.email as string,
+          name: params.name as string | undefined,
+          phone: params.phone as string | undefined,
+          dob: params.dob as string | undefined,
+          role: "customer",
+          profileComplete: true,
+        };
       },
     }),
     ResendOTP,
