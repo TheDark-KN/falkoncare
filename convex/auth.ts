@@ -13,6 +13,21 @@ const ProfileSchema = z.object({
   }, "Must be at least 18 years old"),
 });
 
+// Clean up environment variables at runtime to prevent base64/atob or JSON parsing errors.
+// This is robust against copy-paste mistakes (like literal \n sequences or outer quotes).
+if (process.env.JWT_PRIVATE_KEY) {
+  process.env.JWT_PRIVATE_KEY = process.env.JWT_PRIVATE_KEY.replace(/\\n/g, "\n");
+}
+if (process.env.JWKS) {
+  let jwks = process.env.JWKS.trim();
+  if (jwks.startsWith("'") && jwks.endsWith("'")) {
+    jwks = jwks.slice(1, -1);
+  } else if (jwks.startsWith('"') && jwks.endsWith('"')) {
+    jwks = jwks.slice(1, -1);
+  }
+  process.env.JWKS = jwks;
+}
+
 export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
   providers: [
     Password({
