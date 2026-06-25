@@ -40,7 +40,7 @@ const nextConfig = {
             value: [
               "default-src 'self'",
               // Next.js requires unsafe-inline for styles; Razorpay checkout needs its own origin; Cloudflare challenges allowed for CAPTCHA
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://checkout.razorpay.com https://api.razorpay.com https://*.clerk.accounts.dev https://*.accounts.dev https://*.clerk.com https://challenges.cloudflare.com https://clerk.falkoncare.com",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://checkout.razorpay.com https://api.razorpay.com https://*.clerk.accounts.dev https://*.accounts.dev https://*.clerk.com https://challenges.cloudflare.com https://clerk.falkoncare.com https://unpkg.com",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com",
               "font-src 'self' https://fonts.gstatic.com",
               "img-src 'self' data: https: blob:",

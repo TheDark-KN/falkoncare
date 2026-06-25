@@ -77,7 +77,28 @@ export default function ForgotPasswordPage() {
         toast.error("Please enter a valid email address.")
       } else {
         console.error("OTP send error:", err)
-        toast.error(err.message || "Failed to send code. Please try again.")
+        
+        let friendlyMessage = "Failed to send code. Please try again."
+        try {
+          // Parse stringified JSON errors returned by Resend/Convex backend
+          const parsed = JSON.parse(err.message)
+          if (parsed.message) {
+            friendlyMessage = parsed.message
+          }
+        } catch {
+          if (err.message) {
+            friendlyMessage = err.message
+          }
+        }
+
+        // Catch specific Resend Sandbox / Environment configuration warnings
+        if (friendlyMessage.toLowerCase().includes("sandbox mode")) {
+          friendlyMessage = "Resend Sandbox Mode: You can only send to your own registered developer email. Please test with your registered email or set up a custom domain on Resend."
+        } else if (friendlyMessage.toLowerCase().includes("api key") || friendlyMessage.toLowerCase().includes("unauthorized")) {
+          friendlyMessage = "Resend API Key Error: Please check that AUTH_RESEND_KEY is correctly set in your Convex environment variables."
+        }
+
+        toast.error(friendlyMessage, { duration: 6000 })
       }
     } finally {
       setIsSubmitting(false)

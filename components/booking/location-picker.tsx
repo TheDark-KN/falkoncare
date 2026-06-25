@@ -224,7 +224,7 @@ export function LocationPicker({
     }
   }
 
-  // Live geolocation detection
+  // Live geolocation detection with high-accuracy to low-accuracy fallback
   const handleGetCurrentLocation = () => {
     setIsGettingLocation(true)
     if (!navigator.geolocation) {
@@ -233,26 +233,39 @@ export function LocationPicker({
       return
     }
 
+    const optionsHigh = { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+    const optionsLow = { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }
+
+    const successCallback = async (position: GeolocationPosition) => {
+      const lat = position.coords.latitude
+      const lng = position.coords.longitude
+
+      setLatitude(lat)
+      setLongitude(lng)
+      setLocationSource("live")
+      updateMapLocation(lat, lng)
+      await reverseGeocode(lat, lng, "live")
+
+      toast.success("Live location detected!")
+      setIsGettingLocation(false)
+    }
+
     navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        const lat = position.coords.latitude
-        const lng = position.coords.longitude
-
-        setLatitude(lat)
-        setLongitude(lng)
-        setLocationSource("live")
-        updateMapLocation(lat, lng)
-        await reverseGeocode(lat, lng, "live")
-
-        toast.success("Live location detected!")
-        setIsGettingLocation(false)
-      },
+      successCallback,
       (error) => {
-        console.error("Geolocation error:", error)
-        toast.error("Location access denied or unavailable. Please pin manually.")
-        setIsGettingLocation(false)
+        console.warn("High accuracy geolocation failed, trying low accuracy fallback...", error)
+        // Fallback to low accuracy
+        navigator.geolocation.getCurrentPosition(
+          successCallback,
+          (err) => {
+            console.error("Geolocation error:", err)
+            toast.error("Location access denied or unavailable. Please pin manually.")
+            setIsGettingLocation(false)
+          },
+          optionsLow
+        )
       },
-      { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
+      optionsHigh
     )
   }
 

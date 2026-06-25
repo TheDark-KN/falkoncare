@@ -227,7 +227,7 @@ export default function BookingDetailsPage() {
             {/* Simulated Map Tracker Box */}
             <div className="bg-slate-200 dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm aspect-[16/9] relative border border-slate-300/30 dark:border-slate-700/30">
               {/* Map mockup background */}
-              <div className="absolute inset-0 bg-cover bg-center grayscale-[0.2] opacity-80" style={{ backgroundImage: `url('https://maps.googleapis.com/maps/api/staticmap?center=28.6139,77.2090&zoom=13&size=800x450&scale=2&maptype=roadmap&key=mock')` }}>
+              <div className="absolute inset-0 bg-cover bg-center grayscale-[0.2] opacity-80 bg-slate-50 dark:bg-slate-900">
                 {/* Fallback pattern representing streets */}
                 <div className="w-full h-full bg-[#f2f4f6] dark:bg-slate-950 flex items-center justify-center relative">
                   <div className="absolute w-[2px] h-full bg-white dark:bg-slate-850 left-1/4"></div>
