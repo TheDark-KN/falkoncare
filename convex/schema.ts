@@ -20,6 +20,10 @@ export default defineSchema({
     address: v.optional(v.string()),
     processedPaymentIds: v.optional(v.array(v.string())),
     imageUrl: v.optional(v.string()),
+    clerkId: v.optional(v.string()),
+    fullName: v.optional(v.string()),
+    createdAt: v.optional(v.number()),
+    updatedAt: v.optional(v.number()),
   })
     .index("email", ["email"])
     .index("emailVerificationTime", ["emailVerificationTime"])
