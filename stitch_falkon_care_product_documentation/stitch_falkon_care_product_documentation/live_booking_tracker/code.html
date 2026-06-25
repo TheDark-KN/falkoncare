@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Booking Tracking | Aquatic Precision</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Public+Sans:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-background": "#191c1e",
+                        "inverse-surface": "#2d3133",
+                        "inverse-on-surface": "#eff1f3",
+                        "surface-dim": "#d8dadc",
+                        "error-container": "#ffdad6",
+                        "on-surface-variant": "#3f4850",
+                        "tertiary-container": "#ac6200",
+                        "secondary-container": "#86f2e4",
+                        "tertiary-fixed": "#ffdcc0",
+                        "on-secondary": "#ffffff",
+                        "surface-container-low": "#f2f4f6",
+                        "surface": "#f7f9fb",
+                        "outline": "#707881",
+                        "surface-bright": "#f7f9fb",
+                        "on-tertiary-fixed": "#2d1600",
+                        "on-secondary-fixed": "#00201d",
+                        "secondary-fixed": "#89f5e7",
+                        "on-error-container": "#93000a",
+                        "background": "#f7f9fb",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed-variant": "#004b73",
+                        "tertiary": "#894d00",
+                        "on-tertiary": "#ffffff",
+                        "inverse-primary": "#93ccff",
+                        "secondary-fixed-dim": "#6bd8cb",
+                        "on-error": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary-fixed-variant": "#6b3b00",
+                        "surface-variant": "#e0e3e5",
+                        "on-surface": "#191c1e",
+                        "secondary": "#006a61",
+                        "on-primary": "#ffffff",
+                        "primary-container": "#007bb9",
+                        "surface-container-highest": "#e0e3e5",
+                        "primary-fixed-dim": "#93ccff",
+                        "surface-container": "#eceef0",
+                        "on-primary-container": "#fdfcff",
+                        "surface-container-high": "#e6e8ea",
+                        "on-secondary-container": "#006f66",
+                        "tertiary-fixed-dim": "#ffb875",
+                        "outline-variant": "#bfc7d2",
+                        "primary-fixed": "#cce5ff",
+                        "surface-tint": "#006398",
+                        "primary": "#006194",
+                        "on-tertiary-container": "#fffbff",
+                        "on-primary-fixed": "#001d31",
+                        "on-secondary-fixed-variant": "#005049"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Public Sans"],
+                        "label": ["Public Sans"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Public Sans', sans-serif; }
+        h1, h2, h3, h4 { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(24px);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface antialiased">
+<!-- TopNavBar Shell -->
+<header class="w-full sticky top-0 z-40 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl shadow-sm dark:shadow-none">
+<div class="flex justify-between items-center px-8 py-4 w-full">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold bg-gradient-to-br from-sky-700 to-sky-500 bg-clip-text text-transparent font-['Plus_Jakarta_Sans'] tracking-tight">Aquatic Precision</span>
+<nav class="hidden md:flex gap-6 items-center">
+<a class="text-slate-500 dark:text-slate-400 font-medium hover:text-sky-600 dark:hover:text-sky-300 transition-colors" href="#">Support</a>
+<a class="text-slate-500 dark:text-slate-400 font-medium hover:text-sky-600 dark:hover:text-sky-300 transition-colors" href="#">Emergency</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden md:flex items-center bg-surface-container-highest px-4 py-2 rounded-full gap-2">
+<span class="material-symbols-outlined text-outline text-sm">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-48" placeholder="Search resources..." type="text"/>
+</div>
+<button class="p-2 text-outline hover:text-primary transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined">help</span>
+</button>
+<button class="p-2 text-outline hover:text-primary transition-colors active:scale-95 duration-200 relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-fixed">
+<img alt="User profile avatar" data-alt="professional male avatar for user profile in corporate setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAS3kM-mrNbFcNbpdHOghEpaYK2WVmVpQxYydX6acOPaRXsnbau5ieR8S-RuNKnwPUWRTQE24EVhHtZTmJwZe4amliC3X3V2HptfKBG96nYszK1ZZEXXSvxbr5YzQyjiOUXzx5DiSkvv-g4GeDXT2xtLs8rK58ZLxfjyAs57aiN95D7ZMxRG1Y3kjpL2i1_JH88jqk7dwxA8pnd2My23JBb1NEwh4t9KLSeoa-w9Wy9hf6lD7oM1-0oXFsIID1LB3GNE_84d-uV58I"/>
+</div>
+</div>
+</div>
+<div class="bg-slate-100 dark:bg-slate-800 h-[1px]"></div>
+</header>
+<div class="flex min-h-[calc(100vh-73px)]">
+<!-- SideNavBar Shell -->
+<aside class="h-screen w-64 sticky top-[73px] bg-slate-50 dark:bg-slate-950 border-r border-slate-200/50 dark:border-slate-800/50 flex flex-col p-6 gap-y-2 font-['Plus_Jakarta_Sans'] text-sm hidden lg:flex">
+<div class="mb-8 px-2">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-lg" style="font-variation-settings: 'FILL' 1;">water_drop</span>
+</div>
+<div>
+<p class="font-extrabold text-sky-800 dark:text-sky-200 leading-tight">Client Portal</p>
+<p class="text-[10px] text-slate-500 uppercase tracking-widest">Precision Hygiene</p>
+</div>
+</div>
+</div>
+<!-- Tab: Services (Inactive) -->
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900/50 rounded-xl hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">water_drop</span>
+<span>Services</span>
+</a>
+<!-- Tab: Live Tracking (Active Mapping) -->
+<a class="flex items-center gap-3 px-4 py-3 bg-white dark:bg-slate-900 text-sky-700 dark:text-sky-400 shadow-sm rounded-xl font-bold hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">local_shipping</span>
+<span>Live Tracking</span>
+</a>
+<!-- Tab: Activity Log (Inactive) -->
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900/50 rounded-xl hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">history</span>
+<span>Activity Log</span>
+</a>
+<!-- Tab: My Assets (Inactive) -->
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900/50 rounded-xl hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">layers</span>
+<span>My Assets</span>
+</a>
+<div class="mt-auto pt-6 border-t border-slate-200 dark:border-slate-800">
+<button class="w-full bg-gradient-to-br from-primary to-primary-container text-white py-3 rounded-xl font-bold mb-4 active:scale-95 transition-transform">
+                    Book New Service
+                </button>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900/50 rounded-xl transition-all" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span>Sign Out</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 p-8 overflow-x-hidden">
+<!-- Breadcrumbs -->
+<nav class="flex items-center gap-2 mb-8 text-sm font-medium text-outline">
+<span>Dashboard</span>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span>Bookings</span>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="text-on-surface">Booking #WH-12345</span>
+</nav>
+<div class="grid grid-cols-12 gap-8">
+<!-- Left Column: Status and Map (Bento Layout) -->
+<div class="col-span-12 lg:col-span-8 flex flex-col gap-8">
+<!-- Live Tracking Status Card -->
+<div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm">
+<div class="flex justify-between items-start mb-10">
+<div>
+<h1 class="text-3xl font-extrabold tracking-tight mb-2">Technician En Route</h1>
+<p class="text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm">schedule</span>
+                                    Estimated arrival in <span class="font-bold text-primary">12 minutes</span> (2.4 miles away)
+                                </p>
+</div>
+<div class="flex gap-2">
+<span class="px-4 py-1.5 bg-secondary-container text-on-secondary-container rounded-full text-xs font-bold flex items-center gap-2">
+<span class="w-2 h-2 bg-on-secondary-container rounded-full animate-pulse"></span>
+                                    LIVE STATUS
+                                </span>
+</div>
+</div>
+<!-- Hygiene Meter (Progress Tracker) -->
+<div class="relative pt-1">
+<div class="flex mb-4 items-center justify-between">
+<div class="flex-1 text-center">
+<div class="w-10 h-10 mx-auto bg-primary text-white rounded-full flex items-center justify-center mb-2">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<p class="text-xs font-bold">Confirmed</p>
+</div>
+<div class="flex-1 h-[2px] bg-primary mx-4 -mt-6"></div>
+<div class="flex-1 text-center">
+<div class="w-10 h-10 mx-auto bg-primary text-white rounded-full flex items-center justify-center mb-2">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">local_shipping</span>
+</div>
+<p class="text-xs font-bold text-primary">En Route</p>
+</div>
+<div class="flex-1 h-[2px] bg-surface-container-highest mx-4 -mt-6"></div>
+<div class="flex-1 text-center">
+<div class="w-10 h-10 mx-auto bg-surface-container-highest text-outline rounded-full flex items-center justify-center mb-2">
+<span class="material-symbols-outlined text-lg">water_lux</span>
+</div>
+<p class="text-xs font-medium text-outline">Service</p>
+</div>
+<div class="flex-1 h-[2px] bg-surface-container-highest mx-4 -mt-6"></div>
+<div class="flex-1 text-center">
+<div class="w-10 h-10 mx-auto bg-surface-container-highest text-outline rounded-full flex items-center justify-center mb-2">
+<span class="material-symbols-outlined text-lg">verified</span>
+</div>
+<p class="text-xs font-medium text-outline">Complete</p>
+</div>
+</div>
+<div class="overflow-hidden h-2 mb-4 text-xs flex rounded-full bg-surface-container-highest">
+<div class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-gradient-to-r from-primary to-secondary" style="width:45%"></div>
+</div>
+</div>
+</div>
+<!-- Map Section -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm aspect-[16/9] relative">
+<img class="w-full h-full object-cover grayscale-[0.5] opacity-80" data-alt="clean minimal digital map interface with a tracking icon and route line moving through a residential neighborhood" data-location="Chicago" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBq9skAVLokG7cG39go5tPKDntvsBQr7R7cN-hzNPir_u0v-Q0aifYBaAmtbdVMtvIuuFriVWjXZrlKHBy5gyv_KYY1j5kCYkOPBGZaC04-CDaxB9aJXvL0OnLflcue0LCnb7jHqfCityohyOOmHUfzTIYj8KdCU0Z6dD3QuOf7rhHZOhmYEIC5UjYHtbYhzxjscDTLJRyRyY8DVZynov09vi92nlSxW2cR_yrWqfG9grlyDdKakcxSHH4N-9ZRk8la3m7ztuKKhf8"/>
+<!-- Floating Map Details -->
+<div class="absolute bottom-6 left-6 bg-white/90 backdrop-blur-md p-4 rounded-xl shadow-xl flex items-center gap-4 border border-white/50">
+<div class="w-12 h-12 rounded-lg bg-primary-container/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">near_me</span>
+</div>
+<div>
+<p class="text-[10px] text-outline uppercase font-bold tracking-tighter">Current Location</p>
+<p class="font-bold text-on-surface">North Michigan Ave, Chicago</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Appointment & Tech Info -->
+<div class="col-span-12 lg:col-span-4 flex flex-col gap-8">
+<!-- Technician Profile Card -->
+<div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm border-t-4 border-primary">
+<div class="flex flex-col items-center text-center">
+<div class="relative mb-4">
+<div class="w-24 h-24 rounded-2xl overflow-hidden shadow-lg">
+<img alt="Technician photo" data-alt="close up headshot of professional male technician smiling in clean industrial uniform" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAlU5hN3XBzETlinYBeFWCSNpesrpcyyaW2kJf_jcZXylo_NNTTb4aN6XU-zO66u0yHmhlut0ylsHRH4iO69Iw_jkYZAWTd8AnGGGZPcoPcuYPuqDx0kIQRxtIyMcGpFz7g9uXHtpDD50znq6iaP9jvIXFIIZjf_KY4vfq9uOQOwgs3A7KqzExXILJ2bLzhoo_eXz3fFkJFTb21SGq-kcrw9XB7_famuTHATc6uyfveJVWcrtVK44LVQyQGcQw022R_GJhhrIauePM"/>
+</div>
+<div class="absolute -bottom-2 -right-2 w-8 h-8 bg-secondary-container text-on-secondary-container rounded-lg flex items-center justify-center border-2 border-white">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+</div>
+<h2 class="text-xl font-bold">Marcus Sterling</h2>
+<p class="text-on-surface-variant text-sm mb-6">Senior Hydration Specialist • 4.9★</p>
+<div class="grid grid-cols-2 gap-3 w-full">
+<button class="flex items-center justify-center gap-2 bg-surface-container-high py-3 rounded-xl font-bold text-sm hover:bg-surface-container-highest transition-colors active:scale-95">
+<span class="material-symbols-outlined text-lg">chat_bubble</span>
+                                    Message
+                                </button>
+<button class="flex items-center justify-center gap-2 bg-surface-container-high py-3 rounded-xl font-bold text-sm hover:bg-surface-container-highest transition-colors active:scale-95">
+<span class="material-symbols-outlined text-lg">call</span>
+                                    Call
+                                </button>
+</div>
+</div>
+</div>
+<!-- Appointment Summary Card -->
+<div class="bg-surface-container-low p-8 rounded-xl flex flex-col gap-6">
+<h3 class="font-bold text-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">receipt_long</span>
+                            Appointment Summary
+                        </h3>
+<div class="space-y-4">
+<div class="flex justify-between items-start">
+<div>
+<p class="text-[10px] text-outline uppercase font-bold">Service Type</p>
+<p class="font-semibold text-on-surface">Whole Home UV-Filtration Check</p>
+</div>
+<span class="bg-primary-fixed text-on-primary-fixed-variant px-3 py-1 rounded-full text-[10px] font-extrabold uppercase">Preventative</span>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<p class="text-[10px] text-outline uppercase font-bold">Appointment ID</p>
+<p class="font-semibold text-on-surface">WH-12345</p>
+</div>
+</div>
+<div class="flex justify-between items-start">
+<div>
+<p class="text-[10px] text-outline uppercase font-bold">Address</p>
+<p class="font-semibold text-on-surface text-sm">742 Evergreen Terrace<br/>Springfield, IL 62704</p>
+</div>
+</div>
+<div class="pt-4 border-t border-outline-variant/30 flex justify-between items-center">
+<div>
+<p class="text-[10px] text-outline uppercase font-bold">Estimated Cost</p>
+<p class="text-xl font-extrabold text-on-surface">$189.00</p>
+</div>
+<button class="text-primary font-bold text-sm flex items-center gap-1 hover:underline">
+                                    View Details
+                                    <span class="material-symbols-outlined text-sm">open_in_new</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Help & Safety Card -->
+<div class="bg-gradient-to-br from-inverse-surface to-on-surface text-inverse-on-surface p-6 rounded-xl relative overflow-hidden">
+<div class="relative z-10">
+<h4 class="font-bold mb-2">Hygiene Protocols</h4>
+<p class="text-xs text-surface-dim mb-4 leading-relaxed">Our technicians strictly follow a 12-point sanitization protocol before entering your premises.</p>
+<a class="text-secondary-fixed font-bold text-xs flex items-center gap-1" href="#">
+                                Read our safety guarantee
+                                <span class="material-symbols-outlined text-xs">arrow_forward</span>
+</a>
+</div>
+<span class="material-symbols-outlined absolute -right-4 -bottom-4 text-white/5 text-8xl pointer-events-none">shield</span>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Bottom Mobile Nav -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 glass-nav border-t border-outline-variant/20 px-4 py-3 flex justify-around items-center z-50">
+<a class="flex flex-col items-center gap-1 text-slate-500" href="#">
+<span class="material-symbols-outlined">water_drop</span>
+<span class="text-[10px] font-bold">Services</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-sky-700" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">local_shipping</span>
+<span class="text-[10px] font-bold">Track</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-500" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="text-[10px] font-bold">Logs</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-500" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px] font-bold">Profile</span>
+</a>
+</nav>
+</body></html>

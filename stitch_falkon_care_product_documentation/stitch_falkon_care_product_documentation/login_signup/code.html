@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Falkon Care | Authentication</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Public+Sans:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "background": "#f7f9fb",
+              "surface-container-lowest": "#ffffff",
+              "on-primary-container": "#fdfcff",
+              "primary-fixed-dim": "#93ccff",
+              "on-background": "#191c1e",
+              "on-tertiary-fixed": "#2d1600",
+              "surface-dim": "#d8dadc",
+              "surface-variant": "#e0e3e5",
+              "tertiary-container": "#ac6200",
+              "tertiary-fixed": "#ffdcc0",
+              "on-secondary-fixed-variant": "#005049",
+              "on-secondary-fixed": "#00201d",
+              "on-error": "#ffffff",
+              "secondary": "#006a61",
+              "inverse-surface": "#2d3133",
+              "surface-container-highest": "#e0e3e5",
+              "inverse-on-surface": "#eff1f3",
+              "surface-container-high": "#e6e8ea",
+              "secondary-fixed": "#89f5e7",
+              "on-tertiary-container": "#fffbff",
+              "secondary-container": "#86f2e4",
+              "on-primary-fixed": "#001d31",
+              "on-surface": "#191c1e",
+              "surface-bright": "#f7f9fb",
+              "error": "#ba1a1a",
+              "on-surface-variant": "#3f4850",
+              "on-secondary-container": "#006f66",
+              "primary-container": "#007bb9",
+              "surface-container": "#eceef0",
+              "tertiary": "#894d00",
+              "on-error-container": "#93000a",
+              "primary-fixed": "#cce5ff",
+              "on-tertiary-fixed-variant": "#6b3b00",
+              "surface": "#f7f9fb",
+              "on-primary-fixed-variant": "#004b73",
+              "on-primary": "#ffffff",
+              "surface-tint": "#006398",
+              "outline": "#707881",
+              "error-container": "#ffdad6",
+              "primary": "#006194",
+              "on-secondary": "#ffffff",
+              "inverse-primary": "#93ccff",
+              "secondary-fixed-dim": "#6bd8cb",
+              "outline-variant": "#bfc7d2",
+              "surface-container-low": "#f2f4f6",
+              "tertiary-fixed-dim": "#ffb875",
+              "on-tertiary": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Public Sans"],
+              "label": ["Public Sans"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .auth-gradient {
+            background: linear-gradient(135deg, #006194 0%, #007bb9 100%);
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(24px);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body antialiased min-h-screen">
+<!-- Auth Shell - Split Layout -->
+<main class="flex min-h-screen">
+<!-- Left Side: Visual/Branding (Asymmetric Sheet Design) -->
+<section class="hidden lg:flex lg:w-1/2 relative overflow-hidden p-12 flex-col justify-between">
+<!-- Background Image with data-alt -->
+<div class="absolute inset-0 z-0">
+<img alt="Clean Water Concept" class="w-full h-full object-cover" data-alt="Close-up of crystal clear water splashing in a sterile, white environment with soft blue lighting and high-end aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCcD6d21xR267NI0XzGta6a8ow2DrLyY4WBasucFV7U7ePzJTHMzgmElbv_CQQzFFHq2L4ohvzfmx1fC1GAMr2_jZjWh31_HS7ElirYF4wZYXeJECMsNlHrmjtMVrF_RN-81lo43Jh5NnjJlU0yych7ZsEO6GiO5boWsnUcfGuVIiZmdW3oL5hqThlW8r0HILzxu8Ii3Hd3N8_aDFAvX2Js4Df3m-tkhOoqRSWuESi6HppT4w8lPcoRYf4JioYKvfdg22xoq4uG5mw"/>
+<div class="absolute inset-0 bg-primary/20 backdrop-brightness-75"></div>
+</div>
+<!-- Content Overlay -->
+<div class="relative z-10">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-4xl text-surface-container-lowest" data-icon="water_drop">water_drop</span>
+<h1 class="font-headline font-extrabold text-3xl tracking-tight text-surface-container-lowest">Falkon Care</h1>
+</div>
+</div>
+<div class="relative z-10 max-w-lg">
+<h2 class="font-headline font-bold text-5xl leading-tight text-surface-container-lowest mb-6">Purity through precision.</h2>
+<p class="text-xl text-primary-fixed leading-relaxed opacity-90">
+                    The next generation of water hygiene management. Engineered for professionals who demand excellence in safety and compliance.
+                </p>
+<!-- Hygiene Meter (Design System Specialized Component) -->
+<div class="mt-12 p-6 glass-panel rounded-xl inline-flex items-center gap-6 shadow-xl">
+<div class="relative w-16 h-16">
+<svg class="w-full h-full" viewbox="0 0 36 36">
+<path class="text-white/20 stroke-current" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke-width="3"></path>
+<path class="text-secondary stroke-current" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke-dasharray="85, 100" stroke-linecap="round" stroke-width="3"></path>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="text-xs font-bold text-primary">85%</span>
+</div>
+</div>
+<div>
+<p class="text-sm font-headline font-bold text-primary">Compliance Rate</p>
+<p class="text-xs text-on-surface-variant">System Status: Optimal</p>
+</div>
+</div>
+</div>
+<div class="relative z-10 flex gap-8">
+<div class="text-surface-container-lowest/70 text-xs font-medium">© 2024 Falkon Care</div>
+<div class="text-surface-container-lowest/70 text-xs font-medium">ISO 9001 Certified</div>
+</div>
+</section>
+<!-- Right Side: Form Content -->
+<section class="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 lg:p-24 bg-surface">
+<div class="w-full max-w-md">
+<!-- Header & Toggle -->
+<div class="mb-10">
+<div class="lg:hidden flex items-center gap-2 mb-8">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="water_drop">water_drop</span>
+<h1 class="font-headline font-extrabold text-xl tracking-tight text-primary">Falkon Care</h1>
+</div>
+<h3 class="font-headline font-bold text-3xl text-on-surface mb-2">Welcome back</h3>
+<p class="text-on-surface-variant font-body">Manage your water hygiene services with ease.</p>
+</div>
+<!-- Auth Toggle (Pill style) -->
+<div class="bg-surface-container-high p-1 rounded-full flex mb-8">
+<button class="flex-1 py-2.5 text-sm font-semibold rounded-full bg-surface-container-lowest text-primary shadow-sm transition-all duration-200">
+                        Login
+                    </button>
+<button class="flex-1 py-2.5 text-sm font-semibold rounded-full text-on-surface-variant hover:text-on-surface transition-all duration-200">
+                        Sign up
+                    </button>
+</div>
+<!-- Social Login -->
+<button class="w-full flex items-center justify-center gap-3 py-3 px-4 bg-surface-container-lowest border border-outline-variant/30 rounded-xl hover:bg-surface-container-low transition-colors duration-200 mb-6 group">
+<img alt="Google" class="w-5 h-5" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDi5W3EwjE4eFF3H4b19DwwZPcTVl--19xFViUL2m6KFLQBgj-SN4gKKzYG2XwbEwUTiyT8mwX_VoNMhuggH-EBpHQL-lrPF6dsC4WEecMm2FtYZWeJpQPmb27VAWpVoVZaIVVj1ct1SXASiK86aMmoVK3cV3XcZ11onrhpv1zLzyqx3SyB8Sj6JO8BAPxrqGMGeDEypjd9FVDjLF04GA065aRLVklaqWwsS5mwYoJ3lMcX1STCEXklfNjJl8s1JtRVrrwJsqHuIxs"/>
+<span class="font-semibold text-on-surface text-sm">Continue with Google</span>
+</button>
+<div class="relative flex items-center gap-4 mb-6">
+<div class="flex-grow h-px bg-outline-variant/20"></div>
+<span class="text-xs font-bold text-outline uppercase tracking-widest">or email</span>
+<div class="flex-grow h-px bg-outline-variant/20"></div>
+</div>
+<!-- Form Fields -->
+<form class="space-y-5">
+<div class="space-y-1.5">
+<label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider ml-1" for="email">Email Address</label>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors" data-icon="mail">mail</span>
+<input class="w-full pl-12 pr-4 py-3.5 bg-surface-container-highest border-none rounded-xl focus:ring-0 focus:bg-surface-container-lowest transition-all text-sm font-medium placeholder:text-outline/60" id="email" placeholder="name@company.com" type="email"/>
+<!-- Ghost border simulated with box shadow on focus via CSS if needed, or keeping it clean as per system -->
+</div>
+</div>
+<div class="space-y-1.5">
+<div class="flex justify-between items-end">
+<label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider ml-1" for="password">Password</label>
+<a class="text-xs font-bold text-primary hover:underline" href="#">Forgot?</a>
+</div>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors" data-icon="lock">lock</span>
+<input class="w-full pl-12 pr-12 py-3.5 bg-surface-container-highest border-none rounded-xl focus:ring-0 focus:bg-surface-container-lowest transition-all text-sm font-medium placeholder:text-outline/60" id="password" placeholder="••••••••" type="password"/>
+<button class="absolute right-4 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface" type="button">
+<span class="material-symbols-outlined text-xl" data-icon="visibility">visibility</span>
+</button>
+</div>
+</div>
+<!-- Remember Me -->
+<div class="flex items-center gap-2 py-2">
+<input class="w-4 h-4 rounded text-primary focus:ring-primary/20 border-outline-variant/50" id="remember" type="checkbox"/>
+<label class="text-sm text-on-surface-variant font-medium" for="remember">Stay signed in for 30 days</label>
+</div>
+<!-- CTA -->
+<button class="w-full auth-gradient text-on-primary-container font-headline font-bold py-4 rounded-xl shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all duration-300 active:scale-[0.98]" type="submit">
+                        Sign in to Dashboard
+                    </button>
+</form>
+<!-- Footer Text -->
+<div class="mt-10 text-center">
+<p class="text-sm text-on-surface-variant">
+                        By signing in, you agree to our 
+                        <a class="text-on-surface font-semibold hover:text-primary underline decoration-primary/20 transition-colors" href="#">Terms of Service</a> 
+                        and 
+                        <a class="text-on-surface font-semibold hover:text-primary underline decoration-primary/20 transition-colors" href="#">Privacy Policy</a>.
+                    </p>
+</div>
+</div>
+</section>
+</main>
+</body></html>

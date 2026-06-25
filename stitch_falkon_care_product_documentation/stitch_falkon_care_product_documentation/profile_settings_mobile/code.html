@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Falkon Care - Profile &amp; Settings</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Public+Sans:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-surface-variant": "#3f4850",
+                        "on-primary-fixed": "#001d31",
+                        "on-error-container": "#93000a",
+                        "inverse-on-surface": "#eff1f3",
+                        "surface-container-low": "#f2f4f6",
+                        "surface-container-high": "#e6e8ea",
+                        "on-primary-container": "#fdfcff",
+                        "secondary-container": "#86f2e4",
+                        "secondary": "#006a61",
+                        "primary": "#006194",
+                        "on-secondary-fixed-variant": "#005049",
+                        "on-primary": "#ffffff",
+                        "surface-bright": "#f7f9fb",
+                        "primary-container": "#007bb9",
+                        "inverse-primary": "#93ccff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-dim": "#d8dadc",
+                        "on-surface": "#191c1e",
+                        "on-secondary-fixed": "#00201d",
+                        "error": "#ba1a1a",
+                        "tertiary": "#894d00",
+                        "on-tertiary-fixed-variant": "#6b3b00",
+                        "surface-container-highest": "#e0e3e5",
+                        "inverse-surface": "#2d3133",
+                        "primary-fixed-dim": "#93ccff",
+                        "tertiary-fixed-dim": "#ffb875",
+                        "primary-fixed": "#cce5ff",
+                        "surface": "#f7f9fb",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-container": "#006f66",
+                        "on-tertiary-container": "#fffbff",
+                        "on-background": "#191c1e",
+                        "background": "#f7f9fb",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed": "#ffdcc0",
+                        "surface-variant": "#e0e3e5",
+                        "surface-container": "#eceef0",
+                        "outline-variant": "#bfc7d2",
+                        "outline": "#707881",
+                        "surface-tint": "#006398",
+                        "on-tertiary-fixed": "#2d1600",
+                        "tertiary-container": "#ac6200",
+                        "secondary-fixed": "#89f5e7",
+                        "on-primary-fixed-variant": "#004b73",
+                        "secondary-fixed-dim": "#6bd8cb",
+                        "error-container": "#ffdad6"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"],
+                        "body": ["Public Sans"],
+                        "label": ["Public Sans"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .fill-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+        /* Custom hide scrollbar */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body text-on-surface antialiased no-scrollbar">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full flex justify-between items-center px-6 h-16 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl shadow-[0_10px_40px_rgba(25,28,30,0.06)] z-50">
+<div class="flex items-center gap-4">
+<button class="text-sky-700 active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<h1 class="font-headline font-bold tracking-tight text-xl text-sky-900">Falkon Care</h1>
+</div>
+<div class="w-10 h-10 rounded-full overflow-hidden bg-surface-container-highest ring-2 ring-primary-fixed">
+<img alt="User profile photo" class="w-full h-full object-cover" data-alt="Close-up portrait of a professional man with a friendly expression in a clean studio setting with soft lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJbBdIGb0_dZ6b9AuOM9WohYKU9Ao9BPSV1gDJz4sEUfOZKkgurOKTmSwb5zlW2HMBHAgIICUN2rVUOhuKkLlmgDtYMadNJdVyn1yFCUF86b0pgoY5xMhyEH5EqttzUaXdDvou26NR-OQvAGI91_1z0d2BOX_3gS_CVHm0WPbPBNYQsWBQjueKWCOOUBT-0bDsCm_hzQm4rH9333KdocCGoAbircw9R-AvuIjo5jQEGRLD2VhLEvHsnWGYEqaGq40GBRlvscs83JM"/>
+</div>
+</header>
+<main class="pt-24 pb-32 px-5 max-w-md mx-auto space-y-6">
+<!-- Profile Card -->
+<section class="bg-surface-container-lowest rounded-xl p-6 shadow-[0_10px_40px_rgba(25,28,30,0.06)] relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4">
+<span class="bg-secondary-container text-on-secondary-container text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest">Premium</span>
+</div>
+<div class="flex items-center gap-5 mb-6">
+<div class="relative">
+<div class="w-20 h-20 rounded-2xl overflow-hidden shadow-lg">
+<img alt="User Avatar" class="w-full h-full object-cover" data-alt="Professional profile headshot of a man with clean grooming and a confident smile against a neutral backdrop" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3W09qBggav9C6LePUZxlBEspS5YHDQIXoTAifOme3FPFegrWmUgdDOLuTwqZQVYj8ydUocpIxBxRgXe3GLZHPkei1AdpeM-qwcSXxjwLw4H_OWC6K5ULO36eFasj1uGK37fgZ7fC_YXTiV5880NKm4OMmVZsAuqfKoChktAU8YnhWJI1KcoDVVZLg6DaEaC7fkH3A0MbL4sVVGi2JaO_o2G3i9Pu8Yku_i6xqBhEa0y1nvm35okAZnM0PvTK-cSWwb3-_V1gIRa4"/>
+</div>
+<div class="absolute -bottom-2 -right-2 bg-primary text-white p-1.5 rounded-lg shadow-md">
+<span class="material-symbols-outlined text-sm" data-icon="edit">edit</span>
+</div>
+</div>
+<div class="space-y-1">
+<h2 class="font-headline font-extrabold text-xl text-on-surface tracking-tight">Alex Rivers</h2>
+<p class="text-xs font-medium text-outline flex items-center gap-1 uppercase tracking-wider">
+<span class="material-symbols-outlined text-[14px] text-secondary fill-icon" data-icon="verified">verified</span>
+                        ID: FC-99283-X
+                    </p>
+</div>
+</div>
+<!-- Profile Completion Progress -->
+<div class="space-y-3">
+<div class="flex justify-between items-end">
+<span class="text-xs font-semibold text-on-surface-variant">Profile Completion</span>
+<span class="text-sm font-bold text-primary">85%</span>
+</div>
+<div class="h-2 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary to-primary-container rounded-full" style="width: 85%"></div>
+</div>
+<p class="text-[11px] text-outline leading-tight">Complete your verification to access higher credit limits and priority bookings.</p>
+</div>
+</section>
+<!-- Settings List -->
+<div class="space-y-4">
+<!-- Personal Details Section -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden transition-all active:scale-[0.98]">
+<button class="w-full flex items-center justify-between p-5 text-left">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-xl bg-sky-50 flex items-center justify-center text-sky-700">
+<span class="material-symbols-outlined fill-icon" data-icon="person">person</span>
+</div>
+<div>
+<span class="block font-headline font-bold text-on-surface">Personal Details</span>
+<span class="text-[11px] text-outline">Manage identity and contact info</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+<!-- Wallet & Billing -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden transition-all active:scale-[0.98]">
+<button class="w-full flex items-center justify-between p-5 text-left">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-xl bg-secondary-container/30 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined fill-icon" data-icon="account_balance_wallet">account_balance_wallet</span>
+</div>
+<div>
+<span class="block font-headline font-bold text-on-surface">Wallet &amp; Billing</span>
+<span class="text-[11px] text-outline">Payment methods and history</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+<!-- Notification Preferences -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden p-5 space-y-6">
+<div class="flex items-center gap-4 mb-2">
+<div class="w-10 h-10 rounded-xl bg-tertiary/10 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined fill-icon" data-icon="notifications">notifications</span>
+</div>
+<div>
+<span class="block font-headline font-bold text-on-surface">Notifications</span>
+<span class="text-[11px] text-outline">Push and Email alerts</span>
+</div>
+</div>
+<div class="space-y-4 pt-2">
+<label class="flex items-center justify-between cursor-pointer">
+<span class="text-sm font-medium text-on-surface-variant">Booking Updates</span>
+<div class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</div>
+</label>
+<label class="flex items-center justify-between cursor-pointer">
+<span class="text-sm font-medium text-on-surface-variant">Marketing Promos</span>
+<div class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</div>
+</label>
+</div>
+</div>
+<!-- Security & Privacy -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden transition-all active:scale-[0.98]">
+<button class="w-full flex items-center justify-between p-5 text-left">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-xl bg-error-container/30 flex items-center justify-center text-error">
+<span class="material-symbols-outlined fill-icon" data-icon="security">security</span>
+</div>
+<div>
+<span class="block font-headline font-bold text-on-surface">Security &amp; Privacy</span>
+<span class="text-[11px] text-outline">2FA, Password, &amp; Data</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Help Banner -->
+<section class="bg-primary-container p-6 rounded-2xl flex items-center gap-4 relative overflow-hidden group">
+<div class="absolute -right-4 -bottom-4 w-24 h-24 bg-white/10 rounded-full blur-2xl group-active:scale-150 transition-transform"></div>
+<div class="z-10 bg-white/20 p-3 rounded-xl backdrop-blur-md">
+<span class="material-symbols-outlined text-white" data-icon="support_agent">support_agent</span>
+</div>
+<div class="z-10 flex-1">
+<h3 class="text-white font-headline font-bold text-sm">Need help?</h3>
+<p class="text-white/80 text-xs mt-0.5">24/7 Priority Support available</p>
+</div>
+<button class="z-10 bg-white text-primary text-[11px] font-bold px-4 py-2 rounded-lg shadow-sm uppercase tracking-wider active:scale-95 transition-transform">
+                Chat
+            </button>
+</section>
+<!-- Footer -->
+<footer class="w-full py-12 px-6 flex flex-col items-center gap-4 mb-24 mt-auto">
+<p class="font-['Public_Sans'] text-xs text-slate-500 font-bold text-sky-700">Falkon Care</p>
+<div class="flex gap-4">
+<a class="font-['Public_Sans'] text-xs text-slate-500 hover:text-sky-600 transition-colors" href="#">Privacy</a>
+<a class="font-['Public_Sans'] text-xs text-slate-500 hover:text-sky-600 transition-colors" href="#">Terms</a>
+<a class="font-['Public_Sans'] text-xs text-slate-500 hover:text-sky-600 transition-colors" href="#">Contact</a>
+</div>
+<p class="font-['Public_Sans'] text-xs text-slate-500">© 2024 Falkon Care platform</p>
+</footer>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl shadow-[0_-10px_40px_rgba(25,28,30,0.06)] z-50 rounded-t-3xl">
+<a class="flex flex-col items-center justify-center text-slate-500 px-5 py-2 hover:bg-slate-100 transition-colors active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-['Public_Sans'] text-[10px] font-semibold uppercase tracking-wider mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 px-5 py-2 hover:bg-slate-100 transition-colors active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="event_note">event_note</span>
+<span class="font-['Public_Sans'] text-[10px] font-semibold uppercase tracking-wider mt-1">Bookings</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 px-5 py-2 hover:bg-slate-100 transition-colors active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span class="font-['Public_Sans'] text-[10px] font-semibold uppercase tracking-wider mt-1">Wallet</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-sky-100 text-sky-900 rounded-2xl px-5 py-2 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined fill-icon" data-icon="person">person</span>
+<span class="font-['Public_Sans'] text-[10px] font-semibold uppercase tracking-wider mt-1">Profile</span>
+</a>
+</nav>
+</body></html>

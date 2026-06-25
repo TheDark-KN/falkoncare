@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Falkon Care Admin Operations</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Public+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-surface-variant": "#3f4850",
+              "on-primary-fixed": "#001d31",
+              "on-error-container": "#93000a",
+              "inverse-on-surface": "#eff1f3",
+              "surface-container-low": "#f2f4f6",
+              "surface-container-high": "#e6e8ea",
+              "on-primary-container": "#fdfcff",
+              "secondary-container": "#86f2e4",
+              "secondary": "#006a61",
+              "primary": "#006194",
+              "on-secondary-fixed-variant": "#005049",
+              "on-primary": "#ffffff",
+              "surface-bright": "#f7f9fb",
+              "primary-container": "#007bb9",
+              "inverse-primary": "#93ccff",
+              "surface-container-lowest": "#ffffff",
+              "surface-dim": "#d8dadc",
+              "on-surface": "#191c1e",
+              "on-secondary-fixed": "#00201d",
+              "error": "#ba1a1a",
+              "tertiary": "#894d00",
+              "on-tertiary-fixed-variant": "#6b3b00",
+              "surface-container-highest": "#e0e3e5",
+              "inverse-surface": "#2d3133",
+              "primary-fixed-dim": "#93ccff",
+              "tertiary-fixed-dim": "#ffb875",
+              "primary-fixed": "#cce5ff",
+              "surface": "#f7f9fb",
+              "on-secondary": "#ffffff",
+              "on-tertiary": "#ffffff",
+              "on-secondary-container": "#006f66",
+              "on-tertiary-container": "#fffbff",
+              "on-background": "#191c1e",
+              "background": "#f7f9fb",
+              "on-error": "#ffffff",
+              "tertiary-fixed": "#ffdcc0",
+              "surface-variant": "#e0e3e5",
+              "surface-container": "#eceef0",
+              "outline-variant": "#bfc7d2",
+              "outline": "#707881",
+              "surface-tint": "#006398",
+              "on-tertiary-fixed": "#2d1600",
+              "tertiary-container": "#ac6200",
+              "secondary-fixed": "#89f5e7",
+              "on-primary-fixed-variant": "#004b73",
+              "secondary-fixed-dim": "#6bd8cb",
+              "error-container": "#ffdad6"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Public Sans"],
+              "label": ["Public Sans"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .glass-effect {
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body text-on-surface antialiased">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full flex justify-between items-center px-6 h-16 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl z-50 shadow-[0_10px_40px_rgba(25,28,30,0.06)]">
+<div class="flex items-center gap-3">
+<button class="active:scale-95 duration-200 text-sky-700 dark:text-sky-400">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="text-xl font-extrabold text-sky-900 dark:text-sky-100 font-headline tracking-tight">Falkon Care</h1>
+</div>
+<div class="flex items-center gap-4">
+<!-- Live Sync Indicator -->
+<div class="flex items-center gap-1.5 bg-secondary-container/30 px-2.5 py-1 rounded-full">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<span class="text-[10px] font-bold text-on-secondary-container uppercase tracking-widest">Live Sync</span>
+</div>
+<img alt="User profile photo" class="w-8 h-8 rounded-full border-2 border-primary-container" data-alt="Close up portrait of a professional man in a business suit with a friendly smile, studio lighting, high-end corporate headshot." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVk6-8plIc13_byGhiQsjsH0rBBfLaYa8dbFK6MF-n7WVd5uhVuU4kxFhVn1MU7Ierd6V5bftNz1TquMOyqeQZlXFF5pF9779niKQL1uSbNueiq-Okx4gH9BqRWVOvRJ0N5m2GsXZtOstyfyZDvG-12VWU20k88d4ka3n_HJb0H-UHUE1hZwesiIBdUyfKgez6le16yRNy2EPkaXnnfxstp1ZAxWoUOCyqFbMWbKQeFZXlwK4NOdY76x--mNnHeaHm5ZeL7C_ZtlU"/>
+</div>
+</header>
+<main class="pt-20 pb-28 px-4 max-w-md mx-auto space-y-8">
+<!-- Operational Dashboard Metrics (Vertical Stack) -->
+<section class="space-y-4">
+<h2 class="font-headline text-lg font-bold tracking-tight px-2 text-on-surface-variant">Operational Dashboard</h2>
+<div class="grid grid-cols-1 gap-4">
+<!-- Metric Card 1 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-[0_10px_40px_rgba(25,28,30,0.04)] flex justify-between items-center group active:scale-[0.98] transition-transform">
+<div>
+<p class="text-xs font-semibold text-outline uppercase tracking-wider mb-1">Active Appointments</p>
+<h3 class="text-3xl font-extrabold font-headline text-primary">124</h3>
+<p class="text-[11px] text-secondary mt-1 font-medium">+12% from yesterday</p>
+</div>
+<div class="w-12 h-12 rounded-xl bg-primary-fixed flex items-center justify-center text-on-primary-fixed-variant">
+<span class="material-symbols-outlined">calendar_today</span>
+</div>
+</div>
+<!-- Metric Card 2 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-[0_10px_40px_rgba(25,28,30,0.04)] flex justify-between items-center group active:scale-[0.98] transition-transform">
+<div>
+<p class="text-xs font-semibold text-outline uppercase tracking-wider mb-1">Fleet Efficiency</p>
+<h3 class="text-3xl font-extrabold font-headline text-primary">94.2<span class="text-lg font-bold">%</span></h3>
+<div class="w-24 h-1.5 bg-surface-container-highest rounded-full mt-2 overflow-hidden">
+<div class="h-full bg-gradient-to-r from-secondary to-secondary-fixed w-[94%]"></div>
+</div>
+</div>
+<div class="w-12 h-12 rounded-xl bg-secondary-container flex items-center justify-center text-on-secondary-container">
+<span class="material-symbols-outlined">speed</span>
+</div>
+</div>
+<!-- Metric Card 3 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-[0_10px_40px_rgba(25,28,30,0.04)] flex justify-between items-center group active:scale-[0.98] transition-transform">
+<div>
+<p class="text-xs font-semibold text-outline uppercase tracking-wider mb-1">Response Time</p>
+<h3 class="text-3xl font-extrabold font-headline text-primary">8.5<span class="text-lg font-bold">m</span></h3>
+<p class="text-[11px] text-tertiary mt-1 font-medium">Critical focus area</p>
+</div>
+<div class="w-12 h-12 rounded-xl bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed-variant">
+<span class="material-symbols-outlined">timer</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Revenue Growth Chart (Responsive Mobile Optimized) -->
+<section class="space-y-4">
+<div class="flex justify-between items-end px-2">
+<h2 class="font-headline text-lg font-bold tracking-tight text-on-surface-variant">Revenue Growth</h2>
+<span class="text-xs font-bold text-primary px-2 py-1 bg-primary-fixed rounded-lg">THIS WEEK</span>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-[0_10px_40px_rgba(25,28,30,0.04)]">
+<div class="flex items-end justify-between h-40 gap-2 mb-4">
+<!-- Simple Bar Chart Visualization -->
+<div class="flex flex-col items-center flex-1 gap-2 h-full justify-end">
+<div class="w-full bg-surface-container-highest rounded-t-lg transition-all duration-500 hover:bg-primary" style="height: 45%;"></div>
+<span class="text-[10px] font-bold text-outline">MON</span>
+</div>
+<div class="flex flex-col items-center flex-1 gap-2 h-full justify-end">
+<div class="w-full bg-surface-container-highest rounded-t-lg transition-all duration-500 hover:bg-primary" style="height: 65%;"></div>
+<span class="text-[10px] font-bold text-outline">TUE</span>
+</div>
+<div class="flex flex-col items-center flex-1 gap-2 h-full justify-end">
+<div class="w-full bg-surface-container-highest rounded-t-lg transition-all duration-500 hover:bg-primary" style="height: 55%;"></div>
+<span class="text-[10px] font-bold text-outline">WED</span>
+</div>
+<div class="flex flex-col items-center flex-1 gap-2 h-full justify-end">
+<div class="w-full bg-gradient-to-t from-primary to-primary-container rounded-t-lg transition-all duration-500" style="height: 95%;"></div>
+<span class="text-[10px] font-bold text-primary">THU</span>
+</div>
+<div class="flex flex-col items-center flex-1 gap-2 h-full justify-end">
+<div class="w-full bg-surface-container-highest rounded-t-lg transition-all duration-500 hover:bg-primary" style="height: 75%;"></div>
+<span class="text-[10px] font-bold text-outline">FRI</span>
+</div>
+<div class="flex flex-col items-center flex-1 gap-2 h-full justify-end">
+<div class="w-full bg-surface-container-highest rounded-t-lg transition-all duration-500 hover:bg-primary" style="height: 40%;"></div>
+<span class="text-[10px] font-bold text-outline">SAT</span>
+</div>
+</div>
+<div class="flex justify-between items-center pt-4 border-t border-outline-variant/20">
+<span class="text-xs text-on-surface-variant font-medium">Total Revenue</span>
+<span class="text-lg font-bold text-on-surface">$24,482.00</span>
+</div>
+</div>
+</section>
+<!-- Staff Availability (Horizontal Scroll) -->
+<section class="space-y-4">
+<h2 class="font-headline text-lg font-bold tracking-tight px-2 text-on-surface-variant">Staff Availability</h2>
+<div class="flex gap-4 overflow-x-auto pb-4 no-scrollbar -mx-4 px-4">
+<!-- Staff Card 1 -->
+<div class="min-w-[140px] bg-surface-container-lowest p-4 rounded-xl shadow-[0_10px_40px_rgba(25,28,30,0.04)] text-center">
+<div class="relative w-16 h-16 mx-auto mb-3">
+<img alt="Staff 1" class="w-full h-full rounded-full object-cover" data-alt="Close up of a professional woman with glasses, neutral office background, soft daylight, professional photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCinDWnrCx40M504NSoQ_1iskoeAc6Mobb53N4ZuumgeQ8YZ7pW0bTXP3Jm5nrPH1W9QY1Zby8p2J1vpO3GWwfFqpH6r-Yst-fyI65RKg8ePM6Cvc57U-bOPQU2wSfkdlVEyscALXu_mJtNhNer9qR0Y7U5Jx-zH9lNczxLteIY9yMrGg6jmV-nTveWGeslno_duCYEbrQpVdvjgs7wOKB4QH5-wMvxf23ebInfhXNmkBMKJ_G-PIUkzHJqIVSwcKRWRY3EygXeX0g"/>
+<span class="absolute bottom-0 right-0 w-4 h-4 bg-secondary border-2 border-white rounded-full"></span>
+</div>
+<p class="text-sm font-bold text-on-surface truncate">Sarah J.</p>
+<p class="text-[10px] text-outline font-medium mb-2">Technician</p>
+<span class="text-[10px] font-bold text-on-secondary-container bg-secondary-container px-2 py-0.5 rounded-full">ACTIVE</span>
+</div>
+<!-- Staff Card 2 -->
+<div class="min-w-[140px] bg-surface-container-lowest p-4 rounded-xl shadow-[0_10px_40px_rgba(25,28,30,0.04)] text-center">
+<div class="relative w-16 h-16 mx-auto mb-3">
+<img alt="Staff 2" class="w-full h-full rounded-full object-cover" data-alt="Portrait of a young male professional in a clean white laboratory coat, bright medical environment, clean lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBaE28n1hsM6NXdpuioyMfS3NXC-cVS0hk5y0p8RJ5O-SJGAUW23quBmt_dmRCJCSPoEK2flFiUesQ4U_YBu-s7ON75W71SjKVxSRSK4kmrVPxeXx8rVxaJUL2UYrAMeaJzq7O5D7bxzuNAdOfyUNa4lhpToDWbWJO-2Unl9Q3nmh1DwD-ZAyYtFJqYQysMbdb5OLsPpoNA4QWXUbBvtB-ynm6arbxAqABIfDkaMtDV2v5iExDLP77N-tpsnNZFqjqpy-c6yhYC3ao"/>
+<span class="absolute bottom-0 right-0 w-4 h-4 bg-secondary border-2 border-white rounded-full"></span>
+</div>
+<p class="text-sm font-bold text-on-surface truncate">Marcus K.</p>
+<p class="text-[10px] text-outline font-medium mb-2">Lead Eng.</p>
+<span class="text-[10px] font-bold text-on-secondary-container bg-secondary-container px-2 py-0.5 rounded-full">ACTIVE</span>
+</div>
+<!-- Staff Card 3 -->
+<div class="min-w-[140px] bg-surface-container-lowest p-4 rounded-xl shadow-[0_10px_40px_rgba(25,28,30,0.04)] text-center opacity-70">
+<div class="relative w-16 h-16 mx-auto mb-3">
+<img alt="Staff 3" class="w-full h-full rounded-full object-cover" data-alt="Professional woman looking confidently at camera, blurred office interior background, high-end commercial style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBLXWeNpsgvWffgzc9NtWW030emfm3fHgZeczy_lmzXbbGp9qr-zSpdbLYAmk1Uk8wKQmxy8z_IQK2h_wsUvvpE3sPkm-Oa3MZYc7yz0bt82HW50pDn5onT90EDRwLU-_4LN9Qm9t0ZGfYhrHYEdzypdarcU8sAeLc3z8bgk8HrA8u5_Y478TpZww7wQY9MSCCag5jyKw3esPYZTzZFv97MFjSb-n0BY18mje7HpM43be8vngHV_FQ-wWNpjUNkEO4H0HfWgstFT5I"/>
+<span class="absolute bottom-0 right-0 w-4 h-4 bg-outline-variant border-2 border-white rounded-full"></span>
+</div>
+<p class="text-sm font-bold text-on-surface truncate">Elena R.</p>
+<p class="text-[10px] text-outline font-medium mb-2">Specialist</p>
+<span class="text-[10px] font-bold text-on-surface-variant bg-surface-container-high px-2 py-0.5 rounded-full">AWAY</span>
+</div>
+</div>
+</section>
+<!-- Global Bookings (Mobile Card List) -->
+<section class="space-y-4">
+<div class="flex justify-between items-center px-2">
+<h2 class="font-headline text-lg font-bold tracking-tight text-on-surface-variant">Global Bookings</h2>
+<button class="text-xs font-bold text-primary">View All</button>
+</div>
+<div class="space-y-3">
+<!-- Booking Card 1 -->
+<div class="bg-surface-container-lowest p-5 rounded-xl shadow-[0_10px_40px_rgba(25,28,30,0.04)] flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">water_drop</span>
+</div>
+<div>
+<h4 class="text-sm font-bold text-on-surface">Premium Hydration Flow</h4>
+<p class="text-[11px] text-outline">Ref: #BK-8291</p>
+</div>
+</div>
+<span class="text-[10px] font-bold text-on-secondary-container bg-secondary-container px-2 py-1 rounded-lg uppercase tracking-tight">On Route</span>
+</div>
+<div class="flex justify-between items-center py-3 border-y border-outline-variant/10">
+<div class="flex flex-col">
+<span class="text-[10px] font-bold text-outline uppercase">Client</span>
+<span class="text-xs font-semibold">David Thompson</span>
+</div>
+<div class="flex flex-col text-right">
+<span class="text-[10px] font-bold text-outline uppercase">Time</span>
+<span class="text-xs font-semibold">14:30 - 15:30</span>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="flex-1 bg-surface-container-high text-on-surface text-xs font-bold py-2.5 rounded-lg active:scale-95 transition-transform">Details</button>
+<button class="flex-1 bg-gradient-to-r from-primary to-primary-container text-white text-xs font-bold py-2.5 rounded-lg shadow-lg active:scale-95 transition-transform">Dispatch</button>
+</div>
+</div>
+<!-- Booking Card 2 -->
+<div class="bg-surface-container-lowest p-5 rounded-xl shadow-[0_10px_40px_rgba(25,28,30,0.04)] flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-tertiary/10 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined">sanitizer</span>
+</div>
+<div>
+<h4 class="text-sm font-bold text-on-surface">Full System Sterilize</h4>
+<p class="text-[11px] text-outline">Ref: #BK-8295</p>
+</div>
+</div>
+<span class="text-[10px] font-bold text-on-tertiary-fixed-variant bg-tertiary-fixed px-2 py-1 rounded-lg uppercase tracking-tight">Pending</span>
+</div>
+<div class="flex justify-between items-center py-3 border-y border-outline-variant/10">
+<div class="flex flex-col">
+<span class="text-[10px] font-bold text-outline uppercase">Client</span>
+<span class="text-xs font-semibold">Central Office Plaza</span>
+</div>
+<div class="flex flex-col text-right">
+<span class="text-[10px] font-bold text-outline uppercase">Time</span>
+<span class="text-xs font-semibold">16:00 - 18:00</span>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="flex-1 bg-surface-container-high text-on-surface text-xs font-bold py-2.5 rounded-lg active:scale-95 transition-transform">Details</button>
+<button class="flex-1 bg-gradient-to-r from-primary to-primary-container text-white text-xs font-bold py-2.5 rounded-lg shadow-lg active:scale-95 transition-transform">Assign</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Visible on Mobile) -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-3 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl z-50 shadow-[0_-10px_40px_rgba(25,28,30,0.06)] rounded-t-3xl md:hidden">
+<a class="flex flex-col items-center justify-center bg-sky-100 dark:bg-sky-900/50 text-sky-900 dark:text-sky-100 rounded-2xl px-5 py-2 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-headline text-[10px] font-semibold uppercase tracking-wider mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-5 py-2 hover:bg-slate-100 dark:hover:bg-slate-800 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">event_note</span>
+<span class="font-headline text-[10px] font-semibold uppercase tracking-wider mt-1">Bookings</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-5 py-2 hover:bg-slate-100 dark:hover:bg-slate-800 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-headline text-[10px] font-semibold uppercase tracking-wider mt-1">Wallet</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-5 py-2 hover:bg-slate-100 dark:hover:bg-slate-800 active:scale-90 transition-transform" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-headline text-[10px] font-semibold uppercase tracking-wider mt-1">Profile</span>
+</a>
+</nav>
+<!-- Footer -->
+<footer class="w-full mt-auto py-12 px-6 flex flex-col items-center gap-4 mb-24 bg-slate-100 dark:bg-slate-900 border-t border-slate-200/50 dark:border-slate-800/50">
+<span class="font-bold text-sky-700 font-headline">Falkon Care</span>
+<div class="flex gap-6">
+<a class="font-body text-xs text-slate-500 hover:text-sky-600 transition-colors" href="#">Privacy</a>
+<a class="font-body text-xs text-slate-500 hover:text-sky-600 transition-colors" href="#">Terms</a>
+<a class="font-body text-xs text-slate-500 hover:text-sky-600 transition-colors" href="#">Contact</a>
+</div>
+<p class="font-body text-xs text-slate-500">© 2024 Falkon Care platform</p>
+</footer>
+</body></html>

@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Falkon Care Customer Dashboard</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Public+Sans:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "background": "#f7f9fb",
+              "surface-container-lowest": "#ffffff",
+              "on-primary-container": "#fdfcff",
+              "primary-fixed-dim": "#93ccff",
+              "on-background": "#191c1e",
+              "on-tertiary-fixed": "#2d1600",
+              "surface-dim": "#d8dadc",
+              "surface-variant": "#e0e3e5",
+              "tertiary-container": "#ac6200",
+              "tertiary-fixed": "#ffdcc0",
+              "on-secondary-fixed-variant": "#005049",
+              "on-secondary-fixed": "#00201d",
+              "on-error": "#ffffff",
+              "secondary": "#006a61",
+              "inverse-surface": "#2d3133",
+              "surface-container-highest": "#e0e3e5",
+              "inverse-on-surface": "#eff1f3",
+              "surface-container-high": "#e6e8ea",
+              "secondary-fixed": "#89f5e7",
+              "on-tertiary-container": "#fffbff",
+              "secondary-container": "#86f2e4",
+              "on-primary-fixed": "#001d31",
+              "on-surface": "#191c1e",
+              "surface-bright": "#f7f9fb",
+              "error": "#ba1a1a",
+              "on-surface-variant": "#3f4850",
+              "on-secondary-container": "#006f66",
+              "primary-container": "#007bb9",
+              "surface-container": "#eceef0",
+              "tertiary": "#894d00",
+              "on-error-container": "#93000a",
+              "primary-fixed": "#cce5ff",
+              "on-tertiary-fixed-variant": "#6b3b00",
+              "surface": "#f7f9fb",
+              "on-primary-fixed-variant": "#004b73",
+              "on-primary": "#ffffff",
+              "surface-tint": "#006398",
+              "outline": "#707881",
+              "error-container": "#ffdad6",
+              "primary": "#006194",
+              "on-secondary": "#ffffff",
+              "inverse-primary": "#93ccff",
+              "secondary-fixed-dim": "#6bd8cb",
+              "outline-variant": "#bfc7d2",
+              "surface-container-low": "#f2f4f6",
+              "tertiary-fixed-dim": "#ffb875",
+              "on-tertiary": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Public Sans"],
+              "label": ["Public Sans"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Public Sans', sans-serif;
+            background-color: #f7f9fb;
+        }
+        .font-headline {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(24px);
+        }
+    </style>
+</head>
+<body class="text-on-surface bg-surface">
+<!-- Side Navigation Bar -->
+<aside class="flex flex-col fixed left-0 top-0 h-full p-4 h-screen w-64 bg-slate-50 dark:bg-slate-950 border-r border-slate-200 dark:border-slate-800 z-50">
+<div class="flex items-center gap-3 px-2 mb-8">
+<div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white">
+<span class="material-symbols-outlined" data-icon="water_drop">water_drop</span>
+</div>
+<div>
+<h1 class="text-lg font-black text-sky-900 dark:text-white leading-tight">Falkon Care</h1>
+<p class="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Water Hygiene Pro</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<!-- Dashboard (Active) -->
+<a class="flex items-center gap-3 px-4 py-3 bg-sky-50 dark:bg-sky-900/20 text-sky-700 dark:text-sky-300 rounded-lg font-['Plus_Jakarta_Sans'] text-sm font-semibold transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-sky-600 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg font-['Plus_Jakarta_Sans'] text-sm font-semibold transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+<span>Bookings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-sky-600 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg font-['Plus_Jakarta_Sans'] text-sm font-semibold transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="sanitizer">sanitizer</span>
+<span>Services</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-sky-600 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg font-['Plus_Jakarta_Sans'] text-sm font-semibold transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span>Wallet</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-sky-600 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg font-['Plus_Jakarta_Sans'] text-sm font-semibold transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span>Profile</span>
+</a>
+</nav>
+<div class="mt-auto">
+<button class="w-full py-3 px-4 bg-gradient-to-br from-primary to-primary-container text-white rounded-xl font-headline font-bold text-sm shadow-lg shadow-primary/20 active:scale-95 duration-200 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                New Cleaning Job
+            </button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 min-h-screen">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 right-0 left-64 z-40 bg-white/70 backdrop-blur-xl flex justify-between items-center px-8 py-4 shadow-sm shadow-sky-900/5">
+<div class="flex items-center gap-4">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" data-icon="search">search</span>
+<input class="pl-10 pr-4 py-2 bg-slate-100 border-none rounded-full text-sm focus:ring-2 focus:ring-primary w-64 transition-all" placeholder="Search services..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="relative text-slate-600 hover:bg-slate-100 p-2 rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border-2 border-white"></span>
+</button>
+<div class="flex items-center gap-3 pl-6 border-l border-slate-200">
+<div class="text-right">
+<p class="text-sm font-bold text-sky-900">Aryan Sharma</p>
+<p class="text-[10px] text-slate-500 font-medium">Premium Member</p>
+</div>
+<img class="w-10 h-10 rounded-full object-cover ring-2 ring-primary/10" data-alt="portrait of a young indian man with a professional and friendly smile in a corporate environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCV7QBjoC1wxDGEoINHnrvy2JxWW_OyJS-p1TliPVJk9SLAuOEFNg0cx8vlpFUG-6KLF_SLzToFqFoGTr-QIF_XSHuesfNaFwkncUsqdfPZdjj8ZCD8i0l4R8VWSa3CA8u7GcFcR7PMJ2Aij26MIFJ8RUxPR3hXCMxxLtnLhKodHfWCk-umweAL88PNyH-HuYOnL8ddv21trPLgnMU0lG3JHnQlpuCDBtCWoekITsa-SBRN_ubUxrRhpxCna4LfGygJ7VDkuHMYcA4"/>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<div class="pt-24 px-8 pb-12">
+<!-- Breadcrumbs -->
+<nav class="mb-6 flex items-center gap-2 text-xs font-medium text-slate-400">
+<span class="hover:text-primary cursor-pointer">Dashboard</span>
+<span class="material-symbols-outlined text-[14px]" data-icon="chevron_right">chevron_right</span>
+<span class="text-slate-600">Overview</span>
+</nav>
+<div class="mb-10">
+<h2 class="text-3xl font-headline font-extrabold text-sky-900 tracking-tight">Welcome back, Aryan!</h2>
+<p class="text-slate-500 mt-1">Your water hygiene status is currently <span class="text-secondary font-bold">Optimal</span>.</p>
+</div>
+<!-- Stats Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+<!-- Total Bookings -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border-none shadow-sm shadow-sky-900/5 group hover:bg-primary transition-all duration-300">
+<div class="flex justify-between items-start mb-4">
+<div class="p-3 bg-sky-50 rounded-lg text-primary group-hover:bg-white/20 group-hover:text-white transition-colors">
+<span class="material-symbols-outlined" data-icon="calendar_month">calendar_month</span>
+</div>
+<span class="text-[10px] font-bold text-secondary group-hover:text-white/80">+12%</span>
+</div>
+<p class="text-slate-500 text-xs font-bold uppercase tracking-wider group-hover:text-white/70">Total Bookings</p>
+<h3 class="text-2xl font-headline font-black text-sky-900 mt-1 group-hover:text-white transition-colors">24</h3>
+</div>
+<!-- Wallet Balance -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border-none shadow-sm shadow-sky-900/5 group hover:bg-secondary transition-all duration-300">
+<div class="flex justify-between items-start mb-4">
+<div class="p-3 bg-teal-50 rounded-lg text-secondary group-hover:bg-white/20 group-hover:text-white transition-colors">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+</div>
+<button class="text-[10px] font-bold text-primary bg-sky-50 px-2 py-1 rounded-full group-hover:bg-white/20 group-hover:text-white">Top Up</button>
+</div>
+<p class="text-slate-500 text-xs font-bold uppercase tracking-wider group-hover:text-white/70">Wallet Balance</p>
+<h3 class="text-2xl font-headline font-black text-sky-900 mt-1 group-hover:text-white transition-colors">₹4,250</h3>
+</div>
+<!-- Completed Jobs -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border-none shadow-sm shadow-sky-900/5">
+<div class="flex justify-between items-start mb-4">
+<div class="p-3 bg-slate-100 rounded-lg text-slate-600">
+<span class="material-symbols-outlined" data-icon="task_alt">task_alt</span>
+</div>
+</div>
+<p class="text-slate-500 text-xs font-bold uppercase tracking-wider">Completed Jobs</p>
+<h3 class="text-2xl font-headline font-black text-sky-900 mt-1">18</h3>
+</div>
+<!-- Pending Requests -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border-none shadow-sm shadow-sky-900/5">
+<div class="flex justify-between items-start mb-4">
+<div class="p-3 bg-amber-50 rounded-lg text-amber-600">
+<span class="material-symbols-outlined" data-icon="pending_actions">pending_actions</span>
+</div>
+<span class="w-2 h-2 bg-amber-500 rounded-full animate-pulse"></span>
+</div>
+<p class="text-slate-500 text-xs font-bold uppercase tracking-wider">Pending Requests</p>
+<h3 class="text-2xl font-headline font-black text-sky-900 mt-1">02</h3>
+</div>
+</div>
+<!-- Bento Grid Content -->
+<div class="grid grid-cols-12 gap-8">
+<!-- Main Activity & Table (Left Column) -->
+<div class="col-span-12 lg:col-span-8 space-y-8">
+<!-- Booking Table Section -->
+<div class="bg-surface-container-lowest rounded-xl p-8 shadow-sm shadow-sky-900/5">
+<div class="flex justify-between items-center mb-8">
+<h3 class="text-xl font-headline font-bold text-sky-900">Recent Bookings</h3>
+<button class="text-primary text-sm font-bold hover:underline">View All</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="text-slate-400 text-[10px] uppercase tracking-[0.2em] font-black border-b border-slate-100">
+<th class="pb-4">Service</th>
+<th class="pb-4">Date</th>
+<th class="pb-4">Amount</th>
+<th class="pb-4">Status</th>
+<th class="pb-4 text-right">Action</th>
+</tr>
+</thead>
+<tbody class="text-sm">
+<tr class="group border-b border-transparent hover:border-slate-100 transition-all">
+<td class="py-5">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-lg" data-icon="opacity">opacity</span>
+</div>
+<span class="font-bold text-sky-900">Overhead Tank Cleaning</span>
+</div>
+</td>
+<td class="py-5 text-slate-500">Oct 12, 2023</td>
+<td class="py-5 font-bold text-sky-900">₹1,200</td>
+<td class="py-5">
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container text-[10px] font-black rounded-full uppercase">Completed</span>
+</td>
+<td class="py-5 text-right">
+<button class="p-2 hover:bg-slate-100 rounded-lg transition-colors text-slate-400 hover:text-primary">
+<span class="material-symbols-outlined text-lg" data-icon="description">description</span>
+</button>
+</td>
+</tr>
+<tr class="group border-b border-transparent hover:border-slate-100 transition-all">
+<td class="py-5">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-lg" data-icon="science">science</span>
+</div>
+<span class="font-bold text-sky-900">Water Quality Lab Test</span>
+</div>
+</td>
+<td class="py-5 text-slate-500">Oct 18, 2023</td>
+<td class="py-5 font-bold text-sky-900">₹850</td>
+<td class="py-5">
+<span class="px-3 py-1 bg-sky-100 text-sky-700 text-[10px] font-black rounded-full uppercase">In Progress</span>
+</td>
+<td class="py-5 text-right">
+<button class="p-2 hover:bg-slate-100 rounded-lg transition-colors text-slate-400 hover:text-primary">
+<span class="material-symbols-outlined text-lg" data-icon="visibility">visibility</span>
+</button>
+</td>
+</tr>
+<tr class="group border-b border-transparent hover:border-slate-100 transition-all">
+<td class="py-5">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center text-slate-500">
+<span class="material-symbols-outlined text-lg" data-icon="plumbing">plumbing</span>
+</div>
+<span class="font-bold text-sky-900">Pipeline Sterilization</span>
+</div>
+</td>
+<td class="py-5 text-slate-500">Oct 24, 2023</td>
+<td class="py-5 font-bold text-sky-900">₹2,400</td>
+<td class="py-5">
+<span class="px-3 py-1 bg-slate-100 text-slate-400 text-[10px] font-black rounded-full uppercase">Scheduled</span>
+</td>
+<td class="py-5 text-right">
+<button class="p-2 hover:bg-slate-100 rounded-lg transition-colors text-slate-400 hover:text-primary">
+<span class="material-symbols-outlined text-lg" data-icon="edit">edit</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Usage Chart (Simulated Visualization) -->
+<div class="bg-surface-container-lowest rounded-xl p-8 shadow-sm shadow-sky-900/5">
+<div class="flex justify-between items-center mb-8">
+<div>
+<h3 class="text-xl font-headline font-bold text-sky-900">Service Usage</h3>
+<p class="text-xs text-slate-400">Monthly activity overview</p>
+</div>
+<div class="flex gap-2">
+<span class="flex items-center gap-1 text-[10px] font-bold text-primary"><span class="w-2 h-2 rounded-full bg-primary"></span> Cleaning</span>
+<span class="flex items-center gap-1 text-[10px] font-bold text-secondary"><span class="w-2 h-2 rounded-full bg-secondary"></span> Testing</span>
+</div>
+</div>
+<div class="h-64 flex items-end justify-between gap-4 px-4">
+<!-- Chart Bars (CSS Only representation) -->
+<div class="flex-1 flex flex-col items-center gap-2">
+<div class="w-full max-w-[40px] bg-slate-100 rounded-t-lg h-[40%] relative">
+<div class="absolute bottom-0 w-full bg-primary rounded-t-lg h-[60%]"></div>
+</div>
+<span class="text-[10px] font-bold text-slate-400">May</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2">
+<div class="w-full max-w-[40px] bg-slate-100 rounded-t-lg h-[60%] relative">
+<div class="absolute bottom-0 w-full bg-primary rounded-t-lg h-[80%]"></div>
+</div>
+<span class="text-[10px] font-bold text-slate-400">Jun</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2">
+<div class="w-full max-w-[40px] bg-slate-100 rounded-t-lg h-[30%] relative">
+<div class="absolute bottom-0 w-full bg-primary rounded-t-lg h-[40%]"></div>
+</div>
+<span class="text-[10px] font-bold text-slate-400">Jul</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2">
+<div class="w-full max-w-[40px] bg-slate-100 rounded-t-lg h-[80%] relative">
+<div class="absolute bottom-0 w-full bg-primary rounded-t-lg h-[90%]"></div>
+</div>
+<span class="text-[10px] font-bold text-slate-400">Aug</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2">
+<div class="w-full max-w-[40px] bg-slate-100 rounded-t-lg h-[50%] relative">
+<div class="absolute bottom-0 w-full bg-primary rounded-t-lg h-[70%]"></div>
+</div>
+<span class="text-[10px] font-bold text-slate-400">Sep</span>
+</div>
+<div class="flex-1 flex flex-col items-center gap-2">
+<div class="w-full max-w-[40px] bg-slate-100 rounded-t-lg h-[90%] relative">
+<div class="absolute bottom-0 w-full bg-primary rounded-t-lg h-[95%]"></div>
+</div>
+<span class="text-[10px] font-bold text-slate-400">Oct</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Activity Timeline (Right Column) -->
+<div class="col-span-12 lg:col-span-4 space-y-8">
+<!-- Recent Activity Timeline -->
+<div class="bg-surface-container-lowest rounded-xl p-8 shadow-sm shadow-sky-900/5 h-full">
+<h3 class="text-xl font-headline font-bold text-sky-900 mb-8">Service Activity</h3>
+<div class="relative space-y-8 before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-[2px] before:bg-slate-100">
+<!-- Timeline Item -->
+<div class="relative pl-10">
+<div class="absolute left-0 top-1 w-6 h-6 rounded-full bg-white border-4 border-primary z-10"></div>
+<div class="bg-slate-50 p-4 rounded-xl">
+<p class="text-[10px] font-black uppercase text-primary mb-1">In Progress</p>
+<p class="text-sm font-bold text-sky-900">Lab Technician Dispatched</p>
+<p class="text-xs text-slate-500 mt-1">Water Quality Test #QT-9921</p>
+<p class="text-[10px] text-slate-400 mt-2 font-medium">Today, 10:45 AM</p>
+</div>
+</div>
+<!-- Timeline Item -->
+<div class="relative pl-10">
+<div class="absolute left-0 top-1 w-6 h-6 rounded-full bg-white border-4 border-secondary z-10"></div>
+<div class="bg-slate-50 p-4 rounded-xl">
+<p class="text-[10px] font-black uppercase text-secondary mb-1">Completed</p>
+<p class="text-sm font-bold text-sky-900">Chemical Dosage Report</p>
+<p class="text-xs text-slate-500 mt-1">View sanitized report for Sector 4 tank.</p>
+<div class="mt-3 flex items-center gap-2">
+<button class="flex items-center gap-1 text-[10px] font-bold text-primary bg-white px-2 py-1 rounded-md border border-slate-100 shadow-sm">
+<span class="material-symbols-outlined text-[12px]" data-icon="download">download</span> PDF
+                                        </button>
+</div>
+<p class="text-[10px] text-slate-400 mt-2 font-medium">Yesterday, 04:20 PM</p>
+</div>
+</div>
+<!-- Timeline Item -->
+<div class="relative pl-10">
+<div class="absolute left-0 top-1 w-6 h-6 rounded-full bg-white border-4 border-slate-200 z-10"></div>
+<div class="bg-slate-50 p-4 rounded-xl">
+<p class="text-[10px] font-black uppercase text-slate-400 mb-1">Notification</p>
+<p class="text-sm font-bold text-sky-900">Upcoming Cleaning Alert</p>
+<p class="text-xs text-slate-500 mt-1">Next deep sterilization scheduled in 4 days.</p>
+<p class="text-[10px] text-slate-400 mt-2 font-medium">Oct 15, 09:15 AM</p>
+</div>
+</div>
+<!-- Timeline Item -->
+<div class="relative pl-10">
+<div class="absolute left-0 top-1 w-6 h-6 rounded-full bg-white border-4 border-slate-200 z-10"></div>
+<div class="bg-slate-50 p-4 rounded-xl">
+<p class="text-[10px] font-black uppercase text-slate-400 mb-1">Billing</p>
+<p class="text-sm font-bold text-sky-900">Wallet Auto-Recharged</p>
+<p class="text-xs text-slate-500 mt-1">₹2,000 added via UPI (Ref: 29910)</p>
+<p class="text-[10px] text-slate-400 mt-2 font-medium">Oct 12, 11:30 PM</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Promotion Card -->
+<div class="mt-10 bg-gradient-to-r from-sky-900 to-primary p-10 rounded-3xl overflow-hidden relative">
+<div class="relative z-10 max-w-lg">
+<span class="px-4 py-1 bg-white/20 backdrop-blur-md rounded-full text-white text-[10px] font-black uppercase tracking-widest">Premium Service</span>
+<h3 class="text-3xl font-headline font-black text-white mt-4 leading-tight">Professional UV Sterilization for your Home.</h3>
+<p class="text-sky-100 mt-4 mb-8">Kill 99.9% of harmful pathogens with our advanced hospital-grade UV-C equipment. Special 20% discount for regular customers.</p>
+<button class="bg-white text-primary px-8 py-3 rounded-xl font-bold text-sm shadow-xl shadow-sky-950/20 active:scale-95 transition-all">Book Now</button>
+</div>
+<div class="absolute top-0 right-0 w-1/2 h-full hidden lg:block">
+<img class="w-full h-full object-cover mix-blend-overlay opacity-60" data-alt="close-up of a high-tech blue light water sterilization unit in a modern clean bathroom setting with soft bokeh background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCfQLGdShYhsOsvVJthjSKVrmMDQdln_WVQku9jGp-OL3-zcU5SXBzoT-aveiFzKQIb5bP1VK-LnTeaWAHDIRg86krj0hzaIE24Rxlullwf8CiLwJ296CQkyZogIlcBY9SqJBBG92zxFfW5bPo6QRypn5_NcnDBCnNglBa8YdvdMhfzl5Eudg55LALoefLRrZxrmciO6Bkyt3rv7eK57_Oc-PBBWwiEgef4Ft-swRH6FaAexdStitgr8NcGWYx3yFYdW94Lh5yGFEs"/>
+<div class="absolute inset-0 bg-gradient-to-l from-transparent to-sky-900"></div>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<footer class="w-full py-8 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950">
+<div class="flex flex-col md:flex-row justify-between items-center px-8 max-w-7xl mx-auto">
+<div class="flex flex-col items-center md:items-start gap-1">
+<p class="font-headline text-xs font-bold text-sky-900 tracking-tight">FALKON CARE</p>
+<p class="font-['Public_Sans'] text-xs text-slate-500">© 2024 Falkon Care. Pure Water. Pure Professionalism.</p>
+</div>
+<div class="flex gap-8 mt-6 md:mt-0">
+<a class="text-xs text-slate-400 hover:text-sky-500 transition-colors" href="#">Privacy Policy</a>
+<a class="text-xs text-slate-400 hover:text-sky-500 transition-colors" href="#">Terms of Service</a>
+<a class="text-xs text-slate-400 hover:text-sky-500 transition-colors" href="#">Contact Support</a>
+<a class="text-xs text-slate-400 hover:text-sky-500 transition-colors" href="#">Chemical Safety</a>
+</div>
+</div>
+</footer>
+</main>
+</body></html>

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Falkon Care Help Center</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Public+Sans:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "background": "#f7f9fb",
+              "surface-container-lowest": "#ffffff",
+              "on-primary-container": "#fdfcff",
+              "primary-fixed-dim": "#93ccff",
+              "on-background": "#191c1e",
+              "on-tertiary-fixed": "#2d1600",
+              "surface-dim": "#d8dadc",
+              "surface-variant": "#e0e3e5",
+              "tertiary-container": "#ac6200",
+              "tertiary-fixed": "#ffdcc0",
+              "on-secondary-fixed-variant": "#005049",
+              "on-secondary-fixed": "#00201d",
+              "on-error": "#ffffff",
+              "secondary": "#006a61",
+              "inverse-surface": "#2d3133",
+              "surface-container-highest": "#e0e3e5",
+              "inverse-on-surface": "#eff1f3",
+              "surface-container-high": "#e6e8ea",
+              "secondary-fixed": "#89f5e7",
+              "on-tertiary-container": "#fffbff",
+              "secondary-container": "#86f2e4",
+              "on-primary-fixed": "#001d31",
+              "on-surface": "#191c1e",
+              "surface-bright": "#f7f9fb",
+              "error": "#ba1a1a",
+              "on-surface-variant": "#3f4850",
+              "on-secondary-container": "#006f66",
+              "primary-container": "#007bb9",
+              "surface-container": "#eceef0",
+              "tertiary": "#894d00",
+              "on-error-container": "#93000a",
+              "primary-fixed": "#cce5ff",
+              "on-tertiary-fixed-variant": "#6b3b00",
+              "surface": "#f7f9fb",
+              "on-primary-fixed-variant": "#004b73",
+              "on-primary": "#ffffff",
+              "surface-tint": "#006398",
+              "outline": "#707881",
+              "error-container": "#ffdad6",
+              "primary": "#006194",
+              "on-secondary": "#ffffff",
+              "inverse-primary": "#93ccff",
+              "secondary-fixed-dim": "#6bd8cb",
+              "outline-variant": "#bfc7d2",
+              "surface-container-low": "#f2f4f6",
+              "tertiary-fixed-dim": "#ffb875",
+              "on-tertiary": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Public Sans"],
+              "label": ["Public Sans"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(24px);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body antialiased">
+<!-- Top Navigation Bar -->
+<header class="fixed top-0 w-full z-50 bg-white/70 backdrop-blur-xl shadow-sm shadow-sky-900/5 px-6 py-3 flex justify-between items-center h-16">
+<div class="flex items-center gap-2">
+<span class="text-xl font-bold tracking-tight text-sky-800 font-headline">Falkon Care</span>
+<span class="bg-primary/10 text-primary text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Help</span>
+</div>
+<div class="hidden md:flex items-center gap-8 font-headline font-medium text-sm text-slate-600">
+<a class="hover:text-sky-600 transition-colors" href="#">Documentation</a>
+<a class="hover:text-sky-600 transition-colors" href="#">Guides</a>
+<a class="hover:text-sky-600 transition-colors" href="#">API Reference</a>
+<a class="text-sky-700 font-bold border-b-2 border-sky-600" href="#">FAQs</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-slate-100 transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined text-slate-600" data-icon="notifications">notifications</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-slate-200 overflow-hidden">
+<img alt="User Profile Avatar" data-alt="professional male customer support specialist smiling warmly" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLFUslnFjIrOKdkPy_-wtDHl95vMbHQM-aPzL9oDvavIAFm4MDKc1XFQ2mUUyYAi7Y4oHxrP_xr3CamsqMHTnZvVEsnQV-BMPdcl7EqY1T3zK4w8bbT4JgtEQKy-aFDVq95oYgOWKsIXBB5UA8FfxpOUNKzBaHFoaVxmEjbTsczJtgPFGzPS4PNRjK1btOyAo_tigMWTiNW6DCmiVz5REQEB18JbfK15CJsJ16kwur2oUAnJwdm9YGzrXIKLsOc-jBiLKbO44GSP4"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="pt-24 pb-20 max-w-7xl mx-auto px-6 lg:px-12">
+<!-- Hero Search Section -->
+<section class="mb-16">
+<div class="max-w-3xl">
+<h1 class="font-headline font-extrabold text-4xl lg:text-5xl text-on-background tracking-tight mb-4">How can we help you today?</h1>
+<p class="text-lg text-on-surface-variant mb-8 max-w-xl leading-relaxed">Search our comprehensive hygiene database for booking assistance, technical standards, and safety protocols.</p>
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline" data-icon="search">search</span>
+</div>
+<input class="w-full pl-14 pr-4 py-5 bg-surface-container-highest border-none rounded-xl text-lg focus:ring-0 focus:bg-white transition-all shadow-sm focus:shadow-md" placeholder="Search for FAQs, hygiene reports, or water safety..." type="text"/>
+<div class="absolute inset-y-2 right-2 flex items-center">
+<kbd class="hidden sm:inline-block px-3 py-1 text-xs font-semibold text-outline-variant bg-surface-container-low rounded-lg border border-outline-variant/20 mr-2">CTRL + K</kbd>
+</div>
+</div>
+</div>
+</section>
+<!-- Category Bento Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
+<!-- Booking Guide -->
+<div class="group p-8 bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/10 hover:shadow-xl hover:shadow-sky-900/5 transition-all duration-300">
+<div class="w-12 h-12 rounded-lg bg-sky-50 flex items-center justify-center mb-6 group-hover:bg-primary transition-colors">
+<span class="material-symbols-outlined text-primary group-hover:text-white" data-icon="calendar_today">calendar_today</span>
+</div>
+<h3 class="font-headline font-bold text-xl mb-2 text-on-background">Booking Guide</h3>
+<p class="text-sm text-on-surface-variant leading-relaxed mb-4">Learn how to schedule recurring cleanings and emergency water tests.</p>
+<a class="text-primary font-semibold text-sm flex items-center gap-1 group-hover:gap-2 transition-all" href="#">
+                    Explore Guides <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+<!-- Hygiene Standards -->
+<div class="group p-8 bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/10 hover:shadow-xl hover:shadow-sky-900/5 transition-all duration-300">
+<div class="w-12 h-12 rounded-lg bg-teal-50 flex items-center justify-center mb-6 group-hover:bg-secondary transition-colors">
+<span class="material-symbols-outlined text-secondary group-hover:text-white" data-icon="sanitizer">sanitizer</span>
+</div>
+<h3 class="font-headline font-bold text-xl mb-2 text-on-background">Hygiene Standards</h3>
+<p class="text-sm text-on-surface-variant leading-relaxed mb-4">Official Falkon Care protocols for water sterilization and reporting.</p>
+<a class="text-secondary font-semibold text-sm flex items-center gap-1 group-hover:gap-2 transition-all" href="#">
+                    View Protocols <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+<!-- Payment Help -->
+<div class="group p-8 bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/10 hover:shadow-xl hover:shadow-sky-900/5 transition-all duration-300">
+<div class="w-12 h-12 rounded-lg bg-orange-50 flex items-center justify-center mb-6 group-hover:bg-tertiary transition-colors">
+<span class="material-symbols-outlined text-tertiary group-hover:text-white" data-icon="payments">payments</span>
+</div>
+<h3 class="font-headline font-bold text-xl mb-2 text-on-background">Payment Help</h3>
+<p class="text-sm text-on-surface-variant leading-relaxed mb-4">Billing cycles, corporate invoicing, and subscription management.</p>
+<a class="text-tertiary font-semibold text-sm flex items-center gap-1 group-hover:gap-2 transition-all" href="#">
+                    Billing FAQ <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+<!-- Service Areas -->
+<div class="group p-8 bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/10 hover:shadow-xl hover:shadow-sky-900/5 transition-all duration-300">
+<div class="w-12 h-12 rounded-lg bg-slate-50 flex items-center justify-center mb-6 group-hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-slate-600 group-hover:text-white" data-icon="map">map</span>
+</div>
+<h3 class="font-headline font-bold text-xl mb-2 text-on-background">Service Areas</h3>
+<p class="text-sm text-on-surface-variant leading-relaxed mb-4">Check coverage in your region and upcoming expansion zones.</p>
+<a class="text-slate-700 font-semibold text-sm flex items-center gap-1 group-hover:gap-2 transition-all" href="#">
+                    Check Coverage <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+</section>
+<!-- Split Article View Section -->
+<section class="flex flex-col lg:flex-row gap-12 items-start mb-24">
+<!-- Sidebar Navigation -->
+<aside class="w-full lg:w-72 lg:sticky lg:top-24 space-y-8">
+<div>
+<h4 class="font-headline font-bold text-xs uppercase tracking-widest text-outline mb-4">Trending Topics</h4>
+<nav class="flex flex-col gap-2">
+<a class="px-4 py-2 bg-sky-50 text-sky-700 font-semibold rounded-lg text-sm" href="#">Legionella Prevention</a>
+<a class="px-4 py-2 text-on-surface-variant hover:bg-surface-container-low rounded-lg text-sm transition-colors" href="#">Chemical Safety Data</a>
+<a class="px-4 py-2 text-on-surface-variant hover:bg-surface-container-low rounded-lg text-sm transition-colors" href="#">Water Tank Inspection</a>
+<a class="px-4 py-2 text-on-surface-variant hover:bg-surface-container-low rounded-lg text-sm transition-colors" href="#">Certificate of Sterility</a>
+</nav>
+</div>
+<div>
+<h4 class="font-headline font-bold text-xs uppercase tracking-widest text-outline mb-4">Resources</h4>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:text-primary text-sm transition-colors" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="picture_as_pdf">picture_as_pdf</span>
+                            2024 Compliance PDF
+                        </a>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant hover:text-primary text-sm transition-colors" href="#">
+<span class="material-symbols-outlined text-lg" data-icon="video_library">video_library</span>
+                            Training Videos
+                        </a>
+</nav>
+</div>
+</aside>
+<!-- Main Article Content -->
+<article class="flex-1 bg-surface-container-lowest rounded-2xl p-8 lg:p-12 shadow-sm border border-outline-variant/10">
+<nav class="flex items-center gap-2 text-xs text-outline font-medium mb-8">
+<span>Help Center</span>
+<span class="material-symbols-outlined text-[10px]" data-icon="chevron_right">chevron_right</span>
+<span>Hygiene Standards</span>
+<span class="material-symbols-outlined text-[10px]" data-icon="chevron_right">chevron_right</span>
+<span class="text-primary">Legionella Prevention</span>
+</nav>
+<h2 class="font-headline font-extrabold text-3xl lg:text-4xl mb-6 text-on-background leading-tight">Legionella Control and Prevention Protocol 2024</h2>
+<div class="flex items-center gap-4 mb-10 pb-10 border-b border-surface-variant">
+<img alt="Author avatar" class="w-10 h-10 rounded-full" data-alt="professional female lab technician wearing white coat and safety glasses" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAUqoJNXi7xxPHc4EhY_WRDNISixtpU3KLSrvRAD3-2-fX5NNGqcWEWzGR0yi6nqyqfeHeDoITaXfhQcCkP2Un1SGVh1C_ADyodzrskovqjboEIHjmFHnaKaIAW3F-fujqkolFcFm8Wo9tI5hSWdRPR5t7CNptDfFvrRRnORizEInie1YCe5jvPi6BfE1suoYHW7rgZ2KkO_zIaYM27YR1I3RcHgFh8X2ViHFTnU9DuSyRnfIkxLtC3NYSnGb8e3QbDIWINZSyKeOY"/>
+<div>
+<p class="text-sm font-bold text-on-background">Dr. Sarah Chen</p>
+<p class="text-xs text-outline">Lead Bio-Safety Compliance Officer • Updated 2 days ago</p>
+</div>
+</div>
+<div class="prose prose-slate max-w-none text-on-surface-variant leading-relaxed space-y-6">
+<p class="text-lg">Falkon Care follows strict HSG274 guidelines to ensure all water systems remain free of Legionella bacteria. This protocol outlines the specific steps our technicians take during every site visit.</p>
+<h4 class="text-xl font-headline font-bold text-on-background mt-8">1. Temperature Monitoring</h4>
+<p>Bacteria thrive in temperatures between 20°C and 45°C. We maintain hot water at a minimum of 60°C and cold water below 20°C to prevent colonization.</p>
+<div class="bg-surface-container-low p-6 rounded-xl border-l-4 border-primary">
+<p class="font-bold text-on-background mb-1">Critical Insight:</p>
+<p class="text-sm">Regular "flushing" of little-used outlets is the single most effective way to prevent biofilm buildup in commercial plumbing systems.</p>
+</div>
+<h4 class="text-xl font-headline font-bold text-on-background mt-8">2. Chemical Disinfection</h4>
+<p>Our teams use high-grade Chlorine Dioxide (ClO2) which is 10x more effective than traditional chlorine against biofilms. Our dosage levels are precisely calculated based on tank volume.</p>
+<img alt="Technical hygiene process" class="w-full rounded-xl my-8 object-cover h-64" data-alt="close-up of clean water flowing through a high-tech filtration system with blue glowing lights" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4V5CgePbEhRCyBkvQj3XZzLjbiaVu9kyeKfhF79hJ0nYtrnVbjM1Xo0RTz--UaNhzxVCBPftLszNwl03lJTp7QcDHx63i8ecaTfawaI64RkI7s7dEimFqBCxNvrpUFmyN8v6LGpOASLbTsmJgVGRBR--jM-x-utnXLCrQ54Jt985Ceuis0s8kCYknYj2q2lZAboD20gmBACeSwtDxm45SLWbmsCXXeVDdG_fKpTki-WAOL5yQISvbJmvVF_9Y_p1LlJ_6Stdu0Ok"/>
+<h4 class="text-xl font-headline font-bold text-on-background mt-8">3. Reporting &amp; Compliance</h4>
+<p>Every test result is logged in real-time to your Falkon Care Dashboard. Digital signatures from our lead technicians ensure a legally compliant audit trail for your health and safety records.</p>
+</div>
+<div class="mt-16 pt-10 border-t border-surface-variant flex flex-col sm:flex-row items-center justify-between gap-6">
+<div class="flex items-center gap-4">
+<p class="text-sm font-medium text-on-surface-variant">Was this helpful?</p>
+<div class="flex gap-2">
+<button class="px-4 py-2 border border-outline-variant rounded-lg hover:bg-slate-50 transition-colors text-sm font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-lg" data-icon="thumb_up">thumb_up</span> Yes
+                            </button>
+<button class="px-4 py-2 border border-outline-variant rounded-lg hover:bg-slate-50 transition-colors text-sm font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-lg" data-icon="thumb_down">thumb_down</span> No
+                            </button>
+</div>
+</div>
+<button class="flex items-center gap-2 text-primary font-bold hover:underline transition-all">
+<span class="material-symbols-outlined" data-icon="share">share</span> Share Article
+                    </button>
+</div>
+</article>
+</section>
+<!-- Support Contact Section -->
+<section class="bg-primary overflow-hidden rounded-[2rem] relative p-12 lg:p-16 flex flex-col lg:flex-row items-center gap-12">
+<div class="absolute top-0 right-0 w-1/2 h-full bg-white/5 -skew-x-12 transform translate-x-1/4"></div>
+<div class="relative z-10 flex-1">
+<h2 class="font-headline font-extrabold text-3xl lg:text-4xl text-white mb-4">Still need help?</h2>
+<p class="text-sky-100 text-lg mb-8 max-w-lg">Our dedicated hygiene support team is available 24/7 for emergency water consultations or billing inquiries.</p>
+<div class="flex flex-wrap gap-4">
+<button class="bg-white text-primary px-8 py-4 rounded-xl font-bold text-lg flex items-center gap-3 hover:shadow-xl hover:-translate-y-1 transition-all">
+<span class="material-symbols-outlined" data-icon="chat_bubble">chat_bubble</span>
+                        Chat with us
+                    </button>
+<button class="bg-primary-container text-white border border-white/20 px-8 py-4 rounded-xl font-bold text-lg flex items-center gap-3 hover:bg-sky-600 transition-all">
+<span class="material-symbols-outlined" data-icon="mail">mail</span>
+                        Email Support
+                    </button>
+</div>
+</div>
+<div class="relative z-10 lg:w-1/3 flex justify-center">
+<div class="relative">
+<div class="absolute -inset-4 bg-sky-400/20 blur-2xl rounded-full animate-pulse"></div>
+<img alt="Support Team Office" class="w-64 h-64 object-cover rounded-2xl shadow-2xl rotate-3" data-alt="modern tech support hub with clean minimalist desks and blue ambient lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCwFnI06quSdeBwJLddylvuGyzRnTyes0S1on4RZIYC9lECm_lKs0olNbU2dVDVpumVi_tNIio_mV2oGzE8cmlh0fSD_2PsSccUCS84xWfC0gaR7jfPRK_IOuHA-gjRfTzbPCpyqcR3awvCEpTF4nKbj2gkE7UhG2ipkGDbLWVklHAMI-v-xAIcubPDQLtNHJXE9bInPM_f0qzyaKak2zUDsdtcQ8Oc2wU9HAGvVXjD7A28-AwsmvSlpRjT9IUObAWkZnMgpCDmMcI"/>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-slate-50 border-t border-slate-200">
+<div class="max-w-7xl mx-auto px-8 py-12">
+<div class="flex flex-col md:flex-row justify-between items-start gap-12 mb-12">
+<div class="space-y-4">
+<span class="text-xl font-black text-sky-900 font-headline uppercase tracking-tighter">Falkon Care</span>
+<p class="text-sm text-slate-500 max-w-xs font-body leading-relaxed">Advanced water hygiene and hygiene management solutions for modern facilities.</p>
+</div>
+<div class="grid grid-cols-2 lg:grid-cols-3 gap-12">
+<div>
+<h5 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-4">Product</h5>
+<ul class="space-y-3 text-sm text-slate-600">
+<li><a class="hover:text-primary" href="#">Cleaning Jobs</a></li>
+<li><a class="hover:text-primary" href="#">Hygiene Meter</a></li>
+<li><a class="hover:text-primary" href="#">Safety Reports</a></li>
+</ul>
+</div>
+<div>
+<h5 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-4">Support</h5>
+<ul class="space-y-3 text-sm text-slate-600">
+<li><a class="hover:text-primary" href="#">Help Center</a></li>
+<li><a class="hover:text-primary" href="#">Contact Support</a></li>
+<li><a class="hover:text-primary" href="#">Chemical Safety</a></li>
+</ul>
+</div>
+<div class="col-span-2 lg:col-span-1">
+<h5 class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-4">Legal</h5>
+<ul class="space-y-3 text-sm text-slate-600">
+<li><a class="hover:text-primary" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-primary" href="#">Terms of Service</a></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="pt-8 border-t border-slate-200 flex flex-col md:flex-row justify-between items-center gap-6">
+<p class="text-xs text-slate-500 font-body">© 2024 Falkon Care. Pure Water. Pure Professionalism.</p>
+<div class="flex gap-6">
+<a class="text-slate-400 hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined" data-icon="public">public</span></a>
+<a class="text-slate-400 hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined" data-icon="brand_awareness">brand_awareness</span></a>
+<a class="text-slate-400 hover:text-primary transition-colors" href="#"><span class="material-symbols-outlined" data-icon="hub">hub</span></a>
+</div>
+</div>
+</div>
+</footer>
+</body></html>

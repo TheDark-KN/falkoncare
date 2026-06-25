@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Falkon Care Admin Panel</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Public+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "background": "#f7f9fb",
+              "surface-container-lowest": "#ffffff",
+              "on-primary-container": "#fdfcff",
+              "primary-fixed-dim": "#93ccff",
+              "on-background": "#191c1e",
+              "on-tertiary-fixed": "#2d1600",
+              "surface-dim": "#d8dadc",
+              "surface-variant": "#e0e3e5",
+              "tertiary-container": "#ac6200",
+              "tertiary-fixed": "#ffdcc0",
+              "on-secondary-fixed-variant": "#005049",
+              "on-secondary-fixed": "#00201d",
+              "on-error": "#ffffff",
+              "secondary": "#006a61",
+              "inverse-surface": "#2d3133",
+              "surface-container-highest": "#e0e3e5",
+              "inverse-on-surface": "#eff1f3",
+              "surface-container-high": "#e6e8ea",
+              "secondary-fixed": "#89f5e7",
+              "on-tertiary-container": "#fffbff",
+              "secondary-container": "#86f2e4",
+              "on-primary-fixed": "#001d31",
+              "on-surface": "#191c1e",
+              "surface-bright": "#f7f9fb",
+              "error": "#ba1a1a",
+              "on-surface-variant": "#3f4850",
+              "on-secondary-container": "#006f66",
+              "primary-container": "#007bb9",
+              "surface-container": "#eceef0",
+              "tertiary": "#894d00",
+              "on-error-container": "#93000a",
+              "primary-fixed": "#cce5ff",
+              "on-tertiary-fixed-variant": "#6b3b00",
+              "on-primary": "#ffffff",
+              "surface-tint": "#006398",
+              "outline": "#707881",
+              "error-container": "#ffdad6",
+              "primary": "#006194",
+              "on-secondary": "#ffffff",
+              "inverse-primary": "#93ccff",
+              "secondary-fixed-dim": "#6bd8cb",
+              "outline-variant": "#bfc7d2",
+              "surface-container-low": "#f2f4f6",
+              "tertiary-fixed-dim": "#ffb875",
+              "on-tertiary": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Public Sans"],
+              "label": ["Public Sans"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .glass-effect {
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+      }
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      body {
+        font-family: 'Public Sans', sans-serif;
+        background-color: #f7f9fb;
+      }
+      h1, h2, h3, h4 {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+      }
+    </style>
+</head>
+<body class="text-on-background">
+<!-- SideNavBar (Authority Source: JSON) -->
+<aside class="h-screen w-64 bg-slate-50 dark:bg-slate-950 flex flex-col fixed left-0 top-0 h-full p-4 border-r border-slate-200 dark:border-slate-800 z-50 transition-all duration-300 ease-in-out">
+<div class="flex items-center gap-3 mb-8 px-2">
+<div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-white">
+<span class="material-symbols-outlined" data-icon="water_drop">water_drop</span>
+</div>
+<div>
+<h1 class="text-lg font-black text-sky-900 dark:text-white leading-tight">Falkon Care</h1>
+<p class="text-[10px] uppercase tracking-wider text-slate-500 font-bold">Water Hygiene Pro</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2.5 bg-sky-50 dark:bg-sky-900/20 text-sky-700 dark:text-sky-300 rounded-lg font-['Plus_Jakarta_Sans'] text-sm font-semibold transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-500 dark:text-slate-400 hover:text-sky-600 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg font-['Plus_Jakarta_Sans'] text-sm font-semibold transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+                Bookings
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-500 dark:text-slate-400 hover:text-sky-600 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg font-['Plus_Jakarta_Sans'] text-sm font-semibold transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="badge">badge</span>
+                Staff
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-500 dark:text-slate-400 hover:text-sky-600 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg font-['Plus_Jakarta_Sans'] text-sm font-semibold transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="sanitizer">sanitizer</span>
+                Hygiene Reports
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-500 dark:text-slate-400 hover:text-sky-600 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg font-['Plus_Jakarta_Sans'] text-sm font-semibold transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+                Inventory
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-500 dark:text-slate-400 hover:text-sky-600 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 rounded-lg font-['Plus_Jakarta_Sans'] text-sm font-semibold transition-all duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+                Settings
+            </a>
+</nav>
+<div class="mt-auto pt-4 border-t border-slate-200 dark:border-slate-800">
+<button class="w-full py-3 bg-primary text-white rounded-xl font-bold text-sm shadow-md flex items-center justify-center gap-2 hover:opacity-90 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                New Cleaning Job
+            </button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 min-h-screen relative">
+<!-- TopNavBar (Authority Source: JSON) -->
+<header class="fixed top-0 left-64 right-0 z-40 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl shadow-sm shadow-sky-900/5 flex justify-between items-center px-8 py-3 w-auto">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg" data-icon="search">search</span>
+<input class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-full py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-primary/20 placeholder:text-slate-400 transition-all" placeholder="Global search for bookings, staff, or clients..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="relative p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors active:scale-95">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border-2 border-white"></span>
+</button>
+<div class="flex items-center gap-3 pl-6 border-l border-slate-200 dark:border-slate-800">
+<div class="text-right">
+<p class="text-sm font-bold text-sky-800 dark:text-sky-300">Alexander Thorne</p>
+<p class="text-[10px] text-slate-500 font-medium">Head Administrator</p>
+</div>
+<img alt="User Profile Avatar" class="w-10 h-10 rounded-full object-cover ring-2 ring-primary/10" data-alt="Close up portrait of a professional male administrator in a light blue shirt with a clean modern office background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAN6AfqsxxCHpFRkp6fEc6X14Ekxg6Pq2ooDT2pKNu4xCS3Xy8mrh1Rt2WzSSshyjBuF1ooMoTHgxmN4rp1HIY1H3lrOwLtRtt5hOSuE6Aq35Ljm-dEXyquOqtYwRfr2GnmCraTqp0LArqtMZJ-tWDFmq7fkgGXGS2OO2pD7AEEbtSShzsX41Qurgx4NBeuhqIYEKblxAIMoJXfRrk-79L7msgdGDh0yEWk-UUeV1QN7YH18C9yTGjiO_z0wMfyl0WUbKCcfh8vrFM"/>
+</div>
+</div>
+</header>
+<!-- Canvas -->
+<div class="pt-24 px-8 pb-12">
+<!-- Dashboard Header -->
+<div class="flex justify-between items-end mb-8">
+<div>
+<h2 class="text-3xl font-extrabold tracking-tight text-on-background mb-1">Operational Dashboard</h2>
+<p class="text-on-surface-variant font-medium">Monitoring water hygiene performance for <span class="text-primary">October 24th, 2024</span></p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-4 py-2 bg-surface-container-high text-on-surface rounded-lg font-semibold text-sm hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="download">download</span>
+                        Export Report
+                    </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg font-semibold text-sm shadow-lg shadow-primary/20 hover:opacity-90 transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="refresh">refresh</span>
+                        Live Sync
+                    </button>
+</div>
+</div>
+<!-- Stats Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+<div class="bg-surface-container-lowest p-6 rounded-xl border-none shadow-sm flex flex-col justify-between min-h-[140px]">
+<div class="flex justify-between items-start">
+<div class="p-2 bg-sky-50 rounded-lg text-primary">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+</div>
+<span class="text-xs font-bold text-secondary flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="trending_up">trending_up</span>
+                            12%
+                        </span>
+</div>
+<div>
+<p class="text-slate-500 text-sm font-semibold">Daily Revenue</p>
+<h3 class="text-2xl font-extrabold text-on-surface">$14,280.00</h3>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl border-none shadow-sm flex flex-col justify-between min-h-[140px]">
+<div class="flex justify-between items-start">
+<div class="p-2 bg-emerald-50 rounded-lg text-emerald-600">
+<span class="material-symbols-outlined" data-icon="event_available">event_available</span>
+</div>
+<span class="text-xs font-bold text-slate-400 flex items-center gap-1">
+                            Current
+                        </span>
+</div>
+<div>
+<p class="text-slate-500 text-sm font-semibold">Today's Bookings</p>
+<h3 class="text-2xl font-extrabold text-on-surface">42 Units</h3>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl border-none shadow-sm flex flex-col justify-between min-h-[140px]">
+<div class="flex justify-between items-start">
+<div class="p-2 bg-indigo-50 rounded-lg text-indigo-600">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+</div>
+<span class="text-xs font-bold text-secondary flex items-center gap-1">
+                            94% Capacity
+                        </span>
+</div>
+<div>
+<p class="text-slate-500 text-sm font-semibold">Active Staff</p>
+<h3 class="text-2xl font-extrabold text-on-surface">18 Members</h3>
+</div>
+</div>
+<div class="bg-primary text-white p-6 rounded-xl border-none shadow-xl shadow-primary/20 flex flex-col justify-between min-h-[140px]">
+<div class="flex justify-between items-start">
+<div class="p-2 bg-white/20 rounded-lg">
+<span class="material-symbols-outlined" data-icon="warning">warning</span>
+</div>
+<span class="px-2 py-0.5 bg-white/20 rounded-full text-[10px] font-bold uppercase tracking-wider">High Priority</span>
+</div>
+<div>
+<p class="text-white/80 text-sm font-semibold">Pending Alerts</p>
+<h3 class="text-2xl font-extrabold">07 Alerts</h3>
+</div>
+</div>
+</div>
+<!-- Chart and Widget Section -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+<!-- Revenue Chart -->
+<div class="lg:col-span-2 bg-surface-container-lowest p-8 rounded-xl shadow-sm">
+<div class="flex justify-between items-center mb-10">
+<div>
+<h4 class="text-lg font-extrabold text-on-surface">Revenue Growth</h4>
+<p class="text-sm text-on-surface-variant">Performance metrics across all service regions</p>
+</div>
+<select class="bg-surface-container-low border-none rounded-lg text-xs font-bold px-4 py-2 ring-0 focus:ring-2 focus:ring-primary/20">
+<option>Last 7 Days</option>
+<option>Last 30 Days</option>
+</select>
+</div>
+<div class="relative h-64 w-full flex items-end gap-2 px-2">
+<!-- Simplified Visualization (HTML/CSS Bar representation as chart placeholder) -->
+<div class="flex-1 bg-primary/10 rounded-t-lg h-[40%] relative group transition-all hover:bg-primary/20">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-on-surface text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">$4.2k</div>
+</div>
+<div class="flex-1 bg-primary/15 rounded-t-lg h-[55%] relative group transition-all hover:bg-primary/20">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-on-surface text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">$5.8k</div>
+</div>
+<div class="flex-1 bg-primary/20 rounded-t-lg h-[45%] relative group transition-all hover:bg-primary/20">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-on-surface text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">$4.9k</div>
+</div>
+<div class="flex-1 bg-primary/40 rounded-t-lg h-[75%] relative group transition-all hover:bg-primary/20">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-on-surface text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">$8.1k</div>
+</div>
+<div class="flex-1 bg-primary/25 rounded-t-lg h-[60%] relative group transition-all hover:bg-primary/20">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-on-surface text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">$6.4k</div>
+</div>
+<div class="flex-1 bg-primary/60 rounded-t-lg h-[90%] relative group transition-all hover:bg-primary/20">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-on-surface text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">$10.2k</div>
+</div>
+<div class="flex-1 bg-primary rounded-t-lg h-[80%] relative group transition-all hover:bg-primary/90">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-on-surface text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">$9.4k</div>
+</div>
+</div>
+<div class="flex justify-between mt-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest px-2">
+<span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+</div>
+</div>
+<!-- Staff Availability Widget -->
+<div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm overflow-hidden relative">
+<h4 class="text-lg font-extrabold text-on-surface mb-6">Staff Availability</h4>
+<div class="space-y-5">
+<div class="flex items-center gap-4">
+<img alt="Staff 1" class="w-10 h-10 rounded-full object-cover" data-alt="Close up of a friendly male technician in professional work attire smiling" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHhFVzSIYJzpOyrS-L0nGJe7WOvVvdL1yRxLlARz-EHtkCKszt2lNoQxvbvONsSgMylsSEMKDcH5-ij7nJSyoOJdTV9CqfBQDlxBazic2F1scIUTqoDTkXc4yzOsnw-KalhLxhoIrFe36NBL2nDegS4V6wgZQjiZ5UMt2nB5cLdxw8JL5IffPdJcxVDWulSgRt-bdsQSkFWm-jMbhNVo-kwhkwFsDheTgpw_9j-Ah5FlmC_l-O9E7Y5gkHL-OuVYGmhXDQH-OyKJ8"/>
+<div class="flex-1">
+<p class="text-sm font-bold text-on-surface">Mark J. Peterson</p>
+<p class="text-xs text-secondary font-semibold">Available Now</p>
+</div>
+<span class="w-3 h-3 bg-secondary rounded-full shadow-sm shadow-secondary/50"></span>
+</div>
+<div class="flex items-center gap-4 opacity-70">
+<img alt="Staff 2" class="w-10 h-10 rounded-full object-cover" data-alt="Professional woman in a field tech uniform with a clean neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlc-3dyyxffAmkhZ1J_ZY8ugEh1K94LSZ7RTRjQNBGRYQomaSmmqVncLu-cvpvw0TNDHoDUysTFHd61X-7-KuGVH3PboOLcQyeX5xs_lcSvBrj0T1o6tM95kDHnMHYBw9uqDy3VwEVSNN69WsUxi8VU-rM3sqKiTHRMBccQqN-SzBcoINE8y9X4fsrE6DPZZ4czD1YaapAbbVVA2VmRx8BU0wWiHibhZglRhExJDcnen_ABLqKskuKz5gZofHPiFZ7jGjbNe1L_ak"/>
+<div class="flex-1">
+<p class="text-sm font-bold text-on-surface">Elena Rodriguez</p>
+<p class="text-xs text-slate-500 font-semibold">On-site Job #812</p>
+</div>
+<span class="w-3 h-3 bg-tertiary rounded-full"></span>
+</div>
+<div class="flex items-center gap-4">
+<img alt="Staff 3" class="w-10 h-10 rounded-full object-cover" data-alt="Headshot of a serious female quality control officer in corporate hygiene gear" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBLtTcibaUzApfNyl-8dYlgAmnm9rZclaaYBChmNWtEA7h9MHM5-IRkcH5pYDxxmV9QmtUdYf5EbCLRMpIZBf1tOnysH4-ndBzbD4OkYzO6XUs_XLpaTDfSKHC_bEEq5tLBcbvFb8rrUgRK0hA0b7XN5vi83i44AwgDgN5yGFy-pn44LXRmeEHIe9v6ZIQL9olNTChaTQdllRfOUgj66IP_Bn0rw8hyEzb0K5u7Vfsi4RKNBNOy9XlOivxEsBrrPfZTtmdk6StEuc8"/>
+<div class="flex-1">
+<p class="text-sm font-bold text-on-surface">Sarah Drisko</p>
+<p class="text-xs text-secondary font-semibold">Available Now</p>
+</div>
+<span class="w-3 h-3 bg-secondary rounded-full"></span>
+</div>
+<div class="flex items-center gap-4">
+<img alt="Staff 4" class="w-10 h-10 rounded-full object-cover" data-alt="Mid-age man in a professional service uniform looking confident" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJf1QEaggSScaOy8zW8rqtDUi4vQDembxuiy8jZcIIa5y5y3vFp4pmp7jvAg1qofvCHTzlkxtPkP9-oQNSHGNIEJmcgvFPx52-LkFOo7JHC250VKSK4UdGzgkJZNK7E3a8xOE8HFIAuYKH0A6LPkad08s0B2w_wFQ9vbfVFDhu86Czfn2oXOXf0PR82NKf-zEB5RdWQjX6jRye3kN4AmcVJgQ3GyOmm5vE2hTfBe9G8nzHzb6PHbKGOCLlzCwaYqwpVbV818n6-Ug"/>
+<div class="flex-1">
+<p class="text-sm font-bold text-on-surface">James Chen</p>
+<p class="text-xs text-secondary font-semibold">Available Now</p>
+</div>
+<span class="w-3 h-3 bg-secondary rounded-full"></span>
+</div>
+</div>
+<button class="w-full mt-8 py-2.5 text-xs font-bold text-primary hover:bg-primary/5 rounded-lg transition-colors border border-primary/10">
+                        View Full Roster
+                    </button>
+</div>
+</div>
+<!-- Main Bookings Table Container -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+<div class="p-6 flex flex-col md:flex-row justify-between items-center gap-4 border-b border-slate-50">
+<div>
+<h4 class="text-lg font-extrabold text-on-surface">Global Bookings</h4>
+<p class="text-xs text-on-surface-variant font-medium">Real-time update of all sterilization and cleaning tasks</p>
+</div>
+<div class="flex items-center gap-2">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm" data-icon="filter_list">filter_list</span>
+<select class="bg-surface-container-low border-none rounded-lg text-xs font-bold pl-10 pr-4 py-2 ring-0 focus:ring-2 focus:ring-primary/20 appearance-none">
+<option>Status: All</option>
+<option>Status: Pending</option>
+<option>Status: Completed</option>
+</select>
+</div>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm" data-icon="sort">sort</span>
+<select class="bg-surface-container-low border-none rounded-lg text-xs font-bold pl-10 pr-4 py-2 ring-0 focus:ring-2 focus:ring-primary/20 appearance-none">
+<option>Sort By: Date</option>
+<option>Sort By: Client</option>
+</select>
+</div>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-low/50">
+<tr>
+<th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Client Name</th>
+<th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Service Type</th>
+<th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Technician</th>
+<th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Date &amp; Time</th>
+<th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Status</th>
+<th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-50">
+<tr class="hover:bg-slate-50/50 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-primary-fixed flex items-center justify-center text-primary-fixed-dim font-bold text-xs">GR</div>
+<span class="text-sm font-bold text-on-surface">Grand Riviera Hotel</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="text-xs font-semibold px-2 py-1 bg-surface-container-high rounded text-on-surface-variant">Full Tank Sterilization</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<img alt="Tech" class="w-6 h-6 rounded-full" data-alt="Technician avatar small" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHTgwMYSsZdKw8YuCtQulSF6bpr6W-fi-sj1KPPS03TYnxyt-ATqMsCFIX9i5CrznhuG1GWMstja6XbfKAJBkFjq7VimZuEOmkPgttvViEnob1N_Lr2fC3fmUotr61pWBE5XuOz_W9Kq6grZCkECD1TcBKFD30HDuigvrM_5MAA0c6TIV8eztRD2nVKG_CXjqIZqj3E5u14gCwJLhNB2E0GlHJMG1U2gy0gpxIW4fKBcQaH_DGtgXcYYv_NMdDugKBrXSvths0Xqg"/>
+<span class="text-xs font-medium text-on-surface">Mark J.</span>
+</div>
+</td>
+<td class="px-6 py-4 text-xs font-medium text-slate-500">Oct 24, 09:00 AM</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 py-1 px-3 rounded-full text-[10px] font-black uppercase tracking-wider bg-secondary-container text-on-secondary-container">
+<span class="w-1.5 h-1.5 bg-secondary rounded-full"></span>
+                                        Completed
+                                    </span>
+</td>
+<td class="px-6 py-4">
+<button class="p-2 text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-xl" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50/50 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-tertiary-fixed flex items-center justify-center text-tertiary-container font-bold text-xs">WC</div>
+<span class="text-sm font-bold text-on-surface">Wellness Center South</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="text-xs font-semibold px-2 py-1 bg-surface-container-high rounded text-on-surface-variant">Legionella Assessment</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<img alt="Tech" class="w-6 h-6 rounded-full" data-alt="Technician avatar small" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDUB1RX8NmxyIMKz_3yyu6e0hb-VMPrA1EOMQYhFqrvGbOoQYUyYvUGo_voaWGAO1Mu1VOtRradarGwJ8ENl7xlmzWd9LRtnRY8DHPUwexpx68AUZ0VqWnrXeUlZ54HNZBCo1qCE9Inmtoh7AN8dG2QdTKzTwqiePxbNf1Wm6tYkTyYYotDOQFxPIwFE_Eikq524y94OH_D9UnPnTK203iDbAv7TbUc8dOL6uKJhUb6p9F_IPSAmVKe9P4qUG7mNUA9SMXZYnyPgww"/>
+<span class="text-xs font-medium text-on-surface">Elena R.</span>
+</div>
+</td>
+<td class="px-6 py-4 text-xs font-medium text-slate-500">Oct 24, 11:30 AM</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 py-1 px-3 rounded-full text-[10px] font-black uppercase tracking-wider bg-sky-100 text-sky-700">
+<span class="w-1.5 h-1.5 bg-sky-500 rounded-full"></span>
+                                        In Progress
+                                    </span>
+</td>
+<td class="px-6 py-4">
+<button class="p-2 text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-xl" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50/50 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-slate-200 flex items-center justify-center text-slate-500 font-bold text-xs">CH</div>
+<span class="text-sm font-bold text-on-surface">Central Heights Apts</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="text-xs font-semibold px-2 py-1 bg-surface-container-high rounded text-on-surface-variant">Pipes Flushing</span>
+</td>
+<td class="px-6 py-4 text-xs font-medium text-slate-400">Unassigned</td>
+<td class="px-6 py-4 text-xs font-medium text-slate-500">Oct 24, 02:00 PM</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 py-1 px-3 rounded-full text-[10px] font-black uppercase tracking-wider bg-orange-100 text-orange-700">
+<span class="w-1.5 h-1.5 bg-orange-500 rounded-full animate-pulse"></span>
+                                        Pending
+                                    </span>
+</td>
+<td class="px-6 py-4">
+<button class="p-2 text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-xl" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-6 border-t border-slate-50 flex justify-between items-center">
+<p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Showing 1-10 of 42 Results</p>
+<div class="flex gap-2">
+<button class="p-2 bg-surface-container-low rounded hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="p-2 bg-primary text-white rounded hover:opacity-90 transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer (Authority Source: JSON) -->
+<footer class="w-full py-8 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 mt-auto">
+<div class="flex flex-col md:flex-row justify-between items-center px-8 max-w-7xl mx-auto space-y-4 md:space-y-0">
+<p class="font-['Public_Sans'] text-xs text-slate-500">© 2024 Falkon Care. Pure Water. Pure Professionalism.</p>
+<div class="flex gap-8">
+<a class="font-['Public_Sans'] text-xs text-slate-400 hover:text-sky-500 transition-colors" href="#">Privacy Policy</a>
+<a class="font-['Public_Sans'] text-xs text-slate-400 hover:text-sky-500 transition-colors" href="#">Terms of Service</a>
+<a class="font-['Public_Sans'] text-xs text-slate-400 hover:text-sky-500 transition-colors" href="#">Contact Support</a>
+<a class="font-['Public_Sans'] text-xs text-slate-400 hover:text-sky-500 transition-colors" href="#">Chemical Safety</a>
+</div>
+</div>
+</footer>
+</main>
+</body></html>

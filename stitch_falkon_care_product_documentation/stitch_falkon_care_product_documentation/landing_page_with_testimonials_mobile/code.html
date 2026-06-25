@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Falkon Care | Professional Water Tank Cleaning</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&amp;family=Public+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary-fixed-dim": "#6bd8cb",
+              "on-tertiary-container": "#fffbff",
+              "secondary": "#006a61",
+              "on-secondary": "#ffffff",
+              "surface-dim": "#d8dadc",
+              "on-primary-fixed": "#001d31",
+              "on-secondary-fixed-variant": "#005049",
+              "on-background": "#191c1e",
+              "surface-container": "#eceef0",
+              "outline": "#707881",
+              "inverse-surface": "#2d3133",
+              "surface-container-highest": "#e0e3e5",
+              "primary-fixed": "#cce5ff",
+              "on-error-container": "#93000a",
+              "background": "#f7f9fb",
+              "surface-container-high": "#e6e8ea",
+              "error-container": "#ffdad6",
+              "surface": "#f7f9fb",
+              "tertiary-container": "#ac6200",
+              "error": "#ba1a1a",
+              "inverse-primary": "#93ccff",
+              "surface-variant": "#e0e3e5",
+              "on-secondary-fixed": "#00201d",
+              "secondary-fixed": "#89f5e7",
+              "surface-container-low": "#f2f4f6",
+              "tertiary-fixed": "#ffdcc0",
+              "on-tertiary-fixed": "#2d1600",
+              "on-tertiary": "#ffffff",
+              "on-surface-variant": "#3f4850",
+              "on-primary": "#ffffff",
+              "inverse-on-surface": "#eff1f3",
+              "surface-container-lowest": "#ffffff",
+              "surface-tint": "#006398",
+              "secondary-container": "#86f2e4",
+              "on-surface": "#191c1e",
+              "on-primary-container": "#fdfcff",
+              "primary": "#006194",
+              "on-error": "#ffffff",
+              "outline-variant": "#bfc7d2",
+              "on-tertiary-fixed-variant": "#6b3b00",
+              "tertiary-fixed-dim": "#ffb875",
+              "tertiary": "#894d00",
+              "surface-bright": "#f7f9fb",
+              "primary-fixed-dim": "#93ccff",
+              "primary-container": "#007bb9",
+              "on-primary-fixed-variant": "#004b73",
+              "on-secondary-container": "#006f66"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Public Sans"],
+              "label": ["Public Sans"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .glass-effect {
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+      }
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background font-body text-on-surface antialiased">
+<!-- Top Navigation Shell -->
+<nav class="fixed top-0 w-full z-50 flex justify-between items-center px-6 h-16 bg-[#f2f4f6]/70 backdrop-blur-xl shadow-sm shadow-[#191c1e]/5 transition-opacity">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">water_drop</span>
+<span class="text-xl font-extrabold bg-gradient-to-br from-[#0284C7] to-[#007bb9] bg-clip-text text-transparent font-headline tracking-tight">Falkon Care</span>
+</div>
+<div class="hidden md:flex gap-6 items-center">
+<a class="text-[#0284C7] font-bold font-headline transition-opacity hover:opacity-80 active:scale-95 duration-200" href="#">Home</a>
+<a class="text-[#191c1e] transition-opacity hover:opacity-80 active:scale-95 duration-200" href="#">Features</a>
+<a class="text-[#191c1e] transition-opacity hover:opacity-80 active:scale-95 duration-200" href="#">Pricing</a>
+</div>
+<button class="material-symbols-outlined text-on-surface md:hidden">menu</button>
+</nav>
+<!-- Main Canvas -->
+<main class="pt-16 pb-24 space-y-12">
+<!-- Hero Section -->
+<section class="relative px-6 py-12 flex flex-col items-center text-center">
+<div class="absolute inset-0 -z-10 overflow-hidden">
+<div class="w-full h-full bg-gradient-to-b from-primary/5 to-transparent"></div>
+</div>
+<div class="inline-flex items-center px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container text-xs font-bold mb-6 tracking-wide">
+                100% HYGIENIC GUARANTEE
+            </div>
+<h1 class="text-4xl font-extrabold font-headline leading-tight tracking-tight text-on-surface mb-4">
+                Professional Water <br/><span class="text-primary">Tank Cleaning</span> Service
+            </h1>
+<p class="text-on-surface-variant text-lg leading-relaxed max-w-sm mb-8">
+                Pure water starts with a pristine tank. Experience the gold standard of aquatic sanitation.
+            </p>
+<button class="w-full py-4 rounded-xl bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold text-lg shadow-lg shadow-primary/20 active:scale-95 transition-transform">
+                Book Now
+            </button>
+<div class="mt-12 w-full aspect-video rounded-xl overflow-hidden shadow-2xl shadow-on-surface/10 relative">
+<img class="w-full h-full object-cover" data-alt="high-end stainless steel water storage system in a clean industrial facility with soft natural lighting and reflective surfaces" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAiT0hfm-q6cPdxcc5E7z0eSeOPz4q79tfV-JXpIZAC4x8NwQuSuYoNe_C5VQsdn9Nh4HUnEvA_-NLeLp9j-TLFIJEmch0_h1TzYW3iItEOjy3L1WIOBkkUAEu5xPiRciM-SwnYcOV2ZvBLuEKs5FqF6sMR5ayR3B7vgQO6aMNwCEM7sxjuVuLulR5tzJFg7E64eu6Csa_XipqdMhsKdmB5KzZpmTIW9bg8ZDWZbXLTVNJnOTJyphiVmsMDB79IPtn3DDvuJ1yNMxw"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent"></div>
+</div>
+</section>
+<!-- Features Bento Grid -->
+<section class="px-6 space-y-4">
+<div class="flex flex-col gap-4">
+<div class="bg-surface-container-low p-6 rounded-xl flex items-start gap-4 border border-outline-variant/15">
+<div class="bg-secondary-container p-3 rounded-lg">
+<span class="material-symbols-outlined text-on-secondary-container">verified_user</span>
+</div>
+<div>
+<h3 class="font-headline font-bold text-lg">100% Hygienic</h3>
+<p class="text-on-surface-variant text-sm mt-1">Hospital-grade sterilization using eco-friendly antimicrobial agents.</p>
+</div>
+</div>
+<div class="grid grid-cols-1 gap-4">
+<div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/15">
+<span class="material-symbols-outlined text-primary mb-3">engineering</span>
+<h3 class="font-headline font-bold text-lg">Certified Technicians</h3>
+<p class="text-on-surface-variant text-sm mt-1">Our team is rigorously trained in OSHA water safety standards.</p>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/15">
+<span class="material-symbols-outlined text-tertiary mb-3">bolt</span>
+<h3 class="font-headline font-bold text-lg">Same-Day Service</h3>
+<p class="text-on-surface-variant text-sm mt-1">Emergency cleaning available within 4 hours of your booking.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- How It Works -->
+<section class="px-6 bg-surface-container py-12 -mx-0">
+<h2 class="text-2xl font-extrabold font-headline mb-8 text-center">Process Pipeline</h2>
+<div class="space-y-10 relative">
+<div class="absolute left-6 top-0 bottom-0 w-px bg-outline-variant/30 ml-[11.5px] -z-0"></div>
+<div class="flex gap-6 relative z-10">
+<div class="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-[10px] text-white font-bold ring-4 ring-background">1</div>
+<div>
+<h4 class="font-headline font-bold text-on-surface">Book</h4>
+<p class="text-on-surface-variant text-sm mt-1">Schedule your inspection via our mobile app or quick consultation form.</p>
+</div>
+</div>
+<div class="flex gap-6 relative z-10">
+<div class="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-[10px] text-white font-bold ring-4 ring-background">2</div>
+<div>
+<h4 class="font-headline font-bold text-on-surface">Clean</h4>
+<p class="text-on-surface-variant text-sm mt-1">Multi-stage deep scrubbing and chemical-free sterilization cycle.</p>
+</div>
+</div>
+<div class="flex gap-6 relative z-10">
+<div class="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-[10px] text-white font-bold ring-4 ring-background">3</div>
+<div>
+<h4 class="font-headline font-bold text-on-surface">Certify</h4>
+<p class="text-on-surface-variant text-sm mt-1">Receive a laboratory-grade water quality certificate and digital report.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Pricing Section -->
+<section class="px-6 space-y-6">
+<div class="text-center mb-4">
+<h2 class="text-2xl font-extrabold font-headline">Service Tiers</h2>
+<p class="text-on-surface-variant text-sm">Transparent pricing for every structure</p>
+</div>
+<div class="space-y-4">
+<!-- Basic Card -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/15 flex flex-col">
+<span class="text-xs font-bold uppercase tracking-widest text-on-surface-variant/60 mb-2">Basic</span>
+<div class="flex items-baseline gap-1 mb-4">
+<span class="text-3xl font-bold font-headline">$49</span>
+<span class="text-on-surface-variant text-sm">/ tank</span>
+</div>
+<ul class="space-y-3 mb-6">
+<li class="flex items-center gap-2 text-sm"><span class="material-symbols-outlined text-primary text-base">check_circle</span> Essential Scrubbing</li>
+<li class="flex items-center gap-2 text-sm text-on-surface-variant"><span class="material-symbols-outlined text-outline-variant text-base">cancel</span> UV Sterilization</li>
+</ul>
+<button class="w-full py-3 rounded-lg bg-surface-container-high font-bold text-on-surface transition-colors active:bg-outline-variant/20">Select Essential</button>
+</div>
+<!-- Deep Sterilize Card (Featured) -->
+<div class="bg-primary p-6 rounded-xl border-2 border-primary-container relative overflow-hidden text-on-primary">
+<div class="absolute -right-8 -top-8 w-24 h-24 bg-white/10 rounded-full blur-2xl"></div>
+<div class="absolute right-4 top-4 bg-white/20 px-2 py-1 rounded text-[10px] font-bold tracking-tighter uppercase">Most Popular</div>
+<span class="text-xs font-bold uppercase tracking-widest text-primary-fixed/80 mb-2">Pro Choice</span>
+<div class="flex items-baseline gap-1 mb-4">
+<span class="text-4xl font-extrabold font-headline">$89</span>
+<span class="text-primary-fixed/80 text-sm">/ tank</span>
+</div>
+<ul class="space-y-3 mb-6">
+<li class="flex items-center gap-2 text-sm"><span class="material-symbols-outlined text-white text-base">check_circle</span> Advanced UV Sterilization</li>
+<li class="flex items-center gap-2 text-sm"><span class="material-symbols-outlined text-white text-base">check_circle</span> Bacteria Lab Testing</li>
+<li class="flex items-center gap-2 text-sm"><span class="material-symbols-outlined text-white text-base">check_circle</span> Priority Scheduling</li>
+</ul>
+<button class="w-full py-3 rounded-lg bg-white text-primary font-bold shadow-xl shadow-primary-container/40 active:scale-95 transition-transform">Get Deep Clean</button>
+</div>
+<!-- Annual Pass -->
+<div class="bg-surface-container-lowest p-6 rounded-xl border border-outline-variant/15 flex flex-col">
+<span class="text-xs font-bold uppercase tracking-widest text-on-surface-variant/60 mb-2">Corporate</span>
+<div class="flex items-baseline gap-1 mb-4">
+<span class="text-3xl font-bold font-headline">$299</span>
+<span class="text-on-surface-variant text-sm">/ year</span>
+</div>
+<p class="text-sm text-on-surface-variant mb-6">Bi-annual full service plus 24/7 priority support for large estates.</p>
+<button class="w-full py-3 rounded-lg bg-surface-container-high font-bold text-on-surface transition-colors active:bg-outline-variant/20">Buy Annual Pass</button>
+</div>
+</div>
+</section>
+<!-- Mission Statement -->
+<section class="px-6">
+<div class="bg-surface-container-highest p-8 rounded-2xl flex flex-col items-center text-center">
+<span class="material-symbols-outlined text-secondary text-4xl mb-4">eco</span>
+<h2 class="text-2xl font-extrabold font-headline mb-4">Driven by a Mission for Pure Water</h2>
+<p class="text-on-surface-variant text-sm leading-relaxed italic">
+                    "We believe access to clean water is a fundamental right. Our precision cleaning technology ensures your family never compromises on health."
+                </p>
+<div class="mt-6 flex items-center gap-2">
+<div class="w-8 h-8 rounded-full overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="portrait of a professional male engineer in a clean blue polo shirt smiling with confidence" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQhbp5W5yMt5yVbpP3yDz9rolWig1QzSaoS1dS_t6DgLsGvvbFbcMVscLruFoouDcV731ThqF6LOC1KsMJSCGHnNrcSzSZNkmCG0W64nCrmHnwYNzmJzcYClnJALiUoU37oDZSQ_-X2cVPxsP1Ysp1a-kfAaTUFsUXXtyVW1AswJ_qvMs-KADGT-yswdOoKi1_DjbEowbHx5wkWOQiJwkV6RpAVHT22Y7Q-Cbc6begIZhyFb_Ts2wkdFvoqIHzM7hQhTVZEg5jPiI"/>
+</div>
+<div class="text-left">
+<p class="text-xs font-bold font-headline">Marcus Chen</p>
+<p class="text-[10px] text-on-surface-variant">Chief Sanitation Officer</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Testimonials Section -->
+<section class="px-6 py-12 bg-surface-container-low">
+<div class="text-center mb-10">
+<h2 class="text-3xl font-extrabold font-headline text-on-surface mb-2">What Our Customers Say</h2>
+<p class="text-on-surface-variant text-sm max-w-xs mx-auto">Trusted by thousands of families for unmatched hygiene and water safety.</p>
+</div>
+<div class="space-y-4">
+<!-- Testimonial 1 -->
+<div class="bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-outline-variant/10">
+<div class="flex items-center gap-0.5 mb-3">
+<span class="material-symbols-outlined text-amber-400 text-lg" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-amber-400 text-lg" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-amber-400 text-lg" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-amber-400 text-lg" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-amber-400 text-lg" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<p class="text-on-surface text-sm italic leading-relaxed mb-4">"The difference in water clarity was immediate. The team was professional, thorough, and left everything spotless. Highly recommended!"</p>
+<div class="flex items-center gap-3">
+<img alt="Customer Profile" class="w-10 h-10 rounded-full object-cover bg-surface-container-high" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAnE90x-S1y0oY903t734v3Ue-O3f0E1903q9S18fS-a0f5S18fS-a0f5S18fS-a0f5S18fS-a0f5S18fS-a0f5S18f"/>
+<div>
+<p class="text-sm font-bold font-headline">Sarah Jenkins</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-wider">Homeowner, Brooklyn</p>
+</div>
+</div>
+</div>
+<!-- Testimonial 2 -->
+<div class="bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-outline-variant/10">
+<div class="flex items-center gap-0.5 mb-3">
+<span class="material-symbols-outlined text-amber-400 text-lg" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-amber-400 text-lg" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-amber-400 text-lg" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-amber-400 text-lg" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-amber-400 text-lg" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<p class="text-on-surface text-sm italic leading-relaxed mb-4">"We use their Corporate Pass for our facility. Reliable, certified, and consistently top-tier service. It's peace of mind for our staff."</p>
+<div class="flex items-center gap-3">
+<img alt="Customer Profile" class="w-10 h-10 rounded-full object-cover bg-surface-container-high" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAnE90x-S1y0oY903t734v3Ue-O3f0E1903q9S18fS-a0f5S18fS-a0f5S18fS-a0f5S18fS-a0f5S18fS-a0f5S18f"/>
+<div>
+<p class="text-sm font-bold font-headline">David Miller</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-wider">Facility Manager</p>
+</div>
+</div>
+</div>
+<!-- Testimonial 3 -->
+<div class="bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-outline-variant/10">
+<div class="flex items-center gap-0.5 mb-3">
+<span class="material-symbols-outlined text-amber-400 text-lg" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-amber-400 text-lg" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-amber-400 text-lg" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-amber-400 text-lg" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-amber-400 text-lg" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<p class="text-on-surface text-sm italic leading-relaxed mb-4">"I love the digital report they provide. Knowing exactly what was done and seeing the lab results makes me feel safe about our family's water."</p>
+<div class="flex items-center gap-3">
+<img alt="Customer Profile" class="w-10 h-10 rounded-full object-cover bg-surface-container-high" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAnE90x-S1y0oY903t734v3Ue-O3f0E1903q9S18fS-a0f5S18fS-a0f5S18fS-a0f5S18fS-a0f5S18fS-a0f5S18f"/>
+<div>
+<p class="text-sm font-bold font-headline">Elena Rodriguez</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-wider">Resident, Queens</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Contact Section -->
+<section class="px-6 pb-12">
+<h2 class="text-2xl font-extrabold font-headline mb-6 text-center">Get a Consultation</h2>
+<div class="bg-surface-container-lowest rounded-2xl p-6 border border-outline-variant/15 space-y-6">
+<div class="space-y-4">
+<div class="space-y-1">
+<label class="text-xs font-bold uppercase text-on-surface-variant/60">Full Name</label>
+<input class="w-full px-4 py-3 rounded-lg bg-surface-container-high border-none focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all" placeholder="John Doe" type="text"/>
+</div>
+<div class="space-y-1">
+<label class="text-xs font-bold uppercase text-on-surface-variant/60">Email Address</label>
+<input class="w-full px-4 py-3 rounded-lg bg-surface-container-high border-none focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all" placeholder="john@example.com" type="email"/>
+</div>
+<button class="w-full py-4 rounded-xl bg-primary text-on-primary font-bold shadow-lg shadow-primary/20 active:scale-95 transition-transform">Submit Request</button>
+</div>
+<div class="pt-6 border-t border-outline-variant/15 space-y-4">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary">location_on</span>
+<div>
+<p class="text-sm font-bold">HQ Office</p>
+<p class="text-xs text-on-surface-variant">128 Aquatic Blvd, Sky High Tower, NY 10001</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary">phone_in_talk</span>
+<div>
+<p class="text-sm font-bold">24/7 Hotline</p>
+<p class="text-xs text-on-surface-variant">+1 (800) FALKON-CARE</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Shell (Mobile) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center pt-2 pb-6 px-4 bg-white/70 dark:bg-[#191c1e]/70 backdrop-blur-xl z-50 rounded-t-2xl shadow-[0_-10px_40px_rgba(25,28,30,0.06)] border-t border-[#bfc7d2]/15">
+<a class="flex flex-col items-center justify-center bg-sky-100 dark:bg-sky-900/40 text-[#006194] dark:text-sky-200 rounded-xl px-4 py-1 transition-transform active:scale-90" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-['Public_Sans'] text-[11px] font-medium">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-slate-50 transition-transform active:scale-90" href="#">
+<span class="material-symbols-outlined">waves</span>
+<span class="font-['Public_Sans'] text-[11px] font-medium">Features</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-slate-50 transition-transform active:scale-90" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-['Public_Sans'] text-[11px] font-medium">Pricing</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-slate-50 transition-transform active:scale-90" href="#">
+<span class="material-symbols-outlined">mail</span>
+<span class="font-['Public_Sans'] text-[11px] font-medium">Contact</span>
+</a>
+</nav>
+<!-- Footer -->
+<footer class="w-full pt-12 pb-24 bg-[#f2f4f6] dark:bg-[#121416] flex flex-col items-center text-center px-8 gap-4">
+<div class="text-lg font-bold text-sky-800 font-headline">Falkon Care</div>
+<div class="flex flex-wrap justify-center gap-x-6 gap-y-2">
+<a class="font-['Public_Sans'] text-sm text-slate-500 hover:text-[#007bb9] transition-colors duration-300" href="#">Privacy Policy</a>
+<a class="font-['Public_Sans'] text-sm text-slate-500 hover:text-[#007bb9] transition-colors duration-300" href="#">Terms of Service</a>
+<a class="font-['Public_Sans'] text-sm text-slate-500 hover:text-[#007bb9] transition-colors duration-300" href="#">Water Quality Report</a>
+</div>
+<p class="font-['Public_Sans'] text-xs text-slate-400 mt-4">© 2024 Falkon Care. The Hydro-SaaS Standard.</p>
+</footer>
+</body></html>
