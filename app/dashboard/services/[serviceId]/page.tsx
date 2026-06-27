@@ -600,12 +600,12 @@ export default function ServiceBookingPage() {
                       <p className="text-xs font-bold text-slate-500 dark:text-slate-400 font-headline uppercase tracking-wider">Wallet Balance</p>
                       <p className={cn(
                         "text-2xl font-headline font-black flex items-center mt-1",
-                        user.walletBalance < totalPrice ? "text-rose-600 dark:text-rose-400" : "text-emerald-600 dark:text-emerald-400"
+                        (user.walletBalance ?? 0) < totalPrice ? "text-rose-600 dark:text-rose-400" : "text-emerald-600 dark:text-emerald-400"
                       )}>
-                        ₹{user.walletBalance.toLocaleString()}
+                        ₹{(user.walletBalance ?? 0).toLocaleString()}
                       </p>
                     </div>
-                    {user.walletBalance < totalPrice && (
+                    {(user.walletBalance ?? 0) < totalPrice && (
                       <Link href="/dashboard/wallet">
                         <Button variant="outline" size="sm" className="border-rose-500 text-rose-600 hover:bg-rose-50 dark:hover:bg-slate-800 rounded-xl font-bold font-headline">
                           Recharge Wallet
@@ -613,9 +613,9 @@ export default function ServiceBookingPage() {
                       </Link>
                     )}
                   </div>
-                  {user.walletBalance < totalPrice && (
+                  {(user.walletBalance ?? 0) < totalPrice && (
                     <p className="text-xs text-rose-600 dark:text-rose-400 mt-3 font-semibold font-headline">
-                      ⚠️ Insufficient balance. You need ₹{(totalPrice - user.walletBalance).toLocaleString()} more to complete this booking.
+                      ⚠️ Insufficient balance. You need ₹{(totalPrice - (user.walletBalance ?? 0)).toLocaleString()} more to complete this booking.
                     </p>
                   )}
                 </CardContent>

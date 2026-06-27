@@ -274,39 +274,38 @@ export function LocationPicker({
       return
     }
 
-    const optionsHigh = { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
-    const optionsLow = { enableHighAccuracy: false, timeout: 10000, maximumAge: 0 }
-
-    const successCallback = async (position: GeolocationPosition) => {
-      const lat = position.coords.latitude
-      const lng = position.coords.longitude
-
-      setLatitude(lat)
-      setLongitude(lng)
-      setLocationSource("live")
-      updateMapLocation(lat, lng)
-      await reverseGeocode(lat, lng, "live")
-
-      toast.success("Live location detected!")
-      setIsGettingLocation(false)
+    const options = { 
+      enableHighAccuracy: true, 
+      timeout: 15000, 
+      maximumAge: 0 
     }
 
     navigator.geolocation.getCurrentPosition(
-      successCallback,
-      (error) => {
-        console.warn("High accuracy geolocation failed, trying low accuracy fallback...", error)
-        // Fallback to low accuracy
-        navigator.geolocation.getCurrentPosition(
-          successCallback,
-          (err) => {
-            console.error("Geolocation error:", err)
-            toast.error("Location access denied or unavailable. Please pin manually.")
-            setIsGettingLocation(false)
-          },
-          optionsLow
-        )
+      async (position: GeolocationPosition) => {
+        const lat = position.coords.latitude
+        const lng = position.coords.longitude
+
+        setLatitude(lat)
+        setLongitude(lng)
+        setLocationSource("live")
+        updateMapLocation(lat, lng)
+        await reverseGeocode(lat, lng, "live")
+
+        toast.success("Live location detected!")
+        setIsGettingLocation(false)
       },
-      optionsHigh
+      (error) => {
+        console.error("Geolocation error:", error)
+        let errorMsg = "Unable to retrieve your precise location. Please pin it manually on the map."
+        if (error.code === error.PERMISSION_DENIED) {
+          errorMsg = "Location access denied. Please check your browser permissions or enter your address manually."
+        } else if (error.code === error.TIMEOUT) {
+          errorMsg = "Location request timed out. Please try again or pin your location manually."
+        }
+        toast.error(errorMsg)
+        setIsGettingLocation(false)
+      },
+      options
     )
   }
 

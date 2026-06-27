@@ -105,7 +105,7 @@ export default function ProfilePage() {
 
   const completeness = calculateCompleteness()
 
-  if (convexUser === undefined) {
+  if (convexUser === undefined || convexUser === null) {
     return (
       <div className="min-h-screen bg-[#f7f9fb] dark:bg-slate-950">
         <TopBar title="Loading Profile..." />
@@ -235,7 +235,7 @@ export default function ProfilePage() {
                 <div>
                   <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider font-headline">Current Balance</p>
                   <p className="text-xl font-headline font-black text-sky-900 dark:text-white mt-0.5">
-                    ₹{convexUser.walletBalance.toLocaleString()}
+                    ₹{(convexUser.walletBalance ?? 0).toLocaleString()}
                   </p>
                 </div>
                 <Link href="/dashboard/wallet">
