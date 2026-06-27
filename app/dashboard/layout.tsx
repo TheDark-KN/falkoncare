@@ -30,9 +30,11 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[#f7f9fb] dark:bg-slate-950 flex flex-col lg:pl-60 md:pl-16 pl-0 pb-20 md:pb-0 pt-0">
       <Sidebar userRole={(user?.role as any) || "customer"} />
-      <main className="lg:ml-64 min-h-screen">{children}</main>
+      <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {children}
+      </main>
     </div>
   )
 }

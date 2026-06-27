@@ -48,7 +48,7 @@ export function HeroSection({
   }
 
   return (
-    <section className="relative min-h-[750px] lg:min-h-[850px] flex items-center overflow-hidden px-4 sm:px-6 lg:px-12 py-16 md:py-24 bg-surface-container-low" id="hero">
+    <section className="relative min-h-[70vh] lg:min-h-[90vh] flex items-center overflow-hidden px-4 sm:px-6 lg:px-12 py-16 md:py-24 bg-surface-container-low" id="hero">
       {/* Background visual detail */}
       <div className="absolute inset-0 pointer-events-none opacity-20">
         <div className="absolute -top-1/4 -right-1/4 w-[50rem] h-[50rem] bg-gradient-to-br from-primary/20 to-secondary/10 blur-[120px] rounded-full" />
@@ -76,7 +76,7 @@ export function HeroSection({
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.1 }}
-              className="text-4xl sm:text-5xl lg:text-6xl font-headline font-extrabold text-on-background leading-[1.1] -tracking-[0.03em]"
+              className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-headline font-extrabold text-on-background leading-[1.1] -tracking-[0.03em]"
             >
               Professional <span className="gradient-text">Water Tank</span> Cleaning Service
             </motion.h1>
@@ -96,14 +96,14 @@ export function HeroSection({
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.25 }}
-              className="flex flex-wrap gap-4 pt-2"
+              className="flex flex-col sm:flex-row gap-4 pt-2 w-full sm:w-auto"
             >
               <button 
                 onClick={() => {
                   const el = document.getElementById("services");
                   el?.scrollIntoView({ behavior: "smooth" });
                 }}
-                className="bg-primary text-white px-8 py-4 rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all text-sm sm:text-base"
+                className="w-full sm:w-auto bg-primary text-white px-8 py-4 rounded-xl font-bold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all text-sm sm:text-base min-h-[44px]"
               >
                 Book Now
               </button>
@@ -112,7 +112,7 @@ export function HeroSection({
                   const el = document.getElementById("pricing");
                   el?.scrollIntoView({ behavior: "smooth" });
                 }}
-                className="bg-surface-container-high text-on-surface hover:bg-surface-container-highest px-8 py-4 rounded-xl font-bold transition-colors text-sm sm:text-base"
+                className="w-full sm:w-auto bg-surface-container-high text-on-surface hover:bg-surface-container-highest px-8 py-4 rounded-xl font-bold transition-colors text-sm sm:text-base min-h-[44px]"
               >
                 View Packages
               </button>

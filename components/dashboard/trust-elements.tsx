@@ -92,11 +92,11 @@ const TrustElements = () => {
         <h2 className="section-title">Trusted by Thousands</h2>
         <p className="section-subtitle">See what our customers say about our service</p>
 
-        <div className="stats-grid">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 mb-16">
           {stats.map((stat, index) => (
-            <div key={index} className="stat-card">
-              <div className="stat-number">{stat.number}</div>
-              <div className="stat-label">{stat.label}</div>
+            <div key={index} className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl p-6 text-center shadow-md shadow-sky-900/5 hover:-translate-y-1 transition-transform">
+              <div className="text-3xl font-headline font-black text-blue-600 mb-2">{stat.number}</div>
+              <div className="text-xs sm:text-sm font-semibold text-slate-500">{stat.label}</div>
             </div>
           ))}
         </div>

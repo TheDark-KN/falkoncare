@@ -2,6 +2,7 @@ import "./env";
 import { convexAuth } from "@convex-dev/auth/server";
 import { Password } from "@convex-dev/auth/providers/Password";
 import { ResendOTP } from "./ResendOTP";
+import { ResendOTPPasswordReset } from "./ResendOTPPasswordReset";
 import { ConvexError } from "convex/values";
 import { z } from "zod";
 
@@ -32,6 +33,7 @@ if (process.env.JWKS) {
 export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
   providers: [
     Password({
+      reset: ResendOTPPasswordReset,
       profile(params) {
         const name = typeof params.name === "string" ? params.name : undefined;
         const phone = typeof params.phone === "string" ? params.phone : undefined;

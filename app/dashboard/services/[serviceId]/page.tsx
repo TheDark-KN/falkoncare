@@ -399,7 +399,7 @@ export default function ServiceBookingPage() {
                 {service.tankSizes && (
                   <div className="space-y-3 pt-4 border-t border-slate-100 dark:border-slate-800">
                     <h4 className="text-sm font-bold text-slate-800 dark:text-slate-200 font-headline">Select Tank Size</h4>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                       {service.tankSizes.map((option) => (
                         <button
                           key={option.size}
@@ -466,7 +466,7 @@ export default function ServiceBookingPage() {
                   <CardTitle className="text-sm font-bold text-slate-800 dark:text-slate-200 font-headline">Select Time Slot</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     {timeSlots.map((time) => (
                       <button
                         key={time}
@@ -527,7 +527,7 @@ export default function ServiceBookingPage() {
             </div>
 
             {/* Wizard actions */}
-            <div className="flex gap-4">
+            <div className="fixed bottom-[64px] left-0 right-0 bg-white dark:bg-slate-950 p-4 border-t border-slate-200/50 dark:border-slate-800/50 md:relative md:bottom-0 md:p-0 md:bg-transparent md:border-0 z-30 flex gap-4 shadow-[0_-4px_10px_rgba(0,0,0,0.03)] md:shadow-none">
               <Button
                 className="w-full py-6 rounded-xl font-headline font-bold text-white shadow-lg shadow-primary/20 active:scale-95 duration-200 border-0"
                 disabled={!canProceedStep1()}
@@ -557,7 +557,7 @@ export default function ServiceBookingPage() {
               initialSource={locationSource}
             />
 
-            <div className="flex gap-4">
+            <div className="fixed bottom-[64px] left-0 right-0 bg-white dark:bg-slate-950 p-4 border-t border-slate-200/50 dark:border-slate-800/50 md:relative md:bottom-0 md:p-0 md:bg-transparent md:border-0 z-30 flex gap-4 shadow-[0_-4px_10px_rgba(0,0,0,0.03)] md:shadow-none">
               <Button
                 variant="outline"
                 className="py-6 rounded-xl font-headline font-bold"
@@ -742,7 +742,7 @@ export default function ServiceBookingPage() {
               </CardContent>
             </Card>
 
-            <div className="flex gap-4">
+            <div className="fixed bottom-[64px] left-0 right-0 bg-white dark:bg-slate-950 p-4 border-t border-slate-200/50 dark:border-slate-800/50 md:relative md:bottom-0 md:p-0 md:bg-transparent md:border-0 z-30 flex gap-4 shadow-[0_-4px_10px_rgba(0,0,0,0.03)] md:shadow-none">
               <Button
                 variant="outline"
                 className="py-6 rounded-xl font-headline font-bold"

@@ -406,30 +406,32 @@ export function LocationPicker({
                 )}
               </Button>
 
-              {/* Editable Street Address text */}
-              <div className="space-y-1.5">
-                <Label htmlFor="street-address" className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider font-headline">Street Address / Landmark</Label>
-                <Input
-                  id="street-address"
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                  placeholder="Street name, house/flat no., society"
-                  className="bg-slate-50 dark:bg-slate-800 border-none rounded-xl text-sm font-semibold h-11"
-                  required
-                />
-              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {/* Editable Street Address text */}
+                <div className="space-y-1.5 sm:col-span-2">
+                  <Label htmlFor="street-address" className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider font-headline">Street Address / Landmark</Label>
+                  <Input
+                    id="street-address"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    placeholder="Street name, house/flat no., society"
+                    className="bg-slate-50 dark:bg-slate-800 border-none rounded-xl text-sm font-semibold h-11"
+                    required
+                  />
+                </div>
 
-              {/* PIN Code */}
-              <div className="space-y-1.5">
-                <Label htmlFor="pincode-picker" className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider font-headline">PIN Code (6 Digits)</Label>
-                <Input
-                  id="pincode-picker"
-                  value={pincode}
-                  onChange={(e) => setPincode(e.target.value.replace(/\D/g, "").slice(0, 6))}
-                  placeholder="e.g. 110001"
-                  maxLength={6}
-                  className="bg-slate-50 dark:bg-slate-800 border-none rounded-xl text-sm font-semibold h-11"
-                />
+                {/* PIN Code */}
+                <div className="space-y-1.5 sm:col-span-1">
+                  <Label htmlFor="pincode-picker" className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-wider font-headline">PIN Code</Label>
+                  <Input
+                    id="pincode-picker"
+                    value={pincode}
+                    onChange={(e) => setPincode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                    placeholder="e.g. 110001"
+                    maxLength={6}
+                    className="bg-slate-50 dark:bg-slate-800 border-none rounded-xl text-sm font-semibold h-11"
+                  />
+                </div>
               </div>
 
               {/* Latitude/Longitude Display */}
