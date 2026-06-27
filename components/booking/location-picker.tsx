@@ -8,6 +8,25 @@ import { Label } from "@/components/ui/label"
 import { Icons } from "@/components/icons"
 import { toast } from "sonner"
 
+function isNCRCovered(addressText: string, pin: string): boolean {
+  const cleanPin = pin.trim();
+  const cleanAddress = addressText.toLowerCase();
+
+  const ncrPincodePatterns = [
+    /^11/,       // Delhi (110001-110096)
+    /^201/,      // Noida / Ghaziabad (201001-201310)
+    /^122/,      // Gurgaon (122001-122108)
+    /^121/,      // Faridabad (121001-121012)
+  ];
+
+  const ncrKeywords = ["delhi", "noida", "gurgaon", "gurugram", "ghaziabad", "faridabad"];
+
+  const pinMatches = cleanPin ? ncrPincodePatterns.some(p => p.test(cleanPin)) : false;
+  const keywordMatches = ncrKeywords.some(k => cleanAddress.includes(k));
+
+  return pinMatches || keywordMatches;
+}
+
 interface LocationPickerProps {
   onLocationSelect: (
     address: string,
@@ -55,12 +74,21 @@ export function LocationPicker({
 
       if (data.display_name) {
         const detectedAddress = data.display_name
-        setAddress(detectedAddress)
         let postcode = ""
         if (data.address?.postcode) {
           postcode = data.address.postcode
-          setPincode(postcode)
         }
+        
+        if (!isNCRCovered(detectedAddress, postcode)) {
+          toast.warning("⚠️ We don't currently serve this area. We cover Delhi, Noida, Gurgaon, Ghaziabad, and Faridabad.")
+          setAddress("")
+          setPincode("")
+          onLocationSelect("", undefined, undefined, undefined, source)
+          return
+        }
+
+        setAddress(detectedAddress)
+        setPincode(postcode)
         onLocationSelect(detectedAddress, postcode || undefined, lat, lng, source)
       }
     } catch (error) {
@@ -205,6 +233,19 @@ export function LocationPicker({
         const firstResult = data[0]
         const lat = parseFloat(firstResult.lat)
         const lng = parseFloat(firstResult.lon)
+        const displayName = firstResult.display_name || ""
+
+        let postcode = ""
+        const pinMatch = displayName.match(/\b\d{6}\b/)
+        if (pinMatch) {
+          postcode = pinMatch[0]
+        }
+
+        if (!isNCRCovered(displayName, postcode)) {
+          toast.warning("⚠️ We don't currently serve this area. We cover Delhi, Noida, Gurgaon, Ghaziabad, and Faridabad.")
+          setIsSearching(false)
+          return
+        }
 
         setLatitude(lat)
         setLongitude(lng)
@@ -273,6 +314,10 @@ export function LocationPicker({
   const handleManualSubmit = () => {
     if (!address.trim()) {
       toast.error("Please enter or select a service address")
+      return
+    }
+    if (!isNCRCovered(address, pincode)) {
+      toast.warning("⚠️ We don't currently serve this area. We cover Delhi, Noida, Gurgaon, Ghaziabad, and Faridabad.")
       return
     }
     onLocationSelect(

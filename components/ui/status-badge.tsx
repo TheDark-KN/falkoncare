@@ -12,6 +12,7 @@ const statusStyles: Record<BookingStatus, string> = {
   "in-progress": "bg-accent/10 text-accent border-accent/20",
   completed: "bg-success/10 text-success border-success/20",
   cancelled: "bg-destructive/10 text-destructive border-destructive/20",
+  rescheduled: "bg-purple-100 text-purple-800 dark:bg-purple-950/20 dark:text-purple-400 border-purple-200 dark:border-purple-800/20",
 }
 
 const statusLabels: Record<BookingStatus, string> = {
@@ -20,6 +21,7 @@ const statusLabels: Record<BookingStatus, string> = {
   "in-progress": "In Progress",
   completed: "Completed",
   cancelled: "Cancelled",
+  rescheduled: "Rescheduled",
 }
 
 export function StatusBadge({ status, className }: StatusBadgeProps) {

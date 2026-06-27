@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import Image from "next/image"
 import { AdminTopBar } from "@/components/admin/admin-top-bar"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -125,9 +126,11 @@ export default function AdminBookingsPage() {
                             </Select>
                           ) : assignedStaff ? (
                             <div className="flex items-center gap-2">
-                              <img
+                              <Image
                                 src={assignedStaff.photo || "/placeholder.svg"}
                                 alt={assignedStaff.name}
+                                width={32}
+                                height={32}
                                 className="w-8 h-8 rounded-full object-cover"
                               />
                               <span className="text-sm text-foreground">{assignedStaff.name}</span>

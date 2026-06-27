@@ -132,7 +132,8 @@ export type BookingStatus =
   | "confirmed"
   | "in-progress"
   | "completed"
-  | "cancelled";
+  | "cancelled"
+  | "rescheduled";
 
 /** Minimal booking shape required by BookingCard — works with both LocalBooking and Convex data */
 export interface DisplayBooking {

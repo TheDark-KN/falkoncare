@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
@@ -152,10 +153,12 @@ export default function PhotoDocumentationSection({
             <div className="grid grid-cols-3 gap-2">
               {data.photos.map((photo) => (
                 <div key={photo.id} className="group relative aspect-square">
-                  <img
+                  <Image
                     src={photo.preview}
                     alt="Tank photo preview"
-                    className="h-full w-full rounded-lg object-cover"
+                    fill
+                    sizes="(max-width: 768px) 33vw, 15vw"
+                    className="rounded-lg object-cover"
                   />
                   <button
                     type="button"

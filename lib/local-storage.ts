@@ -15,12 +15,12 @@ export interface LocalBooking {
   tankType?: string;
   paymentMethod: "wallet" | "cash";
   userId: string;
-  status: "pending" | "confirmed" | "in-progress" | "completed" | "cancelled";
+  status: "pending" | "confirmed" | "in-progress" | "completed" | "cancelled" | "rescheduled";
   createdAt: string;
 }
 
 export interface LocalUser {
-  clerkId: string;
+  externalId: string;
   email: string;
   fullName: string;
   walletBalance: number;
@@ -217,7 +217,6 @@ export class LocalBookingManager {
   // Sync with Convex (for future use when Convex is fixed)
   static async syncWithConvex() {
     // Placeholder for future Convex integration
-    console.log("Convex sync not implemented yet");
     return false;
   }
 }

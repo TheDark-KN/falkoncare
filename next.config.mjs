@@ -6,6 +6,19 @@ const nextConfig = {
   },
   images: {
     unoptimized: true,
+    formats: ['image/webp', 'image/avif'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'nominatim.openstreetmap.org',
+        pathname: '/**',
+      },
+    ],
   },
   // Set output directory to default .next
   distDir: '.next',

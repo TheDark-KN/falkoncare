@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import Image from "next/image"
 import { Icons } from "@/components/icons"
 import { Button } from "@/components/ui/button"
 import { motion, type Variants } from "framer-motion"
@@ -176,15 +177,20 @@ export function HeroSection({
 
           </div>
 
-          {/* Right Column: Filtration System Mockup Image */}
-          <div className="relative w-full">
-            <div className="absolute -inset-10 bg-primary/5 rounded-full blur-3xl"></div>
-            <div className="relative rounded-2xl overflow-hidden shadow-2xl transform rotate-1 hover:rotate-0 transition-transform duration-500 max-w-lg mx-auto">
-              <img 
-                alt="Clean water tank installation" 
-                className="w-full h-[350px] sm:h-[450px] md:h-[500px] object-cover" 
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCaQ-ftuIguz6W9rf5LIKdI4R-nMvBW22WwLB_vIECtJggsDuf0bPbwBsstBWkY8sx8M9j1L_LI3TDFT97Q6g6_eCOrP9AZJZxumQ0uFPO2K1p-qIiCvCcM_LaoZ4XmJSd-ORb3bQsSTN0hUYjHJIwWInB2eH43GoBCoa5zmH3-2zqJfbhF_wShIQINkpzsThsr8HY0aZBGGtdKNFkdGl9JIOM4sgIB9NwpU4_aKg5QbnLra21CvRN5Wt6JzzPe877kBzq2j_dlW94"
-              />
+{/* Right Column: Filtration System Mockup Image */}
+            <div className="relative w-full">
+              <div className="absolute -inset-10 bg-primary/5 rounded-full blur-3xl"></div>
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl transform rotate-1 hover:rotate-0 transition-transform duration-50000 max-w-lg mx-auto">
+                <Image
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCaQ-ftuIguz6W9rf5LIKdI4R-nMvBW22WwLB_vIECtJggsDuf0bPbwBsstBWkY8sx8M9j1L_LI3TDFT97Q6g6_eCOrP9AZJZxumQ0uFPO2K1p-qIiCvCcM_LaoZ4XmJSd-ORb3bQsSTN0hUYjHJIwWInB2eH43GoBCoa5zmH3-2zqJfbhF_wShIQINkpzsThsr8HY0aZBGGtdKNFkdGl9JIOM4sgIB9NwpU4_aKg5QbnLra21CvRN5Wt6JzzPe877kBzq2j_dlW94"
+                  alt="FalkonCare water tank cleaning service"
+                  width={800}
+                  height={600}
+                  priority
+                  placeholder="blur"
+                  blurDataURL="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4MDAiIGhlaWdodD0iNjAwIiB2aWV3Qm94PSIwIDAgODAwIDYwMCI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0iI2UwZjJmZSIvPjwvc3ZnPg=="
+                  className="w-full h-[350px] sm:h-[450px] md:h-[500px] object-cover"
+                />
               <div className="absolute bottom-6 left-6 right-6 bg-white/80 backdrop-blur-md p-6 rounded-xl border border-white/20 shadow-lg">
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center">

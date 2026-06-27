@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { useQuery } from "convex/react"
 import { api } from "@/convex/_generated/api"
+import Image from "next/image"
 
 interface TopBarProps {
   title: string
@@ -68,9 +69,11 @@ export function TopBar({ title, onMenuClick }: TopBarProps) {
               </p>
             </div>
             {convexUser?.image || convexUser?.imageUrl ? (
-              <img
+              <Image
                 src={convexUser?.image || convexUser?.imageUrl}
                 alt="Profile"
+                width={40}
+                height={40}
                 className="w-10 h-10 rounded-full object-cover ring-2 ring-primary/10 group-hover:ring-primary/30 transition-all"
               />
             ) : (

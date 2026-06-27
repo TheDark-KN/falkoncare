@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { serviceCategories, serviceItems } from "@/lib/mock-data"
 import { getServiceIcon, Icons } from "@/components/icons"
 import Link from "next/link"
@@ -138,10 +139,13 @@ export function ServicesSection({
                 <h3 className="text-2xl font-headline font-bold mb-4">100% Hygienic 6-Stage Process</h3>
                 <p className="text-on-surface-variant text-slate-500 leading-relaxed">Our proprietary 6-stage process includes sludge removal, high-pressure washing, vacuuming, and UV sterilization to kill 99.9% of pathogens.</p>
               </div>
-              <img 
-                alt="Sterile cleaning equipment" 
-                className="mt-8 rounded-xl h-48 w-full object-cover" 
+              <Image
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAk-wzDwQ_KDHxdlLbUtAIbi5KYUKqUWHCd70Mhr9FMsjMmDEzq6hnhfrp3W-LaoHgPJYfLIyUBW0TEHAQYY87LJOCs0Eojp3kliano7D8Z1GVDfV2Ze9g5NDc7Hmb5XDzUVw1Ii8lYJ09y1mBame9Gk0kNkxnZashg5Axy8l1NqROwLYd5TJshVM8-xo1doiWZ92npCAST4xtIGNsqFP3fUoJAgIeFrT_yy4bmiAYTMpuaMUoiuL1rGDCuygG70Ll8fansjcNysA"
+                alt="Sterile cleaning equipment"
+                width={600}
+                height={400}
+                placeholder="blur"
+                className="mt-8 rounded-xl h-48 w-full object-cover"
               />
             </div>
             <div className="bg-primary-container/5 p-8 rounded-2xl flex flex-col gap-4 border border-slate-100/50">
@@ -294,9 +298,11 @@ export function ServicesSection({
                     <div className="relative flex flex-col items-center justify-center shrink-0">
                       <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden shadow-inner bg-muted border border-slate-200/20">
                         {service.image ? (
-                          <img
+                          <Image
                             src={service.image}
                             alt={service.name}
+                            width={112}
+                            height={112}
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                           />
                         ) : (

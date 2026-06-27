@@ -52,7 +52,7 @@ export const serviceItems: ServiceItem[] = [
     description: "Complete cleaning with anti-bacterial treatment",
     basePrice: 500,
     duration: "1-2 hours",
-    image: "/service_1_tank_service_500.png",
+    image: "/service_1_tank_service_500.webp",
     tankSizes: [
       { size: "500L", priceMultiplier: 1 },
       { size: "1000L", priceMultiplier: 1.5 },
@@ -71,7 +71,7 @@ export const serviceItems: ServiceItem[] = [
     description: "Deep cleaning with UV treatment and sanitization",
     basePrice: 800,
     duration: "2-3 hours",
-    image: "/service_2_tank_service_700.png",
+    image: "/service_2_tank_service_700.webp",
     tankSizes: [
       { size: "500L", priceMultiplier: 1 },
       { size: "1000L", priceMultiplier: 1.5 },
@@ -90,7 +90,7 @@ export const serviceItems: ServiceItem[] = [
     description: "Leak fixing, coating and minor repairs",
     basePrice: 1000,
     duration: "2-4 hours",
-    image: "/service_3_tank_service_1000.png",
+    image: "/service_3_tank_service_1000.webp",
   },
   // Pipe Services
   {
@@ -100,7 +100,7 @@ export const serviceItems: ServiceItem[] = [
     description: "High-pressure pipe cleaning and descaling",
     basePrice: 600,
     duration: "1-2 hours",
-    image: "/service_4_tank_service.png",
+    image: "/service_4_tank_service.webp",
   },
   {
     id: "pipe-replacement",
@@ -109,7 +109,7 @@ export const serviceItems: ServiceItem[] = [
     description: "Old pipe removal and new installation",
     basePrice: 1500,
     duration: "3-5 hours",
-    image: "/service_5_tank_service.png",
+    image: "/service_5_tank_service.webp",
   },
   // Filter Services
   {
@@ -119,7 +119,7 @@ export const serviceItems: ServiceItem[] = [
     description: "New water filter/purifier installation",
     basePrice: 800,
     duration: "1-2 hours",
-    image: "/service_6_tank_service.png",
+    image: "/service_6_tank_service.webp",
   },
   {
     id: "filter-service",
@@ -128,7 +128,7 @@ export const serviceItems: ServiceItem[] = [
     description: "Filter cleaning and cartridge replacement",
     basePrice: 400,
     duration: "30-60 mins",
-    image: "/service_7_tank.png",
+    image: "/service_7_tank.webp",
   },
   // Monitoring Services
   {
@@ -138,7 +138,7 @@ export const serviceItems: ServiceItem[] = [
     description: "Comprehensive water quality analysis",
     basePrice: 300,
     duration: "30 mins",
-    image: "/service_8_tank.png",
+    image: "/service_8_tank.webp",
   },
   // Miscellaneous
   {
@@ -148,7 +148,7 @@ export const serviceItems: ServiceItem[] = [
     description: "Motor repair and maintenance",
     basePrice: 700,
     duration: "1-2 hours",
-    image: "/service_9_tank.png",
+    image: "/service_9_tank.webp",
   },
 ]
 

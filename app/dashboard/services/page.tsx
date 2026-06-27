@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useMemo } from "react"
+import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { TopBar } from "@/components/dashboard/top-bar"
 import { Card, CardContent } from "@/components/ui/card"
@@ -123,9 +124,11 @@ export default function ServicesPage() {
                     {/* Service Image Banner */}
                     <div className="h-48 overflow-hidden relative bg-slate-100 dark:bg-slate-800/50">
                       {service.image ? (
-                        <img
+                        <Image
                           alt={service.name}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          fill
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                          className="object-cover group-hover:scale-105 transition-transform duration-500"
                           src={service.image}
                         />
                       ) : (
@@ -134,7 +137,7 @@ export default function ServicesPage() {
                         </div>
                       )}
                       {isPremium && (
-                        <div className="absolute top-4 right-4">
+                        <div className="absolute top-4 right-4 z-10">
                           <span className="bg-[#86f2e4] text-[#006f66] px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider font-headline shadow-sm">
                             Premium
                           </span>

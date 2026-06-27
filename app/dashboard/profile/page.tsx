@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { TopBar } from "@/components/dashboard/top-bar"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -11,6 +11,7 @@ import { useMutation, useQuery } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import { toast } from "sonner"
 import Link from "next/link"
+import Image from "next/image"
 
 export default function ProfilePage() {
   const convexUser = useQuery(api.users.current)
@@ -18,6 +19,40 @@ export default function ProfilePage() {
 
   const [isEditing, setIsEditing] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
+
+  const generateUploadUrl = useMutation(api.users.generateAvatarUploadUrl)
+  const updateAvatar = useMutation(api.users.updateAvatar)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [isUploading, setIsUploading] = useState(false)
+
+  const handleAvatarUpload = async (file: File) => {
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select an image file")
+      return
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image must be under 5MB")
+      return
+    }
+    setIsUploading(true)
+    try {
+      const uploadUrl = await generateUploadUrl()
+      const response = await fetch(uploadUrl, {
+        method: "POST",
+        headers: { "Content-Type": file.type },
+        body: file,
+      })
+      if (!response.ok) throw new Error("Upload failed")
+      const { storageId } = await response.json()
+      await updateAvatar({ storageId })
+      toast.success("Profile photo updated ✓")
+    } catch (e: any) {
+      console.error(e)
+      toast.error("Failed to upload avatar. Please try again.")
+    } finally {
+      setIsUploading(false)
+    }
+  }
 
   // Local form states
   const [fullName, setFullName] = useState("")
@@ -108,17 +143,38 @@ export default function ProfilePage() {
             {/* Profile Avatar Card */}
             <section className="bg-white dark:bg-slate-900 p-8 rounded-2xl border border-slate-200/50 dark:border-slate-800/50 shadow-sm shadow-sky-900/5">
               <div className="flex flex-col items-center text-center">
-                <div className="relative group mb-6">
-                  <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-slate-100 dark:border-slate-800 relative">
+                <div 
+                  className="relative group mb-6 cursor-pointer"
+                  onClick={() => fileInputRef.current?.click()}
+                  role="button"
+                  tabIndex={0}
+                  aria-label="Upload new profile picture"
+                >
+                  <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-slate-100 dark:border-slate-800 relative group-hover:opacity-90 transition-opacity">
                     {convexUser.image || convexUser.imageUrl ? (
-                      <img
-                        alt="User Profile"
-                        className="w-full h-full object-cover"
+                      <Image
                         src={convexUser.image || convexUser.imageUrl}
+                        alt="User Profile"
+                        width={128}
+                        height={128}
+                        className="w-full h-full object-cover"
                       />
                     ) : (
                       <div className="w-full h-full bg-primary/10 flex items-center justify-center text-primary font-headline font-bold text-4xl">
                         {(convexUser.name || convexUser.fullName || "U")[0]}
+                      </div>
+                    )}
+                    
+                    {/* Hover overlay that shows "Change" */}
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity rounded-full">
+                      <span className="text-white text-xs font-bold font-headline flex items-center gap-1">
+                        <Icons.edit className="w-3 h-3" /> Change
+                      </span>
+                    </div>
+
+                    {isUploading && (
+                      <div className="absolute inset-0 bg-black/60 flex items-center justify-center rounded-full">
+                        <Icons.loader className="w-6 h-6 animate-spin text-white" />
                       </div>
                     )}
                   </div>
@@ -126,6 +182,17 @@ export default function ProfilePage() {
                     <Icons.checkCircle className="w-4 h-4 fill-white" />
                   </div>
                 </div>
+                
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={(e) => {
+                    const f = e.target.files?.[0]
+                    if (f) handleAvatarUpload(f)
+                  }}
+                  accept="image/*"
+                  className="hidden"
+                />
 
                 <h3 className="text-xl font-headline font-bold text-sky-900 dark:text-white">
                   {convexUser.name || convexUser.fullName || "User"}

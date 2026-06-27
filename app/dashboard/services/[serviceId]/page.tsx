@@ -11,7 +11,18 @@ import { serviceItems, serviceCategories } from "@/lib/mock-data"
 import { getServiceIcon, Icons } from "@/components/icons"
 import { cn } from "@/lib/utils"
 import { CalendarPicker } from "@/components/booking/calendar-picker"
-import { LocationPicker } from "@/components/booking/location-picker"
+import dynamic from "next/dynamic"
+const LocationPicker = dynamic(
+  () => import("@/components/booking/location-picker").then((mod) => mod.LocationPicker),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-[280px] w-full bg-slate-100 dark:bg-slate-800 animate-pulse rounded-2xl flex items-center justify-center text-sm text-slate-400 font-bold font-headline">
+        Loading map...
+      </div>
+    ),
+  }
+)
 import { PaymentMethods } from "@/components/payment/payment-methods"
 import type { PaymentMethod, RazorpayResponse } from "@/lib/types"
 import Link from "next/link"
@@ -73,7 +84,7 @@ export default function ServiceBookingPage() {
       if (userData.fullName && !fullName) setFullName(userData.fullName)
       if (userData.address && !selectedAddress) setSelectedAddress(userData.address)
     }
-  }, [userData])
+  }, [userData, fullName, selectedAddress])
 
   // Redirect to /complete-profile if profile is incomplete (no phone or DOB)
   useEffect(() => {
@@ -261,6 +272,9 @@ export default function ServiceBookingPage() {
                 tankSize: selectedTankSize || undefined,
                 tankType: selectedTankType || undefined,
                 paymentMethod: selectedPaymentMethod,
+                paymentId: response.razorpay_payment_id,
+                orderId: response.razorpay_order_id,
+                signature: response.razorpay_signature,
               })
               
               // Clear active session storage on success

@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Icons } from "@/components/icons"
 import Link from "next/link"
@@ -32,9 +33,11 @@ export function Header() {
           <div className="flex items-center gap-4 sm:gap-6">
             <Link href="/" className="flex items-center gap-2 group">
               <div className="relative w-9 h-9 md:w-11 md:h-11 transition-transform group-hover:scale-105">
-                <img 
-                  src="/icon.png" 
-                  alt="Falkon Care Logo" 
+                <Image
+                  src="/icon.png"
+                  alt="Falkon Care Logo"
+                  width={44}
+                  height={44}
                   className="w-full h-full object-contain"
                 />
               </div>
@@ -128,9 +131,11 @@ export function Header() {
                   </Button>
                   <Link href="/dashboard/profile" className="flex items-center">
                     {convexUser?.image || convexUser?.imageUrl ? (
-                      <img
+                      <Image
                         src={convexUser?.image || convexUser?.imageUrl}
                         alt="Profile"
+                        width={34}
+                        height={34}
                         className="w-8.5 h-8.5 rounded-full object-cover border border-primary/20 hover:border-primary/50 transition-all"
                       />
                     ) : (
@@ -160,9 +165,11 @@ export function Header() {
                 <SheetHeader>
                   <SheetTitle className="text-left flex items-center gap-2">
                     <div className="relative w-8 h-8">
-                      <img 
-                        src="/icon.png" 
-                        alt="Falkon Care Logo" 
+                      <Image
+                        src="/icon.png"
+                        alt="Falkon Care Logo"
+                        width={32}
+                        height={32}
                         className="w-full h-full object-contain"
                       />
                     </div>
@@ -241,9 +248,11 @@ export function Header() {
                         </Button>
                         <Link href="/dashboard/profile" className="flex items-center justify-center py-2" onClick={() => setMobileMenuOpen(false)}>
                           {convexUser?.image || convexUser?.imageUrl ? (
-                            <img
+                            <Image
                               src={convexUser?.image || convexUser?.imageUrl}
                               alt="Profile"
+                              width={36}
+                              height={36}
                               className="w-9 h-9 rounded-full object-cover border border-primary/20"
                             />
                           ) : (

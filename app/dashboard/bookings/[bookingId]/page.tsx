@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import { useParams, useRouter } from "next/navigation"
 import { TopBar } from "@/components/dashboard/top-bar"
 import { Card, CardContent } from "@/components/ui/card"
@@ -31,6 +32,34 @@ export default function BookingDetailsPage() {
   const bookingId = params.bookingId as Id<"bookings">
   const booking = useQuery(api.bookings.getById, { id: bookingId })
   const cancelBooking = useMutation(api.bookings.cancel)
+  const rescheduleBooking = useMutation(api.bookings.reschedule)
+
+  const [showReschedule, setShowReschedule] = useState(false)
+  const [newDate, setNewDate] = useState("")
+  const [newTime, setNewTime] = useState("")
+  const [isRescheduling, setIsRescheduling] = useState(false)
+
+  const handleReschedule = async () => {
+    if (!newDate || !newTime) {
+      toast.error("Please pick both a date and a time slot")
+      return
+    }
+    setIsRescheduling(true)
+    try {
+      await rescheduleBooking({
+        id: bookingId,
+        date: new Date(newDate).getTime(),
+        time: newTime,
+      })
+      toast.success("Booking rescheduled successfully ✓")
+      setShowReschedule(false)
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to reschedule booking"
+      toast.error(msg)
+    } finally {
+      setIsRescheduling(false)
+    }
+  }
 
   const handleCancelBooking = async () => {
     try {
@@ -362,7 +391,17 @@ export default function BookingDetailsPage() {
 
                 {/* Operations CTAs */}
                 <div className="pt-6 border-t border-slate-100 dark:border-slate-800 space-y-3">
-                  {["pending", "confirmed"].includes(booking.status) && (
+                  {["pending", "confirmed", "rescheduled"].includes(booking.status) && (
+                    <Button
+                      variant="outline"
+                      className="w-full py-5 rounded-xl font-headline font-bold text-sky-600 hover:text-white dark:text-sky-400 border-sky-200 hover:bg-sky-600 dark:border-sky-900 flex items-center justify-center gap-2"
+                      onClick={() => setShowReschedule(true)}
+                    >
+                      <Icons.edit className="w-4 h-4" /> Reschedule Booking
+                    </Button>
+                  )}
+
+                  {["pending", "confirmed", "rescheduled"].includes(booking.status) && (
                     <Button
                       variant="destructive"
                       className="w-full py-5 rounded-xl font-headline font-bold text-white shadow-md active:scale-95 duration-200 border-0 flex items-center justify-center gap-2"
@@ -389,6 +428,79 @@ export default function BookingDetailsPage() {
         </div>
 
       </div>
+
+      {showReschedule && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800/50 shadow-2xl rounded-2xl p-6 max-w-md w-full animate-in zoom-in-95 duration-200">
+            <h3 className="text-lg font-headline font-bold text-sky-900 dark:text-white mb-4 flex items-center gap-2">
+              <Icons.calendarDays className="w-5 h-5 text-primary" /> Reschedule Booking
+            </h3>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-wide block mb-1">Pick a Date</label>
+                <input
+                  type="date"
+                  min={new Date(Date.now() + 86400000).toISOString().split("T")[0]} // Start from tomorrow
+                  value={newDate}
+                  onChange={(e) => setNewDate(e.target.value)}
+                  className="w-full bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 dark:text-white"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-wide block mb-1">Select Time Window</label>
+                <div className="grid grid-cols-1 gap-2">
+                  {[
+                    { value: "morning_8_11", label: "Morning (8 AM - 11 AM)" },
+                    { value: "noon_12_3", label: "Noon (12 PM - 3 PM)" },
+                    { value: "evening_4_7", label: "Evening (4 PM - 7 PM)" }
+                  ].map((slot) => (
+                    <button
+                      key={slot.value}
+                      type="button"
+                      onClick={() => setNewTime(slot.value)}
+                      className={cn(
+                        "w-full px-4 py-3 rounded-xl border text-sm font-headline font-bold text-left transition-all duration-200",
+                        newTime === slot.value
+                          ? "bg-primary/10 border-primary text-primary"
+                          : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/50"
+                      )}
+                    >
+                      {slot.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex gap-3 mt-6">
+              <Button
+                variant="outline"
+                onClick={() => setShowReschedule(false)}
+                className="flex-1 rounded-xl py-5"
+                disabled={isRescheduling}
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleReschedule}
+                className="flex-1 rounded-xl py-5 bg-primary hover:bg-primary/90 text-white font-headline font-bold"
+                disabled={isRescheduling}
+              >
+                {isRescheduling ? (
+                  <span className="flex items-center gap-1.5 justify-center">
+                    <Icons.loader className="w-4 h-4 animate-spin" /> Saving...
+                  </span>
+                ) : (
+                  "Confirm ✓"
+                )}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   )
 }

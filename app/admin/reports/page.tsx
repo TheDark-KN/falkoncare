@@ -5,8 +5,20 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Icons } from "@/components/icons"
 import { useAppStore } from "@/lib/store"
 import { serviceItems } from "@/lib/mock-data"
-import { AnalyticsChart } from "@/components/admin/analytics-chart"
 import { RevenueMetrics } from "@/components/admin/revenue-metrics"
+import Image from "next/image"
+import dynamic from "next/dynamic"
+const AnalyticsChart = dynamic(
+  () => import("@/components/admin/analytics-chart").then((mod) => mod.AnalyticsChart),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-[350px] w-full bg-slate-100 dark:bg-slate-800 animate-pulse rounded-2xl flex items-center justify-center text-sm text-slate-400 font-bold font-headline">
+        Loading chart...
+      </div>
+    ),
+  }
+)
 
 export default function AdminReportsPage() {
   const { bookings, staff, feedback } = useAppStore()
@@ -131,9 +143,11 @@ export default function AdminReportsPage() {
                         <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-xs font-bold text-primary">
                           {index + 1}
                         </div>
-                        <img
+                        <Image
                           src={member.photo || "/placeholder.svg"}
                           alt={member.name}
+                          width={40}
+                          height={40}
                           className="w-10 h-10 rounded-full object-cover"
                         />
                         <div>

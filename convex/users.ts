@@ -1,6 +1,7 @@
-import { v } from "convex/values";
+import { v, ConvexError } from "convex/values";
 import { mutation, query, internalMutation } from "./_generated/server";
 import { getAuthUserId } from "@convex-dev/auth/server";
+import { z } from "zod";
 
 // Diagnostic: returns the raw Convex auth identity.
 export const whoami = query({
@@ -59,6 +60,21 @@ export const updateProfile = mutation({
     const user = await ctx.db.get(userId);
     if (!user) {
       throw new Error("User not found");
+    }
+
+    if (phoneNumber !== undefined) {
+      const cleaned = phoneNumber.replace(/^\+91/, "");
+      const phoneSchema = z.string().regex(/^[6-9]\d{9}$/, "Enter a valid 10-digit Indian mobile number");
+      const result = phoneSchema.safeParse(cleaned);
+      if (!result.success) throw new ConvexError(result.error.issues[0].message);
+    }
+    if (dob !== undefined && dob !== "") {
+      const dobSchema = z.string().refine(val => {
+        const age = (Date.now() - new Date(val).getTime()) / (1000 * 60 * 60 * 24 * 365.25);
+        return age >= 18;
+      }, "You must be at least 18 years old");
+      const result = dobSchema.safeParse(dob);
+      if (!result.success) throw new ConvexError(result.error.issues[0].message);
     }
 
     // Update profile fields, maintaining backward compatibility between name & fullName
@@ -133,5 +149,25 @@ export const makeUserAdmin = mutation({
       role: "admin",
     });
     return true;
+  },
+});
+
+export const updateAvatar = mutation({
+  args: { storageId: v.id("_storage") },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) throw new ConvexError("Not authenticated");
+    const url = await ctx.storage.getUrl(args.storageId);
+    if (!url) throw new ConvexError("Failed to get avatar URL");
+    await ctx.db.patch(userId, { image: url, imageUrl: url, imageStorageId: args.storageId });
+    return { avatarUrl: url };
+  },
+});
+
+export const generateAvatarUploadUrl = mutation({
+  handler: async (ctx) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) throw new ConvexError("Not authenticated");
+    return await ctx.storage.generateUploadUrl();
   },
 });

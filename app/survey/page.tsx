@@ -576,8 +576,7 @@ function SurveyPageContent() {
           description:
             "Your session expired or the Convex auth pipeline is not configured. " +
             "Please sign out, sign back in, and try again. If the problem persists, " +
-            "ask the team to verify the Clerk 'convex' JWT template and the " +
-            "CLERK_JWT_ISSUER_DOMAIN env var on the Convex deployment.",
+            "ask the team to verify the Convex Auth configuration on the Convex deployment.",
         });
       } else {
         toast.error("❌ Submission Failed", { description: raw });

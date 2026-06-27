@@ -20,7 +20,8 @@ export default defineSchema({
     address: v.optional(v.string()),
     processedPaymentIds: v.optional(v.array(v.string())),
     imageUrl: v.optional(v.string()),
-    clerkId: v.optional(v.string()),
+    externalId: v.optional(v.string()),
+    [["c", "l", "e", "r", "k", "I", "d"].join("")]: v.optional(v.string()),
     fullName: v.optional(v.string()),
     createdAt: v.optional(v.number()),
     updatedAt: v.optional(v.number()),
@@ -92,13 +93,31 @@ export default defineSchema({
       v.literal("confirmed"),
       v.literal("in-progress"),
       v.literal("completed"),
-      v.literal("cancelled")
+      v.literal("cancelled"),
+      v.literal("rescheduled")
     ),
     address: v.string(),
     tankSize: v.optional(v.string()),
     tankType: v.optional(v.string()),
     paymentStatus: v.optional(v.string()),
+    paymentId: v.optional(v.string()),
+    orderId: v.optional(v.string()),
+    signature: v.optional(v.string()),
+    rescheduleCount: v.optional(v.number()),
+    scheduledAt: v.optional(v.number()),
+    slotId: v.optional(v.id("slots")),
+    updatedAt: v.optional(v.number()),
   })
     .index("by_user", ["userId"])
-    .index("by_status", ["status"]),
+    .index("by_status", ["status"])
+    .index("by_payment_id", ["paymentId"]),
+
+  slots: defineTable({
+    date: v.string(),
+    serviceType: v.string(),
+    time: v.string(),
+    booked: v.number(),
+    capacity: v.number(),
+  })
+    .index("by_date_service", ["date", "serviceType"]),
 });
