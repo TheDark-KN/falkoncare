@@ -100,6 +100,19 @@ export default function BookingDetailsPage() {
     )
   }
 
+  // Reschedule validation helpers
+  const getSlotStartHour = (timeSlot: string): number => {
+    const slot = timeSlot.toLowerCase();
+    if (slot.includes("morning") || slot.includes("8")) return 8;
+    if (slot.includes("noon") || slot.includes("12")) return 12;
+    if (slot.includes("evening") || slot.includes("4") || slot.includes("16")) return 16;
+    return 9;
+  };
+
+  const bookingStartTime = booking.date + getSlotStartHour(booking.time) * 60 * 60 * 1000;
+  const now = Date.now();
+  const canReschedule = bookingStartTime <= now || (bookingStartTime - now >= 4 * 60 * 60 * 1000);
+
   // Calculate progress details based on status
   const status = booking.status
   const isCompleted = status === "completed"
@@ -391,7 +404,7 @@ export default function BookingDetailsPage() {
 
                 {/* Operations CTAs */}
                 <div className="pt-6 border-t border-slate-100 dark:border-slate-800 space-y-3">
-                  {["pending", "confirmed", "rescheduled"].includes(booking.status) && (
+                  {["pending", "confirmed", "rescheduled"].includes(booking.status) && canReschedule && (
                     <Button
                       variant="outline"
                       className="w-full py-5 rounded-xl font-headline font-bold text-sky-600 hover:text-white dark:text-sky-400 border-sky-200 hover:bg-sky-600 dark:border-sky-900 flex items-center justify-center gap-2"

@@ -301,7 +301,8 @@ export const reschedule = mutation({
         }
 
         const bookingStartTime = booking.date + getSlotStartHour(booking.time) * 60 * 60 * 1000;
-        if (bookingStartTime - Date.now() < 4 * 60 * 60 * 1000) {
+        const now = Date.now();
+        if (bookingStartTime > now && bookingStartTime - now < 4 * 60 * 60 * 1000) {
             throw new ConvexError("Cannot reschedule bookings within 4 hours of the scheduled time.");
         }
 
