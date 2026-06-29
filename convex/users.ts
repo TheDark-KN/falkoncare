@@ -49,7 +49,8 @@ export const checkAndPromoteAdmin = mutation({
     if (!userId) return null;
     const user = await ctx.db.get(userId);
     if (!user) return null;
-    if (user.email?.toLowerCase() === "madhav.internship2024@gmail.com" && user.role !== "admin") {
+    const email = user.email?.toLowerCase();
+    if ((email === "madhav.internship2024@gmail.com" || email === "102ctbmti2122016@nfsu.ac.in") && user.role !== "admin") {
       await ctx.db.patch(userId, { role: "admin" });
       return { ...user, role: "admin" };
     }
