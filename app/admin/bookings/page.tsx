@@ -36,7 +36,7 @@ function formatDate(timestamp: any) {
 }
 
 export default function AdminBookingsPage() {
-  const bookings = useQuery(api.admin.getAllBookings);
+  const bookings = useQuery(api.admin.getAllBookings, {});
   const rawUsers = useQuery(api.admin.getAllUsers);
   const users = useMemo(() => rawUsers ?? [], [rawUsers]);
   const updateStatus = useMutation(api.admin.updateBookingStatus);

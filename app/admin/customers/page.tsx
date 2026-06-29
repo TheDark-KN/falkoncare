@@ -13,11 +13,13 @@ import { Label } from "@/components/ui/label";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { toast } from "sonner";
 import { useState, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import type { Id } from "@/convex/_generated/dataModel";
 
 export default function AdminCustomersPage() {
+  const router = useRouter();
   const rawUsers = useQuery(api.admin.getAllUsers);
-  const rawBookings = useQuery(api.admin.getAllBookings);
+  const rawBookings = useQuery(api.admin.getAllBookings, {});
   const bookings = useMemo(() => rawBookings ?? [], [rawBookings]);
   const sendNotification = useMutation(api.admin.sendNotificationToUser);
 
@@ -153,7 +155,7 @@ export default function AdminCustomersPage() {
                       <Icons.bell className="w-3.5 h-3.5" /> Notify
                     </Button>
                     <Button
-                      onClick={() => setSelectedCustomer(customer)}
+                      onClick={() => router.push(`/admin/customers/${customer._id}`)}
                       className="min-h-[38px] bg-blue-600 hover:bg-blue-700 text-white rounded-xl flex items-center gap-1.5 text-xs font-bold border-0"
                     >
                       View Details

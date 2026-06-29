@@ -34,7 +34,7 @@ function formatDate(timestamp: number) {
 
 export default function AdminDashboardPage() {
   const stats = useQuery(api.admin.getDashboardStats);
-  const allBookings = useQuery(api.admin.getAllBookings);
+  const allBookings = useQuery(api.admin.getAllBookings, {});
 
   const isLoading = stats === undefined || allBookings === undefined;
 

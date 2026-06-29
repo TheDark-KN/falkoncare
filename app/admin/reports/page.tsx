@@ -23,7 +23,7 @@ const AnalyticsChart = dynamic(
 );
 
 export default function AdminReportsPage() {
-  const rawBookings = useQuery(api.admin.getAllBookings);
+  const rawBookings = useQuery(api.admin.getAllBookings, {});
   const bookings = useMemo(() => rawBookings ?? [], [rawBookings]);
   const rawUsers = useQuery(api.admin.getAllUsers);
   const users = useMemo(() => rawUsers ?? [], [rawUsers]);

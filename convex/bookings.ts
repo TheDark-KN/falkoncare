@@ -78,7 +78,7 @@ export const getByUser = query({
         }
         return await ctx.db
             .query("bookings")
-            .withIndex("by_user", (q: any) => q.eq("userId", userId))
+            .withIndex("by_userId", (q: any) => q.eq("userId", userId))
             .collect();
     },
 });
@@ -90,7 +90,7 @@ export const getByUserId = query({
         await assertAdmin(ctx);
         return await ctx.db
             .query("bookings")
-            .withIndex("by_user", (q: any) => q.eq("userId", userId))
+            .withIndex("by_userId", (q: any) => q.eq("userId", userId))
             .collect();
     },
 });

@@ -28,19 +28,25 @@ async function checkAdmin(ctx: any) {
 
 // Admin: get all bookings sorted by createdAt desc
 export const getAllBookings = query({
-  args: {},
-  handler: async (ctx) => {
+  args: {
+    status: v.optional(v.string()),
+    limit: v.optional(v.number()),
+  },
+  handler: async (ctx, args) => {
     const adminId = await checkAdminQuery(ctx);
     if (!adminId) return [];
 
     const bookings = await ctx.db
       .query("bookings")
       .order("desc")
-      .collect();
+      .take(args.limit ?? 100);
 
-    // Join user info
+    const filtered = args.status
+      ? bookings.filter((b) => b.status === args.status)
+      : bookings;
+
     const bookingsWithUser = await Promise.all(
-      bookings.map(async (booking) => {
+      filtered.map(async (booking) => {
         let user: any = null;
         try {
           if (booking.userId) {
@@ -94,17 +100,24 @@ export const getAllUsers = query({
     const adminId = await checkAdminQuery(ctx);
     if (!adminId) return [];
 
-    const users = await ctx.db
-      .query("users")
-      .collect();
+    const users = await ctx.db.query("users").order("desc").collect();
 
     const activeUsers = users.filter((u) => !u.deleted);
 
+    const seen = new Set<string>();
+    const uniqueUsers = activeUsers.filter((u) => {
+      if (!u.email) return true;
+      const key = String(u.email).toLowerCase();
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+
     const usersWithBookings = await Promise.all(
-      activeUsers.map(async (user) => {
+      uniqueUsers.map(async (user) => {
         const userBookings = await ctx.db
           .query("bookings")
-          .withIndex("by_user", (q) => q.eq("userId", user._id))
+          .withIndex("by_userId", (q) => q.eq("userId", user._id))
           .collect();
 
         return {
@@ -115,6 +128,9 @@ export const getAllUsers = query({
           phone: user.phone ?? user.phoneNumber ?? "-",
           role: user.role ?? "customer",
           bookingCount: userBookings.length,
+          totalSpent: userBookings
+            .filter((b) => b.paymentStatus === "paid")
+            .reduce((sum, b) => sum + (b.amount ?? 0), 0),
           status: user.status ?? "available",
         };
       })
@@ -134,6 +150,10 @@ export const getDashboardStats = query({
         totalUsers: 0,
         totalBookings: 0,
         totalRevenue: 0,
+        pendingCount: 0,
+        confirmedCount: 0,
+        completedCount: 0,
+        cancelledCount: 0,
         bookingsByStatus: {
           pending: 0,
           confirmed: 0,
@@ -145,34 +165,43 @@ export const getDashboardStats = query({
       };
     }
 
-    const users = await ctx.db.query("users").collect();
-    const activeUsers = users.filter((u) => !u.deleted);
+    const [allUsers, allBookings] = await Promise.all([
+      ctx.db.query("users").collect(),
+      ctx.db.query("bookings").collect(),
+    ]);
 
-    const bookings = await ctx.db.query("bookings").collect();
+    const seen = new Set<string>();
+    const uniqueUsers = allUsers.filter((u) => {
+      if (u.deleted) return false;
+      if (!u.email) return true;
+      const key = String(u.email).toLowerCase();
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
 
-    // Total Revenue from completed bookings
-    const completedBookings = bookings.filter((b) => b.status === "completed");
-    const totalRevenue = completedBookings.reduce((sum, b) => sum + (b.amount ?? 0), 0);
-
-    // Bookings by Status
-    const bookingsByStatus = {
-      pending: bookings.filter((b) => b.status === "pending").length,
-      confirmed: bookings.filter((b) => b.status === "confirmed").length,
-      "in-progress": bookings.filter((b) => b.status === "in-progress").length,
-      completed: completedBookings.length,
-      cancelled: bookings.filter((b) => b.status === "cancelled").length,
-    };
-
-    // Bookings this week
     const oneWeekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
-    const bookingsThisWeek = bookings.filter((b) => b._creationTime >= oneWeekAgo).length;
+
+    const totalRevenue = allBookings
+      .filter((b) => b.paymentStatus === "paid")
+      .reduce((sum, b) => sum + (b.amount ?? 0), 0);
 
     return {
-      totalUsers: activeUsers.length,
-      totalBookings: bookings.length,
+      totalUsers: uniqueUsers.length,
+      totalBookings: allBookings.length,
       totalRevenue,
-      bookingsByStatus,
-      bookingsThisWeek,
+      pendingCount: allBookings.filter((b) => b.status === "pending").length,
+      confirmedCount: allBookings.filter((b) => b.status === "confirmed").length,
+      completedCount: allBookings.filter((b) => b.status === "completed").length,
+      cancelledCount: allBookings.filter((b) => b.status === "cancelled").length,
+      bookingsByStatus: {
+        pending: allBookings.filter((b) => b.status === "pending").length,
+        confirmed: allBookings.filter((b) => b.status === "confirmed").length,
+        "in-progress": allBookings.filter((b) => b.status === "in-progress").length,
+        completed: allBookings.filter((b) => b.status === "completed").length,
+        cancelled: allBookings.filter((b) => b.status === "cancelled").length,
+      },
+      bookingsThisWeek: allBookings.filter((b) => b._creationTime >= oneWeekAgo).length,
     };
   },
 });
@@ -421,5 +450,45 @@ export const assignStaff = mutation({
     });
 
     return true;
+  },
+});
+
+// Admin: get detail for a single user
+export const getUserDetail = query({
+  args: { userId: v.id("users") },
+  handler: async (ctx, args) => {
+    const adminId = await checkAdminQuery(ctx);
+    if (!adminId) return null;
+
+    const user = await ctx.db.get(args.userId);
+    if (!user) return null;
+
+    const bookings = await ctx.db
+      .query("bookings")
+      .withIndex("by_userId", (q) => q.eq("userId", args.userId))
+      .collect();
+
+    return {
+      ...user,
+      bookingCount: bookings.length,
+      totalSpent: bookings
+        .filter((b) => b.paymentStatus === "paid")
+        .reduce((sum, b) => sum + (b.amount ?? 0), 0),
+    };
+  },
+});
+
+// Admin: get bookings for a specific user
+export const getUserBookings = query({
+  args: { userId: v.id("users") },
+  handler: async (ctx, args) => {
+    const adminId = await checkAdminQuery(ctx);
+    if (!adminId) return [];
+
+    return ctx.db
+      .query("bookings")
+      .withIndex("by_userId", (q) => q.eq("userId", args.userId))
+      .order("desc")
+      .collect();
   },
 });
