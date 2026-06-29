@@ -55,8 +55,9 @@ export function Sidebar({ userRole }: SidebarProps) {
   const [keyboardOpen, setKeyboardOpen] = useState(false)
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
 
-  const navItems = userRole === "admin" ? adminNavItems : customerNavItems
-  const tabs = userRole === "admin" ? adminTabs : customerTabs
+  const isAdminPath = pathname.startsWith("/admin")
+  const navItems = isAdminPath ? adminNavItems : customerNavItems
+  const tabs = isAdminPath ? adminTabs : customerTabs
   const unreadCount = notifications.filter((n) => !n.read).length
 
   useEffect(() => {
@@ -125,10 +126,24 @@ export function Sidebar({ userRole }: SidebarProps) {
 
         {/* Bottom logout */}
         <div className="pt-4 border-t border-slate-200/50 dark:border-slate-800/50 space-y-3">
-          {userRole !== "admin" && (
+          {!isAdminPath && (
             <Link href="/dashboard/services" className="block">
               <Button className="w-full py-5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-headline font-bold text-xs shadow-md shadow-blue-500/10 active:scale-95 duration-200 flex items-center justify-center gap-1.5 border-0">
                 <Icons.plus className="w-4 h-4" /> Book Service
+              </Button>
+            </Link>
+          )}
+          {!isAdminPath && userRole === "admin" && (
+            <Link href="/admin" className="block">
+              <Button className="w-full py-5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl font-headline font-bold text-xs shadow-md shadow-rose-500/10 active:scale-95 duration-200 flex items-center justify-center gap-1.5 border-0">
+                <Icons.shield className="w-4 h-4" /> Admin Panel
+              </Button>
+            </Link>
+          )}
+          {isAdminPath && userRole === "admin" && (
+            <Link href="/dashboard" className="block">
+              <Button className="w-full py-5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-headline font-bold text-xs shadow-md shadow-indigo-500/10 active:scale-95 duration-200 flex items-center justify-center gap-1.5 border-0">
+                <Icons.user className="w-4 h-4" /> Customer View
               </Button>
             </Link>
           )}
@@ -189,13 +204,33 @@ export function Sidebar({ userRole }: SidebarProps) {
 
         {/* Bottom logout icon */}
         <div className="w-full flex flex-col items-center gap-3 pt-4 border-t border-slate-200/50 dark:border-slate-800/50">
-          {userRole !== "admin" && (
+          {!isAdminPath && (
             <Link href="/dashboard/services" className="relative group">
               <button className="w-11 h-11 bg-blue-600 hover:bg-blue-700 text-white rounded-xl flex items-center justify-center shadow-md active:scale-95 duration-200">
                 <Icons.plus className="w-5 h-5" />
               </button>
               <div className="absolute left-14 top-1/2 -translate-y-1/2 bg-slate-900 text-white text-xs font-bold font-headline rounded-lg px-2.5 py-1.5 shadow-md scale-0 group-hover:scale-100 transition-all origin-left whitespace-nowrap z-50">
                 Book Service
+              </div>
+            </Link>
+          )}
+          {!isAdminPath && userRole === "admin" && (
+            <Link href="/admin" className="relative group">
+              <button className="w-11 h-11 bg-rose-600 hover:bg-rose-700 text-white rounded-xl flex items-center justify-center shadow-md active:scale-95 duration-200">
+                <Icons.shield className="w-5 h-5" />
+              </button>
+              <div className="absolute left-14 top-1/2 -translate-y-1/2 bg-slate-900 text-white text-xs font-bold font-headline rounded-lg px-2.5 py-1.5 shadow-md scale-0 group-hover:scale-100 transition-all origin-left whitespace-nowrap z-50">
+                Admin Panel
+              </div>
+            </Link>
+          )}
+          {isAdminPath && userRole === "admin" && (
+            <Link href="/dashboard" className="relative group">
+              <button className="w-11 h-11 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl flex items-center justify-center shadow-md active:scale-95 duration-200">
+                <Icons.user className="w-5 h-5" />
+              </button>
+              <div className="absolute left-14 top-1/2 -translate-y-1/2 bg-slate-900 text-white text-xs font-bold font-headline rounded-lg px-2.5 py-1.5 shadow-md scale-0 group-hover:scale-100 transition-all origin-left whitespace-nowrap z-50">
+                Customer View
               </div>
             </Link>
           )}

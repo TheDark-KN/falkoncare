@@ -1,7 +1,6 @@
 import { ReactNode } from "react";
 import { redirect } from "next/navigation";
-import { Sidebar } from "@/components/admin/sidebar";
-import { TopBar } from "@/components/dashboard/top-bar";
+import { Sidebar } from "@/components/dashboard/sidebar";
 import { ConvexHttpClient } from "convex/browser";
 import { convexAuthNextjsToken } from "@convex-dev/auth/nextjs/server";
 import { api } from "@/convex/_generated/api";
@@ -27,14 +26,10 @@ export default async function AdminLayout({ children }: { children: ReactNode })
   }
 
   return (
-    <div className="flex h-screen bg-muted/30">
-      <Sidebar />
-
-      <main className="flex-1 flex flex-col overflow-hidden">
-        <TopBar title="Admin Dashboard" />
-        <div className="flex-1 overflow-auto p-4 md:p-8">
-          {children}
-        </div>
+    <div className="min-h-screen bg-[#f7f9fb] dark:bg-slate-950 flex flex-col lg:pl-60 md:pl-16 pl-0 pb-20 md:pb-0 pt-0">
+      <Sidebar userRole="admin" />
+      <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {children}
       </main>
     </div>
   );
