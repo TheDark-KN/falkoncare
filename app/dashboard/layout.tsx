@@ -22,9 +22,13 @@ export default async function DashboardLayout({
 
   const user = await convex.query(api.users.current)
 
+  if (!user) {
+    redirect("/signup")
+  }
+
   // Authenticated but incomplete profile → complete-profile page
-  const hasPhone = user?.phone || user?.phoneNumber
-  const hasDob = user?.dob
+  const hasPhone = user.phone || user.phoneNumber
+  const hasDob = user.dob
   if (!hasPhone || !hasDob) {
     redirect("/complete-profile")
   }

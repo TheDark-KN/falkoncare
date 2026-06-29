@@ -48,12 +48,14 @@ export default function CompleteProfilePage() {
 
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  // Redirect if not signed in
+  // Redirect if not signed in or not signed up
   useEffect(() => {
     if (!isAuthLoading && !isAuthenticated) {
       router.push("/signin?redirect_url=/complete-profile")
+    } else if (!isAuthLoading && isAuthenticated && convexUser === null) {
+      router.push("/signup")
     }
-  }, [isAuthLoading, isAuthenticated, router])
+  }, [isAuthLoading, isAuthenticated, convexUser, router])
 
   // Redirect if profile is already complete
   useEffect(() => {

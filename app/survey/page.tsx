@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useCallback, useEffect, useMemo } from "react";
-import { useMutation, useQuery } from "convex/react";
+import { useMutation, useQuery, useConvexAuth } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -242,10 +243,23 @@ const successVariants = {
 // Main Survey Page
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 function SurveyPageContent() {
+  const { isAuthenticated, isLoading: isAuthLoading } = useConvexAuth();
+  const router = useRouter();
   const user = useQuery(api.users.current);
   const isLoaded = user !== undefined;
   const submitSurvey = useMutation(api.surveys.submitSurvey);
   const generateUploadUrl = useMutation(api.surveys.generateUploadUrl);
+
+  // Redirect if not signed in or not registered in users table
+  useEffect(() => {
+    if (!isAuthLoading && !isAuthenticated) {
+      toast.error("Please sign in first.");
+      router.push("/signin?redirect_url=/survey");
+    } else if (!isAuthLoading && isAuthenticated && user === null) {
+      toast.error("Account not registered. Please sign up first.");
+      router.push("/signup");
+    }
+  }, [isAuthLoading, isAuthenticated, user, router]);
 
 
   // Gracefully handle the case where the Convex backend has not been

@@ -10,12 +10,15 @@ import { Label } from "@/components/ui/label"
 import { Icons } from "@/components/icons"
 import Link from "next/link"
 import { cn } from "@/lib/utils"
+import { useConvex } from "convex/react"
+import { api } from "@/convex/_generated/api"
 
 type Step = "email" | "otp" | "password"
 
 export default function SignInPage() {
   const { signIn } = useAuthActions()
   const router = useRouter()
+  const convex = useConvex()
   const [step, setStep] = useState<Step>("email")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -43,6 +46,13 @@ export default function SignInPage() {
     setError("")
     setIsPending(true)
     try {
+      const isRegistered = await convex.query(api.users.checkEmailRegistered, { email: email.trim() })
+      if (!isRegistered) {
+        toast.error("This email is not registered. Please sign up first.")
+        router.push("/signup")
+        return
+      }
+
       await signIn("resend-otp", { email: email.trim() })
       setStep("otp")
       setResendTimer(60)
@@ -86,6 +96,13 @@ export default function SignInPage() {
     setError("")
     setIsPending(true)
     try {
+      const isRegistered = await convex.query(api.users.checkEmailRegistered, { email: email.trim() })
+      if (!isRegistered) {
+        toast.error("This email is not registered. Please sign up first.")
+        router.push("/signup")
+        return
+      }
+
       await signIn("password", { email: email.trim(), password, flow: "signIn" })
       toast.success("Signed in successfully!")
       router.push("/dashboard")
@@ -321,7 +338,7 @@ export default function SignInPage() {
                       onChange={(e) => handleOtpInput(i, e.target.value)}
                       onKeyDown={(e) => handleOtpKeyDown(i, e)}
                       onFocus={(e) => e.target.select()}
-                      className="w-12 h-14 text-center text-xl font-bold border-2 border-slate-200 dark:border-slate-800 rounded-xl focus:border-primary focus:outline-none transition-colors dark:bg-slate-900"
+                      className="w-12 h-14 text-center text-xl font-bold text-slate-900 dark:text-white border-2 border-slate-200 dark:border-slate-800 rounded-xl focus:border-primary focus:outline-none transition-colors dark:bg-slate-900"
                       autoFocus={i === 0}
                       disabled={isPending}
                     />

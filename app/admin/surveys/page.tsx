@@ -222,7 +222,7 @@ export default function AdminSurveysPage() {
                     </TableCell>
                     <TableCell className="min-w-44">
                       <div className="font-medium text-foreground">{survey.surveyorName}</div>
-                      <div className="text-xs text-muted-foreground">{survey.submittedBy}</div>
+                      <div className="text-xs text-muted-foreground">{survey.surveyorId}</div>
                     </TableCell>
                   </TableRow>
                 ))}

@@ -456,7 +456,7 @@ export default function AdminDashboardPage() {
                               </TableCell>
                               <TableCell className="py-4 font-headline min-w-[140px]">
                                 <div className="font-bold text-sky-900 dark:text-slate-200">{survey.surveyorName}</div>
-                                <div className="text-xs text-slate-400 mt-0.5">By: {survey.submittedBy.slice(0, 10)}...</div>
+                                <div className="text-xs text-slate-400 mt-0.5">ID: {survey.surveyorId}</div>
                               </TableCell>
                             </TableRow>
                           )

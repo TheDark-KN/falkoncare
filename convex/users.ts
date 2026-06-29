@@ -171,3 +171,16 @@ export const generateAvatarUploadUrl = mutation({
     return await ctx.storage.generateUploadUrl();
   },
 });
+
+export const checkEmailRegistered = query({
+  args: { email: v.string() },
+  handler: async (ctx, args) => {
+    const emailLower = args.email.trim().toLowerCase();
+    // Query users by email index
+    const user = await ctx.db
+      .query("users")
+      .withIndex("email", (q) => q.eq("email", emailLower))
+      .first();
+    return user !== null;
+  },
+});
