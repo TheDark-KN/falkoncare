@@ -7,6 +7,7 @@ import Link from "next/link"
 import { useQuery } from "convex/react"
 import { api } from "@/convex/_generated/api"
 import Image from "next/image"
+import { NotificationBell } from "@/components/notifications/NotificationBell"
 
 interface TopBarProps {
   title: string
@@ -48,14 +49,7 @@ export function TopBar({ title, onMenuClick }: TopBarProps) {
         )}
 
         {/* Notifications */}
-        <Link href="/dashboard/notifications">
-          <Button variant="ghost" size="icon" className="relative text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full w-10 h-10">
-            <Icons.bell className="w-5 h-5" />
-            {unreadCount > 0 && (
-              <span className="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full border-2 border-white dark:border-slate-900"></span>
-            )}
-          </Button>
-        </Link>
+        <NotificationBell />
 
         {/* Profile Details */}
         <Link href="/dashboard/profile">

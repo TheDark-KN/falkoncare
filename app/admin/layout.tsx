@@ -21,7 +21,7 @@ export default async function AdminLayout({ children }: { children: ReactNode })
   const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
   convex.setAuth(token);
 
-  const user = await convex.query(api.users.current);
+  const user = await convex.mutation(api.users.checkAndPromoteAdmin);
   if (!user || user.role !== "admin") {
     redirect("/dashboard");
   }

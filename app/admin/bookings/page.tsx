@@ -1,201 +1,222 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Image from "next/image"
-import { AdminTopBar } from "@/components/admin/admin-top-bar"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { StatusBadge } from "@/components/ui/status-badge"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Icons } from "@/components/icons"
-import { useAppStore } from "@/lib/store"
-import { mockStaff } from "@/lib/mock-data"
-import { cn } from "@/lib/utils"
-import type { BookingStatus } from "@/lib/types"
+import { useMutation, useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Icons } from "@/components/icons";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { StatusBadge } from "@/components/ui/status-badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { toast } from "sonner";
+import { useState, useMemo } from "react";
+import type { Id } from "@/convex/_generated/dataModel";
+
+type BookingStatus = "pending" | "confirmed" | "in-progress" | "completed" | "cancelled";
+
+function formatCurrency(amount: number) {
+  return new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency: "INR",
+    maximumFractionDigits: 0,
+  }).format(amount);
+}
+
+function formatDate(timestamp: number) {
+  return new Date(timestamp).toLocaleDateString("en-IN", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+}
 
 export default function AdminBookingsPage() {
-  const { bookings, staff, updateBookingStatus, assignStaff } = useAppStore()
-  const [filter, setFilter] = useState<BookingStatus | "all">("all")
-  const [assigningBooking, setAssigningBooking] = useState<string | null>(null)
+  const bookings = useQuery(api.admin.getAllBookings);
+  const updateStatus = useMutation(api.admin.updateBookingStatus);
 
-  const filteredBookings = filter === "all" ? bookings : bookings.filter((b) => b.status === filter)
+  const [statusFilter, setStatusFilter] = useState<BookingStatus | "all">("all");
+  const [serviceFilter, setServiceFilter] = useState<string | "all">("all");
 
-  const handleStatusChange = (bookingId: string, status: BookingStatus) => {
-    updateBookingStatus(bookingId, status)
-  }
+  const isLoading = bookings === undefined;
 
-  const handleAssignStaff = (bookingId: string, staffId: string) => {
-    assignStaff(bookingId, staffId)
-    setAssigningBooking(null)
+  const uniqueServices = useMemo(() => {
+    if (!bookings) return [];
+    const services = bookings.map((b) => b.serviceName);
+    return Array.from(new Set(services));
+  }, [bookings]);
+
+  const filteredBookings = useMemo(() => {
+    if (!bookings) return [];
+    return bookings.filter((b) => {
+      const matchStatus = statusFilter === "all" || b.status === statusFilter;
+      const matchService = serviceFilter === "all" || b.serviceName === serviceFilter;
+      return matchStatus && matchService;
+    });
+  }, [bookings, statusFilter, serviceFilter]);
+
+  const handleStatusUpdate = async (bookingId: Id<"bookings">, newStatus: BookingStatus) => {
+    try {
+      await updateStatus({ bookingId, status: newStatus });
+      toast.success(`Booking status updated to ${newStatus}`);
+    } catch (e) {
+      toast.error("Failed to update booking status");
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-[60vh]">
+        <div className="text-center">
+          <Icons.loader className="h-8 w-8 animate-spin text-blue-600 mx-auto mb-4" />
+          <p className="text-slate-500 dark:text-slate-400 font-semibold">Loading bookings canvas...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <AdminTopBar title="Booking Management" />
+    <div className="space-y-6 font-sans">
+      <div>
+        <h2 className="text-2xl font-black font-headline text-slate-900 dark:text-white tracking-tight">
+          Booking Management
+        </h2>
+        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+          Review, confirm, track, or cancel water tank cleaning service bookings
+        </p>
+      </div>
 
-      <div className="p-6">
-        {/* Filters */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex gap-2">
-            {(["all", "pending", "confirmed", "in-progress", "completed", "cancelled"] as const).map((status) => (
-              <Button
-                key={status}
-                variant={filter === status ? "default" : "outline"}
-                size="sm"
-                onClick={() => setFilter(status)}
-                className={cn(
-                  filter === status ? "bg-primary text-primary-foreground" : "border-border text-muted-foreground",
-                )}
-              >
-                {status === "all" ? "All" : status.charAt(0).toUpperCase() + status.slice(1).replace("-", " ")}
-                {status !== "all" && (
-                  <span className="ml-1 text-xs">({bookings.filter((b) => b.status === status).length})</span>
-                )}
-              </Button>
-            ))}
-          </div>
+      {/* Filters Bar */}
+      <div className="flex flex-wrap items-center gap-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-xl shadow-sm">
+        <div className="flex flex-col gap-1">
+          <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Status</label>
+          <Select
+            value={statusFilter}
+            onValueChange={(val) => setStatusFilter(val as any)}
+          >
+            <SelectTrigger className="w-[160px] min-h-[40px] border-slate-200 dark:border-slate-800 rounded-lg">
+              <SelectValue placeholder="Filter by status" />
+            </SelectTrigger>
+            <SelectContent className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800">
+              <SelectItem value="all">All Statuses</SelectItem>
+              <SelectItem value="pending">Pending</SelectItem>
+              <SelectItem value="confirmed">Confirmed</SelectItem>
+              <SelectItem value="in-progress">In Progress</SelectItem>
+              <SelectItem value="completed">Completed</SelectItem>
+              <SelectItem value="cancelled">Cancelled</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
-        {/* Bookings Table */}
-        <Card className="bg-card border-border">
-          <CardContent className="p-0">
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="border-b border-border bg-muted/50">
-                  <tr>
-                    <th className="text-left p-4 text-sm font-medium text-muted-foreground">Booking ID</th>
-                    <th className="text-left p-4 text-sm font-medium text-muted-foreground">Service</th>
-                    <th className="text-left p-4 text-sm font-medium text-muted-foreground">Date & Time</th>
-                    <th className="text-left p-4 text-sm font-medium text-muted-foreground">Amount</th>
-                    <th className="text-left p-4 text-sm font-medium text-muted-foreground">Staff</th>
-                    <th className="text-left p-4 text-sm font-medium text-muted-foreground">Status</th>
-                    <th className="text-left p-4 text-sm font-medium text-muted-foreground">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredBookings.map((booking) => {
-                    const assignedStaff = booking.staffId ? mockStaff.find((s) => s.id === booking.staffId) : null
-                    const availableStaff = staff.filter((s) => s.status === "available")
-
-                    return (
-                      <tr key={booking.id} className="border-b border-border last:border-0">
-                        <td className="p-4">
-                          <span className="font-mono text-sm text-foreground">{booking.id}</span>
-                        </td>
-                        <td className="p-4">
-                          <div>
-                            <p className="font-medium text-foreground">{booking.serviceName}</p>
-                            {booking.tankSize && (
-                              <p className="text-sm text-muted-foreground">
-                                {booking.tankSize} {booking.tankType}
-                              </p>
-                            )}
-                          </div>
-                        </td>
-                        <td className="p-4">
-                          <div>
-                            <p className="text-foreground">
-                              {new Date(booking.date).toLocaleDateString("en-IN", {
-                                day: "numeric",
-                                month: "short",
-                                year: "numeric",
-                              })}
-                            </p>
-                            <p className="text-sm text-muted-foreground">{booking.time}</p>
-                          </div>
-                        </td>
-                        <td className="p-4">
-                          <span className="font-medium text-foreground flex items-center">
-                            <Icons.rupee className="w-3 h-3" />
-                            {booking.amount.toLocaleString()}
-                          </span>
-                        </td>
-                        <td className="p-4">
-                          {assigningBooking === booking.id ? (
-                            <Select onValueChange={(value) => handleAssignStaff(booking.id, value)}>
-                              <SelectTrigger className="w-40">
-                                <SelectValue placeholder="Select Staff" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {availableStaff.map((s) => (
-                                  <SelectItem key={s.id} value={s.id}>
-                                    {s.name}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          ) : assignedStaff ? (
-                            <div className="flex items-center gap-2">
-                              <Image
-                                src={assignedStaff.photo || "/placeholder.svg"}
-                                alt={assignedStaff.name}
-                                width={32}
-                                height={32}
-                                className="w-8 h-8 rounded-full object-cover"
-                              />
-                              <span className="text-sm text-foreground">{assignedStaff.name}</span>
-                            </div>
-                          ) : (
-                            <Button variant="outline" size="sm" onClick={() => setAssigningBooking(booking.id)}>
-                              Assign Staff
-                            </Button>
-                          )}
-                        </td>
-                        <td className="p-4">
-                          <StatusBadge status={booking.status} />
-                        </td>
-                        <td className="p-4">
-                          <div className="flex items-center gap-2">
-                            {booking.status === "pending" && (
-                              <Button
-                                size="sm"
-                                className="bg-success hover:bg-success/90 text-success-foreground"
-                                onClick={() => handleStatusChange(booking.id, "confirmed")}
-                              >
-                                Confirm
-                              </Button>
-                            )}
-                            {booking.status === "confirmed" && (
-                              <Button size="sm" onClick={() => handleStatusChange(booking.id, "in-progress")}>
-                                Start
-                              </Button>
-                            )}
-                            {booking.status === "in-progress" && (
-                              <Button
-                                size="sm"
-                                className="bg-success hover:bg-success/90 text-success-foreground"
-                                onClick={() => handleStatusChange(booking.id, "completed")}
-                              >
-                                Complete
-                              </Button>
-                            )}
-                            {["pending", "confirmed"].includes(booking.status) && (
-                              <Button
-                                size="sm"
-                                variant="destructive"
-                                onClick={() => handleStatusChange(booking.id, "cancelled")}
-                              >
-                                Cancel
-                              </Button>
-                            )}
-                          </div>
-                        </td>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </table>
-            </div>
-
-            {filteredBookings.length === 0 && (
-              <div className="text-center py-12">
-                <Icons.calendar className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                <p className="text-muted-foreground">No bookings found</p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+        <div className="flex flex-col gap-1">
+          <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Service Type</label>
+          <Select
+            value={serviceFilter}
+            onValueChange={setServiceFilter}
+          >
+            <SelectTrigger className="w-[180px] min-h-[40px] border-slate-200 dark:border-slate-800 rounded-lg">
+              <SelectValue placeholder="Filter by service" />
+            </SelectTrigger>
+            <SelectContent className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800">
+              <SelectItem value="all">All Services</SelectItem>
+              {uniqueServices.map((service) => (
+                <SelectItem key={service} value={service}>
+                  {service}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
+
+      {/* Bookings Table */}
+      <Card className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden">
+        <CardHeader className="p-6 border-b border-slate-100 dark:border-slate-800 flex flex-row items-center justify-between">
+          <CardTitle className="text-lg font-bold font-headline text-slate-900 dark:text-slate-50">
+            Bookings List
+          </CardTitle>
+          <div className="text-xs text-slate-500 dark:text-slate-400 font-semibold">
+            Showing {filteredBookings.length} bookings
+          </div>
+        </CardHeader>
+        <CardContent className="p-0">
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow className="border-b border-slate-100 dark:border-slate-800 bg-slate-50/20 hover:bg-transparent">
+                  <TableHead className="font-bold text-xs uppercase tracking-wider text-slate-400 pl-6">Booking ID</TableHead>
+                  <TableHead className="font-bold text-xs uppercase tracking-wider text-slate-400">Customer</TableHead>
+                  <TableHead className="font-bold text-xs uppercase tracking-wider text-slate-400">Service</TableHead>
+                  <TableHead className="font-bold text-xs uppercase tracking-wider text-slate-400">Slot</TableHead>
+                  <TableHead className="font-bold text-xs uppercase tracking-wider text-slate-400">Status</TableHead>
+                  <TableHead className="font-bold text-xs uppercase tracking-wider text-slate-400 text-right">Amount</TableHead>
+                  <TableHead className="font-bold text-xs uppercase tracking-wider text-slate-400 pr-6 text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredBookings.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={7} className="text-center py-12 text-sm text-slate-500 dark:text-slate-400">
+                      No bookings match selected filters.
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  filteredBookings.map((b) => (
+                    <TableRow key={b._id} className="border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50/50 dark:hover:bg-slate-800/30">
+                      <TableCell className="pl-6 py-4 font-mono text-xs font-semibold text-slate-400">
+                        {b._id.substring(0, 8)}
+                      </TableCell>
+                      <TableCell>
+                        <div>
+                          <div className="font-semibold text-sm text-slate-900 dark:text-slate-100">
+                            {b.user?.name}
+                          </div>
+                          <div className="text-xs text-slate-400">{b.user?.email}</div>
+                          <div className="text-xs text-slate-400">{b.user?.phone}</div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="font-semibold text-sm text-slate-700 dark:text-slate-300">
+                          {b.serviceName}
+                        </div>
+                        <div className="text-xs text-slate-400 max-w-[200px] truncate">{b.address}</div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="text-sm font-medium text-slate-600 dark:text-slate-300">
+                          {b.date}
+                        </div>
+                        <div className="text-xs text-slate-400">{b.time}</div>
+                      </TableCell>
+                      <TableCell>
+                        <StatusBadge status={b.status} />
+                      </TableCell>
+                      <TableCell className="text-right font-bold text-sm text-slate-900 dark:text-slate-100">
+                        {formatCurrency(b.amount)}
+                      </TableCell>
+                      <TableCell className="pr-6 text-right">
+                        <Select
+                          value={b.status}
+                          onValueChange={(val) => handleStatusUpdate(b._id, val as BookingStatus)}
+                        >
+                          <SelectTrigger className="w-[130px] min-h-[36px] h-9 text-xs border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 rounded-lg ml-auto">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800">
+                            <SelectItem value="pending">Pending</SelectItem>
+                            <SelectItem value="confirmed">Confirmed</SelectItem>
+                            <SelectItem value="in-progress">In Progress</SelectItem>
+                            <SelectItem value="completed">Completed</SelectItem>
+                            <SelectItem value="cancelled">Cancelled</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        </CardContent>
+      </Card>
     </div>
-  )
+  );
 }

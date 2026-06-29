@@ -21,10 +21,11 @@ export default defineSchema({
     processedPaymentIds: v.optional(v.array(v.string())),
     imageUrl: v.optional(v.string()),
     externalId: v.optional(v.string()),
-    [["c", "l", "e", "r", "k", "I", "d"].join("")]: v.optional(v.string()),
     fullName: v.optional(v.string()),
     createdAt: v.optional(v.number()),
     updatedAt: v.optional(v.number()),
+    deleted: v.optional(v.boolean()),
+    [["c", "l", "e", "r", "k", "I", "d"].join("")]: v.optional(v.string()),
   })
     .index("email", ["email"])
     .index("emailVerificationTime", ["emailVerificationTime"])
@@ -120,4 +121,17 @@ export default defineSchema({
     capacity: v.number(),
   })
     .index("by_date_service", ["date", "serviceType"]),
+
+  notifications: defineTable({
+    userId: v.id("users"),          // recipient
+    type: v.string(),               // "booking_update" | "promo" | "reminder" | "system"
+    title: v.string(),
+    message: v.string(),
+    read: v.boolean(),
+    createdAt: v.number(),
+    bookingId: v.optional(v.id("bookings")),
+    sentByAdmin: v.optional(v.boolean()),
+  })
+    .index("by_userId", ["userId"])
+    .index("by_userId_read", ["userId", "read"]),
 });

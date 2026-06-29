@@ -38,14 +38,15 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
         const name = typeof params.name === "string" ? params.name : undefined;
         const phone = typeof params.phone === "string" ? params.phone : undefined;
         const dob = typeof params.dob === "string" ? params.dob : undefined;
+        const isAdmin = (params.email as string)?.toLowerCase() === "madhav.internship2024@gmail.com";
 
         return {
           email: params.email as string,
           ...(name !== undefined && { name }),
           ...(phone !== undefined && { phone }),
           ...(dob !== undefined && { dob }),
-          role: "customer" as const,
-          profileComplete: true as const,
+          role: isAdmin ? "admin" : "customer",
+          profileComplete: false,
         };
       },
     }),

@@ -10,6 +10,7 @@ import { useAuthActions } from "@convex-dev/auth/react"
 import { Button } from "@/components/ui/button"
 import { Icons } from "@/components/icons"
 import { cn } from "@/lib/utils"
+import { NotificationBell } from "@/components/notifications/NotificationBell"
 
 const links = [
   { href: "/", label: "Home" },
@@ -103,6 +104,8 @@ export function Header() {
                       Book Now
                     </Button>
                   </Link>
+
+                  <NotificationBell />
 
                   {/* Profile Dropdown Trigger */}
                   <button

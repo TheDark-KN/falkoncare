@@ -1,352 +1,323 @@
-"use client"
+"use client";
 
-import { useState, useRef, useEffect } from "react"
-import { useAuthActions } from "@convex-dev/auth/react"
-import { useRouter } from "next/navigation"
-import { toast } from "sonner"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Icons } from "@/components/icons"
-import Link from "next/link"
-import { cn } from "@/lib/utils"
-import { useConvex } from "convex/react"
-import { api } from "@/convex/_generated/api"
+import { useState, useRef, useEffect } from "react";
+import { useAuthActions } from "@convex-dev/auth/react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import Link from "next/link";
+import { Icons } from "@/components/icons";
+import { Button } from "@/components/ui/button";
+import { useConvex } from "convex/react";
+import { api } from "@/convex/_generated/api";
 
-type Step = "email" | "reset"
+type Step = "email" | "reset";
 
 export default function ForgotPasswordPage() {
-  const { signIn } = useAuthActions()
-  const router = useRouter()
-  const convex = useConvex()
-  const [step, setStep] = useState<Step>("email")
-  const [email, setEmail] = useState("")
-  const [otp, setOtp] = useState(["", "", "", "", "", ""])
-  const [newPassword, setNewPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
-  const [showPassword, setShowPassword] = useState(false)
-  const [isPending, setIsPending] = useState(false)
-  const [error, setError] = useState("")
-  const [resendTimer, setResendTimer] = useState(0)
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([])
+  const { signIn } = useAuthActions();
+  const router = useRouter();
+  const convex = useConvex();
+
+  const [step, setStep] = useState<Step>("email");
+  const [email, setEmail] = useState("");
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPw, setShowPw] = useState(false);
+  const [isPending, setIsPending] = useState(false);
+  const [error, setError] = useState("");
+  const [resendTimer, setResendTimer] = useState(0);
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   useEffect(() => {
-    if (resendTimer <= 0) return
-    const t = setTimeout(() => setResendTimer((r) => r - 1), 1000)
-    return () => clearTimeout(t)
-  }, [resendTimer])
+    if (resendTimer <= 0) return;
+    const t = setTimeout(() => setResendTimer(r => r - 1), 1000);
+    return () => clearTimeout(t);
+  }, [resendTimer]);
 
   // STEP 1 — Request reset code
   async function handleRequestReset(e: React.FormEvent) {
-    e.preventDefault()
+    e.preventDefault();
     if (!email.trim()) {
-      setError("Enter your email address")
-      return
+      setError("Enter your email address");
+      return;
     }
-    setError("")
-    setIsPending(true)
+    setError("");
+    setIsPending(true);
     try {
-      const isRegistered = await convex.query(api.users.checkEmailRegistered, { email: email.trim() })
+      // Check if user is registered first
+      const isRegistered = await convex.query(api.users.checkEmailRegistered, { email: email.trim() });
       if (!isRegistered) {
-        toast.error("This email is not registered. Please sign up first.")
-        router.push("/signup")
-        return
+        toast.error("This email is not registered. Please sign up first.");
+        router.push("/signup");
+        return;
       }
 
-      await signIn("password", { email: email.trim(), flow: "reset" })
-      setStep("reset")
-      setResendTimer(60)
-      toast.success("Reset code sent! Check your email.")
+      await signIn("password", { email: email.trim(), flow: "reset" });
+      setStep("reset");
+      setResendTimer(60);
+      toast.success("Reset code sent! Check your email.");
     } catch (err: any) {
-      // Always show the same step/message to prevent email enumeration
-      setStep("reset")
-      setResendTimer(60)
-      toast.success("If this email is registered, you'll receive a reset code.")
+      // Direct enumeration protection or fallback
+      setStep("reset");
+      setResendTimer(60);
+      toast.success("If this email is registered, you'll receive a reset code.");
     } finally {
-      setIsPending(false)
+      setIsPending(false);
     }
   }
 
-  // STEP 2 — Verify OTP + set new password
+  // STEP 2 — Reset password with code
   async function handleResetPassword(e: React.FormEvent) {
-    e.preventDefault()
-    const code = otp.join("")
+    e.preventDefault();
+    const code = otp.join("");
     if (code.length < 6) {
-      setError("Enter the full 6-digit code")
-      return
+      setError("Enter the 6-digit verification code");
+      return;
     }
     if (newPassword.length < 8) {
-      setError("Password must be at least 8 characters")
-      return
+      setError("Password must be at least 8 characters");
+      return;
     }
     if (!/[A-Z]/.test(newPassword)) {
-      setError("Password must contain at least one uppercase letter")
-      return
+      setError("Password must contain at least one uppercase letter");
+      return;
     }
-    if (!/[0-9]/.test(newPassword)) {
-      setError("Password must contain at least one number")
-      return
+    if (!/\d/.test(newPassword)) {
+      setError("Password must contain at least one number");
+      return;
     }
     if (newPassword !== confirmPassword) {
-      setError("Passwords do not match")
-      return
+      setError("Passwords do not match");
+      return;
     }
-    setError("")
-    setIsPending(true)
+
+    setError("");
+    setIsPending(true);
     try {
       await signIn("password", {
-        email,
+        email: email.trim(),
         code,
         newPassword,
         flow: "reset-verification",
-      })
-      toast.success("Password reset successful! You are now signed in.")
-      router.push("/dashboard")
+      });
+      toast.success("Password reset! Signing you in...");
+      router.push("/dashboard");
     } catch (err: any) {
-      setError(err?.message ?? "Invalid or expired code. Please request a new one.")
+      setError(err?.message ?? "Failed to reset password. Please verify the code and try again.");
     } finally {
-      setIsPending(false)
+      setIsPending(false);
     }
   }
 
   function handleOtpInput(index: number, value: string) {
-    if (!/^\d?$/.test(value)) return
-    const next = [...otp]
-    next[index] = value
-    setOtp(next)
+    if (!/^\d?$/.test(value)) return;
+    const next = [...otp];
+    next[index] = value;
+    setOtp(next);
     if (value && index < 5) {
-      inputRefs.current[index + 1]?.focus()
+      inputRefs.current[index + 1]?.focus();
     }
   }
 
   function handleOtpKeyDown(index: number, e: React.KeyboardEvent) {
     if (e.key === "Backspace" && !otp[index] && index > 0) {
-      inputRefs.current[index - 1]?.focus()
+      inputRefs.current[index - 1]?.focus();
     }
   }
 
-  async function handleResend() {
-    if (resendTimer > 0) return
-    setOtp(["", "", "", "", "", ""])
-    setError("")
-    setIsPending(true)
+  async function handleResendCode() {
+    setOtp(["", "", "", "", "", ""]);
+    setError("");
+    setIsPending(true);
     try {
-      await signIn("password", { email, flow: "reset" })
-      setResendTimer(60)
-      toast.success("New reset code sent!")
+      await signIn("password", { email: email.trim(), flow: "reset" });
+      setResendTimer(60);
+      toast.success("New reset code sent!");
     } catch {
-      toast.error("Failed to resend. Please try again.")
+      toast.error("Failed to resend reset code.");
     } finally {
-      setIsPending(false)
+      setIsPending(false);
     }
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background relative overflow-hidden p-4">
-      {/* Background gradients */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-0 w-1/2 h-1/2 bg-gradient-to-r from-accent/10 to-transparent blur-3xl opacity-70" />
-        <div className="absolute bottom-0 right-0 w-1/3 h-1/2 bg-gradient-to-tl from-primary/10 to-transparent blur-3xl rounded-full opacity-70" />
-      </div>
+    <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 px-4 py-12 relative overflow-hidden font-sans">
+      <div className="absolute top-[-20%] left-[-20%] w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-[-20%] right-[-20%] w-[600px] h-[600px] bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none" />
 
-      <div className="w-full max-w-md relative z-10 space-y-6">
-        <div className="text-center">
-          <Link href="/signin" className="text-xs font-bold text-slate-500 hover:text-primary inline-flex items-center gap-1.5 mb-6">
-            <Icons.arrowLeft className="w-3.5 h-3.5" /> Back to sign in
+      <div className="w-full max-w-[440px] z-10">
+        <div className="text-center mb-8">
+          <Link href="/signin" className="inline-flex items-center gap-2 text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-slate-950 dark:hover:text-slate-100 transition-colors mb-4">
+            <Icons.arrowLeft className="w-4 h-4" />
+            Back to sign in
           </Link>
-          <Link href="/" className="flex items-center justify-center gap-2 mb-2">
-            <Icons.droplets className="w-8 h-8 text-primary" />
-            <span className="text-xl font-bold font-headline text-sky-900 dark:text-white">FalkonCare</span>
-          </Link>
+          <h1 className="text-2xl sm:text-3xl font-extrabold font-headline text-slate-900 dark:text-slate-50 tracking-tight">
+            Reset password
+          </h1>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-2">
+            Recover access to your FalkonCare account
+          </p>
         </div>
 
-        <Card className="border-slate-200/50 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-2xl rounded-2xl overflow-hidden">
-          <CardHeader className="text-center pb-4">
-            <CardTitle className="text-2xl font-headline font-black text-sky-900 dark:text-white">
-              {step === "email" ? "Forgot Password?" : "Reset Password"}
-            </CardTitle>
-            <CardDescription className="text-slate-500 font-medium">
-              {step === "email"
-                ? "Enter your email and we'll send a reset code."
-                : `Enter the 6-digit code sent to ${email} and choose a new password.`}
-            </CardDescription>
-          </CardHeader>
+        <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800/80 rounded-2xl shadow-xl p-6 sm:p-8">
+          {step === "email" ? (
+            <form onSubmit={handleRequestReset} className="space-y-4">
+              <div>
+                <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={e => {
+                    setEmail(e.target.value);
+                    setError("");
+                  }}
+                  placeholder="you@example.com"
+                  autoFocus
+                  disabled={isPending}
+                  className="w-full min-h-[44px] text-base border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent text-slate-900 dark:text-slate-100 transition-shadow"
+                />
+              </div>
 
-          <CardContent className="p-6 md:p-8">
-            {step === "email" ? (
-              <form onSubmit={handleRequestReset} className="space-y-4">
-                <div className="space-y-1.5">
-                  <Label htmlFor="email" className="text-xs font-bold text-slate-500 dark:text-slate-400 font-headline uppercase tracking-wider ml-1">
-                    Email Address
-                  </Label>
-                  <div className="relative group">
-                    <Icons.mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-muted-foreground/60 group-focus-within:text-primary transition-colors" />
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="you@example.com"
-                      value={email}
-                      onChange={(e) => {
-                        setEmail(e.target.value)
-                        setError("")
-                      }}
-                      disabled={isPending}
-                      className="pl-12 bg-slate-50 dark:bg-slate-800 border-none rounded-xl text-sm font-semibold h-11 focus:ring-2 focus:ring-primary min-h-[44px]"
-                      required
-                      autoFocus
-                    />
-                  </div>
-                  {error && (
-                    <p className="text-[11px] text-red-500 font-semibold flex items-center gap-1 ml-1">
-                      <Icons.alertCircle className="w-3.5 h-3.5" /> {error}
-                    </p>
-                  )}
+              {error && (
+                <div className="p-3 rounded-lg bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400 text-xs font-medium flex items-center gap-2">
+                  <Icons.alertCircle className="w-4 h-4 shrink-0" />
+                  <span>{error}</span>
                 </div>
+              )}
 
+              <Button
+                type="submit"
+                disabled={isPending}
+                className="w-full min-h-[44px] bg-gradient-to-r from-blue-600 to-indigo-500 hover:from-blue-700 hover:to-indigo-600 text-white font-semibold rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20"
+              >
+                {isPending ? (
+                  <>
+                    <Icons.loader className="w-4 h-4 animate-spin" />
+                    Sending Reset Code...
+                  </>
+                ) : (
+                  "Send Reset Code"
+                )}
+              </Button>
+            </form>
+          ) : (
+            <form onSubmit={handleResetPassword} className="space-y-5">
+              <div>
+                <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-3 text-center">
+                  Enter the code sent to <span className="text-slate-800 dark:text-slate-200">{email}</span>
+                </p>
+
+                {/* 6 OTP boxes */}
+                <div className="flex justify-center gap-2 sm:gap-3">
+                  {otp.map((d, i) => (
+                    <input
+                      key={i}
+                      ref={el => {
+                        inputRefs.current[i] = el;
+                      }}
+                      type="text"
+                      inputMode="numeric"
+                      maxLength={1}
+                      value={d}
+                      onChange={e => handleOtpInput(i, e.target.value)}
+                      onKeyDown={e => handleOtpKeyDown(i, e)}
+                      onFocus={e => e.target.select()}
+                      autoFocus={i === 0}
+                      disabled={isPending}
+                      className="w-12 h-14 text-center text-xl font-extrabold text-slate-900 dark:text-white border-2 border-slate-200 dark:border-slate-800 rounded-xl focus:border-blue-500 focus:outline-none transition-colors dark:bg-slate-950"
+                    />
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">
+                  New Password
+                </label>
+                <div className="relative">
+                  <input
+                    type={showPw ? "text" : "password"}
+                    value={newPassword}
+                    onChange={e => {
+                      setNewPassword(e.target.value);
+                      setError("");
+                    }}
+                    placeholder="Minimum 8 characters"
+                    disabled={isPending}
+                    className="w-full min-h-[44px] text-base border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 bg-white dark:bg-slate-950 pr-12 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent text-slate-900 dark:text-slate-100 transition-shadow"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPw(!showPw)}
+                    disabled={isPending}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                  >
+                    {showPw ? (
+                      <Icons.eyeOff className="w-4 h-4" />
+                    ) : (
+                      <Icons.eye className="w-4 h-4" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">
+                  Confirm Password
+                </label>
+                <input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={e => {
+                    setConfirmPassword(e.target.value);
+                    setError("");
+                  }}
+                  placeholder="Re-enter new password"
+                  disabled={isPending}
+                  className="w-full min-h-[44px] text-base border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent text-slate-900 dark:text-slate-100 transition-shadow"
+                />
+              </div>
+
+              {error && (
+                <div className="p-3 rounded-lg bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400 text-xs font-medium flex items-center gap-2">
+                  <Icons.alertCircle className="w-4 h-4 shrink-0" />
+                  <span>{error}</span>
+                </div>
+              )}
+
+              <div className="flex flex-col gap-2">
                 <Button
                   type="submit"
                   disabled={isPending}
-                  className="w-full h-11 bg-primary hover:bg-primary/95 text-white font-headline font-bold text-sm rounded-xl active:scale-95 duration-200 border-0 flex items-center justify-center gap-1.5 shadow-lg shadow-primary/10 mt-2 min-h-[44px]"
+                  className="w-full min-h-[44px] bg-gradient-to-r from-blue-600 to-indigo-500 hover:from-blue-700 hover:to-indigo-600 text-white font-semibold rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20"
                 >
                   {isPending ? (
-                    <Icons.loader className="w-5 h-5 animate-spin" />
+                    <>
+                      <Icons.loader className="w-4 h-4 animate-spin" />
+                      Resetting Password...
+                    </>
                   ) : (
-                    "Send Reset Code"
+                    "Reset Password"
                   )}
                 </Button>
-              </form>
-            ) : (
-              <form onSubmit={handleResetPassword} className="space-y-5">
-                {/* OTP Boxes */}
-                <div className="space-y-2">
-                  <Label className="text-xs font-bold text-slate-500 dark:text-slate-400 font-headline uppercase tracking-wider ml-1 block text-center">
-                    Verification Code
-                  </Label>
-                  <div className="flex justify-center gap-2">
-                    {otp.map((digit, i) => (
-                      <input
-                        key={i}
-                        ref={(el) => {
-                          inputRefs.current[i] = el
-                        }}
-                        type="text"
-                        inputMode="numeric"
-                        maxLength={1}
-                        value={digit}
-                        onChange={(e) => handleOtpInput(i, e.target.value)}
-                        onKeyDown={(e) => handleOtpKeyDown(i, e)}
-                        onFocus={(e) => e.target.select()}
-                        className="w-11 h-13 text-center text-lg font-bold text-slate-900 dark:text-white border-2 border-slate-200 dark:border-slate-800 rounded-xl focus:border-primary focus:outline-none transition-colors dark:bg-slate-900"
-                        autoFocus={i === 0}
-                        disabled={isPending}
-                      />
-                    ))}
-                  </div>
-                </div>
 
-                {/* New Password */}
-                <div className="space-y-1.5">
-                  <Label htmlFor="newPassword" className="text-xs font-bold text-slate-500 dark:text-slate-400 font-headline uppercase tracking-wider ml-1">
-                    New Password
-                  </Label>
-                  <div className="relative group">
-                    <Icons.lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-muted-foreground/60 group-focus-within:text-primary transition-colors" />
-                    <Input
-                      id="newPassword"
-                      type={showPassword ? "text" : "password"}
-                      placeholder="Min 8 chars, 1 uppercase, 1 number"
-                      value={newPassword}
-                      onChange={(e) => {
-                        setNewPassword(e.target.value)
-                        setError("")
-                      }}
-                      disabled={isPending}
-                      className="pl-12 pr-12 bg-slate-50 dark:bg-slate-800 border-none rounded-xl text-sm font-semibold h-11 focus:ring-2 focus:ring-primary min-h-[44px]"
-                      required
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-450 hover:text-slate-700 transition-colors"
-                    >
-                      {showPassword ? <Icons.eyeOff className="w-4 h-4" /> : <Icons.eye className="w-4 h-4" />}
-                    </button>
-                  </div>
-                </div>
-
-                {/* Confirm Password */}
-                <div className="space-y-1.5">
-                  <Label htmlFor="confirmPassword" className="text-xs font-bold text-slate-500 dark:text-slate-400 font-headline uppercase tracking-wider ml-1">
-                    Confirm New Password
-                  </Label>
-                  <div className="relative group">
-                    <Icons.checkCircle className="absolute left-4 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-muted-foreground/60 group-focus-within:text-primary transition-colors" />
-                    <Input
-                      id="confirmPassword"
-                      type={showPassword ? "text" : "password"}
-                      placeholder="Repeat your new password"
-                      value={confirmPassword}
-                      onChange={(e) => {
-                        setConfirmPassword(e.target.value)
-                        setError("")
-                      }}
-                      disabled={isPending}
-                      className="pl-12 pr-12 bg-slate-50 dark:bg-slate-800 border-none rounded-xl text-sm font-semibold h-11 focus:ring-2 focus:ring-primary min-h-[44px]"
-                      required
-                    />
-                  </div>
-                  {error && (
-                    <p className="text-[11px] text-red-500 font-semibold flex items-center gap-1 ml-1">
-                      <Icons.alertCircle className="w-3.5 h-3.5" /> {error}
-                    </p>
-                  )}
-                </div>
-
-                <div className="flex items-center justify-between text-xs font-medium px-1 pt-2">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setStep("email")
-                      setError("")
-                    }}
-                    className="text-slate-500 hover:text-primary flex items-center gap-1"
-                    disabled={isPending}
-                  >
-                    <Icons.arrowLeft className="w-3.5 h-3.5" /> Change email
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={handleResend}
-                    disabled={resendTimer > 0 || isPending}
-                    className={cn(
-                      "font-bold transition-colors",
-                      resendTimer > 0
-                        ? "text-slate-400 cursor-not-allowed"
-                        : "text-primary hover:underline"
-                    )}
-                  >
-                    {resendTimer > 0 ? `Resend in ${resendTimer}s` : "Resend code"}
-                  </button>
-                </div>
-
-                <Button
-                  type="submit"
-                  disabled={isPending || otp.join("").length < 6}
-                  className="w-full h-11 bg-primary hover:bg-primary/95 text-white font-headline font-bold text-sm rounded-xl active:scale-95 duration-200 border-0 flex items-center justify-center gap-1.5 shadow-lg shadow-primary/10 mt-2 min-h-[44px]"
+                <button
+                  type="button"
+                  onClick={handleResendCode}
+                  disabled={resendTimer > 0 || isPending}
+                  className="w-full min-h-[44px] text-xs font-bold text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
-                  {isPending ? (
-                    <Icons.loader className="w-5 h-5 animate-spin" />
-                  ) : (
-                    "Reset Password & Sign In"
-                  )}
-                </Button>
-              </form>
-            )}
-          </CardContent>
-        </Card>
+                  {resendTimer > 0
+                    ? `Resend code in ${resendTimer}s`
+                    : "Didn't get a code? Resend"}
+                </button>
+              </div>
+            </form>
+          )}
+        </div>
       </div>
     </div>
-  )
+  );
 }

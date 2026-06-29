@@ -13,8 +13,11 @@ export const ResendOTPPasswordReset = Email({
   },
   async sendVerificationRequest({ identifier: email, provider, token }) {
     const resend = new ResendAPI(provider.apiKey);
+    const from = process.env.NODE_ENV === "production" && process.env.RESEND_FROM_EMAIL
+      ? `FalkonCare <${process.env.RESEND_FROM_EMAIL}>`
+      : "FalkonCare <onboarding@resend.dev>";
     const { error } = await resend.emails.send({
-      from: "FalkonCare <onboarding@resend.dev>",
+      from,
       to: [email],
       subject: "Reset your FalkonCare password",
       text: `Your password reset code is: ${token}\n\nThis code expires in 15 minutes.\n\nIf you didn't request this, ignore this email.`,

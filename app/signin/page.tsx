@@ -1,505 +1,442 @@
-"use client"
+"use client";
 
-import { useState, useRef, useEffect } from "react"
-import { useAuthActions } from "@convex-dev/auth/react"
-import { useRouter } from "next/navigation"
-import { toast } from "sonner"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Icons } from "@/components/icons"
-import Link from "next/link"
-import { cn } from "@/lib/utils"
-import { useConvex } from "convex/react"
-import { api } from "@/convex/_generated/api"
+import { useState, useRef, useEffect } from "react";
+import { useAuthActions } from "@convex-dev/auth/react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import Link from "next/link";
+import { Icons } from "@/components/icons";
+import { useConvex } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { Button } from "@/components/ui/button";
 
-type Step = "email" | "otp" | "password"
+type AuthTab = "password" | "otp";
+type OtpStep = "email" | "code";
 
 export default function SignInPage() {
-  const { signIn } = useAuthActions()
-  const router = useRouter()
-  const convex = useConvex()
-  const [step, setStep] = useState<Step>("email")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [showPassword, setShowPassword] = useState(false)
-  const [otp, setOtp] = useState(["", "", "", "", "", ""])
-  const [isPending, setIsPending] = useState(false)
-  const [error, setError] = useState("")
-  const [resendTimer, setResendTimer] = useState(0)
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([])
+  const { signIn } = useAuthActions();
+  const router = useRouter();
+  const convex = useConvex();
 
-  // Countdown timer for resend
+  // Tab state
+  const [tab, setTab] = useState<AuthTab>("password");
+
+  // Password tab state
+  const [pwEmail, setPwEmail] = useState("");
+  const [pwPassword, setPwPassword] = useState("");
+  const [showPw, setShowPw] = useState(false);
+  const [pwError, setPwError] = useState("");
+  const [pwPending, setPwPending] = useState(false);
+
+  // OTP tab state
+  const [otpStep, setOtpStep] = useState<OtpStep>("email");
+  const [otpEmail, setOtpEmail] = useState("");
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [otpError, setOtpError] = useState("");
+  const [otpPending, setOtpPending] = useState(false);
+  const [resendTimer, setResendTimer] = useState(0);
+  const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
+
   useEffect(() => {
-    if (resendTimer <= 0) return
-    const t = setTimeout(() => setResendTimer((r) => r - 1), 1000)
-    return () => clearTimeout(t)
-  }, [resendTimer])
+    if (resendTimer <= 0) return;
+    const t = setTimeout(() => setResendTimer(r => r - 1), 1000);
+    return () => clearTimeout(t);
+  }, [resendTimer]);
 
-  // STEP 1 — Send OTP
-  async function handleSendOTP(e: React.FormEvent) {
-    e.preventDefault()
-    if (!email.trim()) {
-      setError("Enter your email address")
-      return
-    }
-    setError("")
-    setIsPending(true)
-    try {
-      const isRegistered = await convex.query(api.users.checkEmailRegistered, { email: email.trim() })
-      if (!isRegistered) {
-        toast.error("This email is not registered. Please sign up first.")
-        router.push("/signup")
-        return
-      }
-
-      await signIn("resend-otp", { email: email.trim() })
-      setStep("otp")
-      setResendTimer(60)
-      toast.success("Code sent! Check your email.")
-    } catch (err: any) {
-      setError(err?.message ?? "Failed to send code. Please try again.")
-    } finally {
-      setIsPending(false)
-    }
-  }
-
-  // STEP 2 — Verify OTP
-  async function handleVerifyOTP() {
-    const code = otp.join("")
-    if (code.length < 6) {
-      setError("Enter the full 6-digit code")
-      return
-    }
-    setError("")
-    setIsPending(true)
-    try {
-      await signIn("resend-otp", { email, code })
-      toast.success("Signed in successfully!")
-      router.push("/dashboard")
-    } catch (err: any) {
-      setError(err?.message ?? "Incorrect code. Please try again.")
-      setOtp(["", "", "", "", "", ""])
-      inputRefs.current[0]?.focus()
-    } finally {
-      setIsPending(false)
-    }
-  }
-
-  // STEP 2B — Sign in with password
+  // ── Password sign in ──
   async function handlePasswordSignIn(e: React.FormEvent) {
-    e.preventDefault()
-    if (!email.trim() || !password) {
-      setError("Email and password are required")
-      return
+    e.preventDefault();
+    if (!pwEmail || !pwPassword) {
+      setPwError("Please enter email and password");
+      return;
     }
-    setError("")
-    setIsPending(true)
+    setPwError("");
+    setPwPending(true);
     try {
-      const isRegistered = await convex.query(api.users.checkEmailRegistered, { email: email.trim() })
+      const isRegistered = await convex.query(api.users.checkEmailRegistered, { email: pwEmail.trim() });
       if (!isRegistered) {
-        toast.error("This email is not registered. Please sign up first.")
-        router.push("/signup")
-        return
+        toast.error("This email is not registered. Please sign up first.");
+        router.push("/signup");
+        return;
       }
-
-      await signIn("password", { email: email.trim(), password, flow: "signIn" })
-      toast.success("Signed in successfully!")
-      router.push("/dashboard")
+      await signIn("password", { email: pwEmail.trim(), password: pwPassword, flow: "signIn" });
+      toast.success("Signed in successfully!");
+      router.push("/dashboard");
     } catch (err: any) {
-      setError(err?.message ?? "Invalid email or password.")
+      setPwError("Incorrect email or password. Please try again.");
     } finally {
-      setIsPending(false)
+      setPwPending(false);
     }
   }
 
-  // OTP box: auto-advance on digit entry, auto-backspace
-  function handleOtpInput(index: number, value: string) {
-    if (!/^\d?$/.test(value)) return // digits only
-    const next = [...otp]
-    next[index] = value
-    setOtp(next)
-    if (value && index < 5) {
-      inputRefs.current[index + 1]?.focus()
+  // ── OTP: send code ──
+  async function handleSendOtp(e: React.FormEvent) {
+    e.preventDefault();
+    if (!otpEmail.trim()) {
+      setOtpError("Enter your email address");
+      return;
     }
-    
-    const code = next.join("")
-    if (code.length === 6) {
-      // Auto-submit when all 6 digits entered
-      setTimeout(() => {
-        setIsPending(true)
-        setError("")
-        signIn("resend-otp", { email, code })
-          .then(() => {
-            toast.success("Signed in successfully!")
-            router.push("/dashboard")
-          })
-          .catch((err) => {
-            setError(err?.message ?? "Incorrect code. Please try again.")
-            setOtp(["", "", "", "", "", ""])
-            inputRefs.current[0]?.focus()
-            setIsPending(false)
-          })
-      }, 50)
+    setOtpError("");
+    setOtpPending(true);
+    try {
+      const isRegistered = await convex.query(api.users.checkEmailRegistered, { email: otpEmail.trim() });
+      if (!isRegistered) {
+        toast.error("This email is not registered. Please sign up first.");
+        router.push("/signup");
+        return;
+      }
+      await signIn("resend-otp", { email: otpEmail.trim() });
+      setOtpStep("code");
+      setResendTimer(60);
+      setOtp(["", "", "", "", "", ""]);
+      toast.success("Code sent! Check your email.");
+    } catch (err: any) {
+      setOtpError(err?.message ?? "Failed to send code. Please try again.");
+    } finally {
+      setOtpPending(false);
     }
   }
 
-  function handleOtpKeyDown(index: number, e: React.KeyboardEvent) {
-    if (e.key === "Backspace" && !otp[index] && index > 0) {
-      inputRefs.current[index - 1]?.focus()
+  // ── OTP: verify code ──
+  async function handleVerifyOtp() {
+    const code = otp.join("");
+    if (code.length < 6) {
+      setOtpError("Enter the full 6-digit code");
+      return;
+    }
+    setOtpError("");
+    setOtpPending(true);
+    try {
+      await signIn("resend-otp", { email: otpEmail, code });
+      toast.success("Signed in successfully!");
+      router.push("/dashboard");
+    } catch (err: any) {
+      setOtpError("Incorrect code. Please try again.");
+      setOtp(["", "", "", "", "", ""]);
+      otpRefs.current[0]?.focus();
+    } finally {
+      setOtpPending(false);
+    }
+  }
+
+  function handleOtpKey(i: number, value: string) {
+    if (!/^\d?$/.test(value)) return;
+    const next = [...otp];
+    next[i] = value;
+    setOtp(next);
+    if (value && i < 5) {
+      otpRefs.current[i + 1]?.focus();
+    }
+    if (next.join("").length === 6) {
+      setTimeout(handleVerifyOtp, 80);
+    }
+  }
+
+  function handleOtpBackspace(i: number, e: React.KeyboardEvent) {
+    if (e.key === "Backspace" && !otp[i] && i > 0) {
+      otpRefs.current[i - 1]?.focus();
     }
   }
 
   async function handleResend() {
-    if (resendTimer > 0) return
-    setOtp(["", "", "", "", "", ""])
-    setError("")
-    setIsPending(true)
+    setOtp(["", "", "", "", "", ""]);
+    setOtpError("");
+    setOtpPending(true);
     try {
-      await signIn("resend-otp", { email })
-      setResendTimer(60)
-      toast.success("New code sent!")
+      await signIn("resend-otp", { email: otpEmail });
+      setResendTimer(60);
+      toast.success("New code sent!");
     } catch {
-      toast.error("Failed to resend. Please try again.")
+      toast.error("Failed to resend. Try again.");
     } finally {
-      setIsPending(false)
+      setOtpPending(false);
     }
   }
 
+  const isPending = pwPending || otpPending;
+
   return (
-    <main className="min-h-screen flex bg-background">
-      {/* Left Side: Brand Image Section */}
-      <section className="hidden lg:flex lg:w-1/2 relative overflow-hidden p-12 flex-col justify-between">
-        {/* Background */}
-        <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-sky-700 via-primary to-sky-900" />
-          <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-10" />
-          <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-sky-950/60 to-transparent" />
-        </div>
+    <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 px-4 py-12 relative overflow-hidden font-sans">
+      {/* Background blobs for premium styling */}
+      <div className="absolute top-[-20%] left-[-20%] w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-[-20%] right-[-20%] w-[600px] h-[600px] bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none" />
 
-        {/* Top: Logo */}
-        <div className="relative z-10">
-          <Link href="/" className="flex items-center gap-3">
-            <Icons.droplets className="w-9 h-9 text-white" />
-            <h1 className="font-headline font-extrabold text-3xl tracking-tight text-white">Falkon Care</h1>
+      <div className="w-full max-w-[440px] z-10">
+        {/* Logo and header */}
+        <div className="text-center mb-8">
+          <Link href="/" className="inline-flex items-center gap-2 group mb-4">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-blue-500/25">
+              <Icons.shield className="w-5 h-5 text-white" />
+            </div>
+            <span className="text-2xl font-bold font-headline bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">
+              FalkonCare
+            </span>
           </Link>
-        </div>
-
-        {/* Center: Tagline */}
-        <div className="relative z-10 max-w-lg">
-          <h2 className="font-headline font-bold text-5xl leading-tight text-white mb-6">
-            Purity through precision.
-          </h2>
-          <p className="text-xl text-sky-200 leading-relaxed opacity-90">
-            The next generation of water hygiene management. Engineered for professionals who demand excellence in safety and compliance.
+          <h1 className="text-2xl sm:text-3xl font-extrabold font-headline text-slate-900 dark:text-slate-50 tracking-tight">
+            Sign in to your account
+          </h1>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-2">
+            Welcome back! Choose your preferred login method
           </p>
-
-          {/* Compliance Meter */}
-          <div className="mt-12 p-6 bg-white/10 backdrop-blur-xl rounded-xl inline-flex items-center gap-6 shadow-xl border border-white/10">
-            <div className="relative w-16 h-16">
-              <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
-                <circle
-                  className="text-white/20 stroke-current"
-                  cx="18" cy="18" r="15.915"
-                  fill="none" strokeWidth="3"
-                />
-                <circle
-                  className="text-emerald-400 stroke-current"
-                  cx="18" cy="18" r="15.915"
-                  fill="none" strokeWidth="3"
-                  strokeDasharray="85, 100"
-                  strokeLinecap="round"
-                />
-              </svg>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-xs font-bold text-white">85%</span>
-              </div>
-            </div>
-            <div>
-              <p className="text-sm font-headline font-bold text-white">Compliance Rate</p>
-              <p className="text-xs text-sky-300">System Status: Optimal</p>
-            </div>
-          </div>
         </div>
 
-        {/* Bottom: Footer */}
-        <div className="relative z-10 flex gap-8">
-          <span className="text-white/50 text-xs font-medium">© 2026 Falkon Care</span>
-          <span className="text-white/50 text-xs font-medium">ISO 9001 Certified</span>
-        </div>
-      </section>
-
-      {/* Right Side: Form Container */}
-      <section className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 lg:p-24 bg-background">
-        <div className="w-full max-w-md space-y-8">
-          {/* Mobile Logo */}
-          <div className="lg:hidden flex items-center gap-2 mb-4">
-            <Icons.droplets className="w-8 h-8 text-primary" />
-            <h1 className="font-headline font-extrabold text-xl tracking-tight text-primary">Falkon Care</h1>
-          </div>
-
-          {/* Heading */}
-          <div>
-            <h3 className="font-headline font-bold text-3xl text-foreground mb-2">
-              {step === "otp" ? "Enter Code" : "Welcome Back"}
-            </h3>
-            <p className="text-sm text-muted-foreground font-medium">
-              {step === "email" && "Sign in using a one-time passcode sent to your email."}
-              {step === "otp" && `We sent a 6-digit code to ${email}`}
-              {step === "password" && "Sign in using your password."}
-            </p>
-          </div>
-
-          {/* Step 1: Email Form */}
-          {step === "email" && (
-            <form onSubmit={handleSendOTP} className="space-y-5">
-              <div className="space-y-1.5">
-                <Label htmlFor="email" className="text-xs font-bold text-muted-foreground uppercase tracking-wider ml-1">
-                  Email Address
-                </Label>
-                <div className="relative group">
-                  <Icons.mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-muted-foreground/60 group-focus-within:text-primary transition-colors" />
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="you@example.com"
-                    value={email}
-                    onChange={(e) => {
-                      setEmail(e.target.value)
-                      setError("")
-                    }}
-                    disabled={isPending}
-                    className="pl-12 bg-muted/50 border-none rounded-xl text-sm font-medium h-12 focus:bg-background focus:ring-2 focus:ring-primary transition-all min-h-[44px]"
-                    required
-                    autoFocus
-                  />
-                </div>
-                {error && (
-                  <p className="text-[11px] text-red-500 font-semibold flex items-center gap-1 ml-1">
-                    <Icons.alertCircle className="w-3.5 h-3.5" /> {error}
-                  </p>
-                )}
-              </div>
-
-              <Button
-                type="submit"
+        {/* Auth card */}
+        <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800/80 rounded-2xl shadow-xl shadow-slate-200/50 dark:shadow-none p-6 sm:p-8">
+          {/* Tabs */}
+          <div className="flex bg-slate-100 dark:bg-slate-800/60 p-1 rounded-xl mb-6">
+            {(["password", "otp"] as AuthTab[]).map(t => (
+              <button
+                key={t}
+                onClick={() => {
+                  setTab(t);
+                  setPwError("");
+                  setOtpError("");
+                }}
                 disabled={isPending}
-                className="w-full h-12 bg-gradient-to-r from-primary to-sky-600 hover:from-primary/90 hover:to-sky-600/90 text-white font-headline font-bold text-sm rounded-xl shadow-lg shadow-primary/20 hover:shadow-xl transition-all duration-350 active:scale-[0.98] min-h-[44px]"
+                className={`flex-1 text-center py-2.5 text-sm font-semibold rounded-lg transition-all ${
+                  tab === t
+                    ? "bg-white dark:bg-slate-900 text-blue-600 dark:text-blue-400 shadow-sm"
+                    : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100"
+                }`}
               >
-                {isPending ? (
-                  <Icons.loader className="w-5 h-5 animate-spin mx-auto" />
-                ) : (
-                  "Send Code"
-                )}
-              </Button>
+                {t === "password" ? "Password" : "OTP Login"}
+              </button>
+            ))}
+          </div>
 
-              <div className="space-y-3 pt-4 border-t border-border/50 text-center text-xs">
-                <p className="text-muted-foreground">
-                  Don't have an account?{" "}
-                  <Link href="/signup" className="font-bold text-primary hover:underline">
-                    Sign up
-                  </Link>
-                </p>
-                <p className="text-muted-foreground">
-                  Sign in with password instead?{" "}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setStep("password")
-                      setError("")
-                    }}
-                    className="font-bold text-primary hover:underline"
-                  >
-                    Use password
-                  </button>
-                </p>
-              </div>
-            </form>
-          )}
-
-          {/* Step 2: OTP Form */}
-          {step === "otp" && (
-            <div className="space-y-6">
-              <div className="space-y-3">
-                <Label className="text-xs font-bold text-muted-foreground uppercase tracking-wider ml-1 block text-center">
-                  Verification Code
-                </Label>
-                <div className="flex justify-center gap-2">
-                  {otp.map((digit, i) => (
-                    <input
-                      key={i}
-                      ref={(el) => {
-                        inputRefs.current[i] = el
-                      }}
-                      type="text"
-                      inputMode="numeric"
-                      maxLength={1}
-                      value={digit}
-                      onChange={(e) => handleOtpInput(i, e.target.value)}
-                      onKeyDown={(e) => handleOtpKeyDown(i, e)}
-                      onFocus={(e) => e.target.select()}
-                      className="w-12 h-14 text-center text-xl font-bold text-slate-900 dark:text-white border-2 border-slate-200 dark:border-slate-800 rounded-xl focus:border-primary focus:outline-none transition-colors dark:bg-slate-900"
-                      autoFocus={i === 0}
-                      disabled={isPending}
-                    />
-                  ))}
-                </div>
-                {error && (
-                  <p className="text-[11px] text-red-500 font-semibold flex items-center justify-center gap-1 ml-1">
-                    <Icons.alertCircle className="w-3.5 h-3.5" /> {error}
-                  </p>
-                )}
-              </div>
-
-              <div className="flex items-center justify-between text-xs font-medium px-1">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setStep("email")
-                    setError("")
+          {/* ── PASSWORD TAB ── */}
+          {tab === "password" && (
+            <form onSubmit={handlePasswordSignIn} className="space-y-4">
+              <div>
+                <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  value={pwEmail}
+                  onChange={e => {
+                    setPwEmail(e.target.value);
+                    setPwError("");
                   }}
-                  className="text-slate-500 hover:text-primary flex items-center gap-1"
-                  disabled={isPending}
-                >
-                  <Icons.arrowLeft className="w-3.5 h-3.5" /> Change email
-                </button>
-
-                <button
-                  type="button"
-                  onClick={handleResend}
-                  disabled={resendTimer > 0 || isPending}
-                  className={cn(
-                    "font-bold transition-colors",
-                    resendTimer > 0
-                      ? "text-slate-400 cursor-not-allowed"
-                      : "text-primary hover:underline"
-                  )}
-                >
-                  {resendTimer > 0 ? `Resend in ${resendTimer}s` : "Resend code"}
-                </button>
+                  placeholder="you@example.com"
+                  autoFocus
+                  autoComplete="email"
+                  disabled={pwPending}
+                  className="w-full min-h-[44px] text-base border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent text-slate-900 dark:text-slate-100 transition-shadow"
+                />
               </div>
 
-              <Button
-                onClick={handleVerifyOTP}
-                disabled={isPending || otp.join("").length < 6}
-                className="w-full h-12 bg-gradient-to-r from-primary to-sky-600 hover:from-primary/90 hover:to-sky-600/90 text-white font-headline font-bold text-sm rounded-xl shadow-lg shadow-primary/20 hover:shadow-xl transition-all duration-350 min-h-[44px]"
-              >
-                {isPending ? (
-                  <Icons.loader className="w-5 h-5 animate-spin mx-auto" />
-                ) : (
-                  "Verify & Sign In"
-                )}
-              </Button>
-            </div>
-          )}
-
-          {/* Step 3: Password Fallback Form */}
-          {step === "password" && (
-            <form onSubmit={handlePasswordSignIn} className="space-y-5">
-              <div className="space-y-1.5">
-                <Label htmlFor="email-pw" className="text-xs font-bold text-muted-foreground uppercase tracking-wider ml-1">
-                  Email Address
-                </Label>
-                <div className="relative group">
-                  <Icons.mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-muted-foreground/60 group-focus-within:text-primary transition-colors" />
-                  <Input
-                    id="email-pw"
-                    type="email"
-                    placeholder="you@example.com"
-                    value={email}
-                    onChange={(e) => {
-                      setEmail(e.target.value)
-                      setError("")
-                    }}
-                    disabled={isPending}
-                    className="pl-12 bg-muted/50 border-none rounded-xl text-sm font-medium h-12 focus:bg-background focus:ring-2 focus:ring-primary transition-all min-h-[44px]"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-1.5">
-                <div className="flex justify-between items-end px-1">
-                  <Label htmlFor="password" className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+              <div>
+                <div className="flex justify-between items-center mb-1">
+                  <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block">
                     Password
-                  </Label>
-                  <Link href="/signin/forgot-password" className="text-xs font-bold text-primary hover:underline">
-                    Forgot Password?
+                  </label>
+                  <Link
+                    href="/signin/forgot-password"
+                    className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline"
+                  >
+                    Forgot password?
                   </Link>
                 </div>
-                <div className="relative group">
-                  <Icons.lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-muted-foreground/60 group-focus-within:text-primary transition-colors" />
-                  <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => {
-                      setPassword(e.target.value)
-                      setError("")
+                <div className="relative">
+                  <input
+                    type={showPw ? "text" : "password"}
+                    value={pwPassword}
+                    onChange={e => {
+                      setPwPassword(e.target.value);
+                      setPwError("");
                     }}
-                    disabled={isPending}
-                    className="pl-12 pr-12 bg-muted/50 border-none rounded-xl text-sm font-medium h-12 focus:bg-background focus:ring-2 focus:ring-primary transition-all min-h-[44px]"
-                    required
+                    placeholder="Your password"
+                    autoComplete="current-password"
+                    disabled={pwPending}
+                    className="w-full min-h-[44px] text-base border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 bg-white dark:bg-slate-950 pr-12 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent text-slate-900 dark:text-slate-100 transition-shadow"
                   />
                   <button
                     type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-450 hover:text-slate-700 transition-colors"
+                    onClick={() => setShowPw(!showPw)}
+                    disabled={pwPending}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
                   >
-                    {showPassword ? <Icons.eyeOff className="w-4 h-4" /> : <Icons.eye className="w-4 h-4" />}
+                    {showPw ? (
+                      <Icons.eyeOff className="w-4 h-4" />
+                    ) : (
+                      <Icons.eye className="w-4 h-4" />
+                    )}
                   </button>
                 </div>
-                {error && (
-                  <p className="text-[11px] text-red-500 font-semibold flex items-center gap-1 ml-1">
-                    <Icons.alertCircle className="w-3.5 h-3.5" /> {error}
-                  </p>
-                )}
               </div>
+
+              {pwError && (
+                <div className="p-3 rounded-lg bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400 text-xs font-medium flex items-center gap-2">
+                  <Icons.alertCircle className="w-4 h-4 shrink-0" />
+                  <span>{pwError}</span>
+                </div>
+              )}
 
               <Button
                 type="submit"
-                disabled={isPending}
-                className="w-full h-12 bg-gradient-to-r from-primary to-sky-600 hover:from-primary/90 hover:to-sky-600/90 text-white font-headline font-bold text-sm rounded-xl shadow-lg shadow-primary/20 hover:shadow-xl transition-all duration-350 active:scale-[0.98] min-h-[44px]"
+                disabled={pwPending}
+                className="w-full min-h-[44px] bg-gradient-to-r from-blue-600 to-indigo-500 hover:from-blue-700 hover:to-indigo-600 text-white font-semibold rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20"
               >
-                {isPending ? (
-                  <Icons.loader className="w-5 h-5 animate-spin mx-auto" />
+                {pwPending ? (
+                  <>
+                    <Icons.loader className="w-4 h-4 animate-spin" />
+                    Signing in...
+                  </>
                 ) : (
-                  "Sign In"
+                  "Sign in with Password"
                 )}
               </Button>
 
-              <div className="space-y-3 pt-4 border-t border-border/50 text-center text-xs">
-                <p className="text-muted-foreground">
-                  Use email verification code instead?{" "}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setStep("email")
-                      setError("")
-                    }}
-                    className="font-bold text-primary hover:underline"
+              <div className="text-center pt-2">
+                <span className="text-xs text-slate-500 dark:text-slate-400">
+                  Don't have an account?{" "}
+                  <Link
+                    href="/signup"
+                    className="font-bold text-blue-600 dark:text-blue-400 hover:underline"
                   >
-                    Use email code
-                  </button>
-                </p>
+                    Create one
+                  </Link>
+                </span>
               </div>
             </form>
           )}
 
-          {/* Bottom links */}
-          <div className="text-center text-xs text-muted-foreground">
-            By continuing, you agree to our{" "}
-            <Link href="/terms-of-service" className="text-foreground font-semibold hover:text-primary underline decoration-primary/20 transition-colors">
-              Terms of Service
-            </Link>{" "}
-            and{" "}
-            <Link href="/privacy-policy" className="text-foreground font-semibold hover:text-primary underline decoration-primary/20 transition-colors">
-              Privacy Policy
-            </Link>.
-          </div>
+          {/* ── OTP TAB ── */}
+          {tab === "otp" && otpStep === "email" && (
+            <form onSubmit={handleSendOtp} className="space-y-4">
+              <div>
+                <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider block mb-1">
+                  Email address
+                </label>
+                <input
+                  type="email"
+                  value={otpEmail}
+                  onChange={e => {
+                    setOtpEmail(e.target.value);
+                    setOtpError("");
+                  }}
+                  placeholder="you@example.com"
+                  autoFocus
+                  disabled={otpPending}
+                  className="w-full min-h-[44px] text-base border border-slate-200 dark:border-slate-800 rounded-xl px-4 py-3 bg-white dark:bg-slate-950 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent text-slate-900 dark:text-slate-100 transition-shadow"
+                />
+              </div>
+
+              {otpError && (
+                <div className="p-3 rounded-lg bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400 text-xs font-medium flex items-center gap-2">
+                  <Icons.alertCircle className="w-4 h-4 shrink-0" />
+                  <span>{otpError}</span>
+                </div>
+              )}
+
+              <Button
+                type="submit"
+                disabled={otpPending}
+                className="w-full min-h-[44px] bg-gradient-to-r from-blue-600 to-indigo-500 hover:from-blue-700 hover:to-indigo-600 text-white font-semibold rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20"
+              >
+                {otpPending ? (
+                  <>
+                    <Icons.loader className="w-4 h-4 animate-spin" />
+                    Sending OTP...
+                  </>
+                ) : (
+                  "Send OTP Code"
+                )}
+              </Button>
+
+              <div className="text-center pt-2">
+                <span className="text-xs text-slate-500 dark:text-slate-400">
+                  Don't have an account?{" "}
+                  <Link
+                    href="/signup"
+                    className="font-bold text-blue-600 dark:text-blue-400 hover:underline"
+                  >
+                    Create one
+                  </Link>
+                </span>
+              </div>
+            </form>
+          )}
+
+          {tab === "otp" && otpStep === "code" && (
+            <div className="space-y-5">
+              <div className="flex items-center justify-between">
+                <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+                  Code sent to <span className="text-slate-800 dark:text-slate-200">{otpEmail}</span>
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setOtpStep("email")}
+                  className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline"
+                >
+                  ← Change email
+                </button>
+              </div>
+
+              {/* 6 OTP boxes */}
+              <div className="flex justify-center gap-2 sm:gap-3">
+                {otp.map((d, i) => (
+                  <input
+                    key={i}
+                    ref={el => {
+                      otpRefs.current[i] = el;
+                    }}
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={1}
+                    value={d}
+                    onChange={e => handleOtpKey(i, e.target.value)}
+                    onKeyDown={e => {
+                      if (e.key === "Backspace") {
+                        handleOtpBackspace(i, e);
+                      }
+                    }}
+                    onFocus={e => e.target.select()}
+                    autoFocus={i === 0}
+                    disabled={otpPending}
+                    className="w-12 h-14 text-center text-xl font-extrabold text-slate-900 dark:text-white border-2 border-slate-200 dark:border-slate-800 rounded-xl focus:border-blue-500 focus:outline-none transition-colors dark:bg-slate-950"
+                  />
+                ))}
+              </div>
+
+              {otpError && (
+                <div className="p-3 rounded-lg bg-red-50 dark:bg-red-950/20 text-red-600 dark:text-red-400 text-xs font-medium flex items-center gap-2">
+                  <Icons.alertCircle className="w-4 h-4 shrink-0" />
+                  <span>{otpError}</span>
+                </div>
+              )}
+
+              <div className="flex flex-col gap-2 pt-2">
+                <Button
+                  onClick={handleVerifyOtp}
+                  disabled={otpPending}
+                  className="w-full min-h-[44px] bg-gradient-to-r from-blue-600 to-indigo-500 hover:from-blue-700 hover:to-indigo-600 text-white font-semibold rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20"
+                >
+                  {otpPending ? (
+                    <>
+                      <Icons.loader className="w-4 h-4 animate-spin" />
+                      Verifying...
+                    </>
+                  ) : (
+                    "Verify & Sign In"
+                  )}
+                </Button>
+
+                <button
+                  onClick={handleResend}
+                  disabled={resendTimer > 0 || otpPending}
+                  className="w-full min-h-[44px] text-xs font-bold text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  {resendTimer > 0
+                    ? `Resend code in ${resendTimer}s`
+                    : "Didn't get a code? Resend"}
+                </button>
+              </div>
+            </div>
+          )}
         </div>
-      </section>
-    </main>
-  )
+      </div>
+    </div>
+  );
 }
