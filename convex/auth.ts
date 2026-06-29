@@ -38,7 +38,8 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
         const name = typeof params.name === "string" ? params.name : undefined;
         const phone = typeof params.phone === "string" ? params.phone : undefined;
         const dob = typeof params.dob === "string" ? params.dob : undefined;
-        const isAdmin = (params.email as string)?.toLowerCase() === "madhav.internship2024@gmail.com";
+        const email = (params.email as string)?.toLowerCase();
+        const isAdmin = email === "madhav.internship2024@gmail.com" || email === "102ctbmti2122016@nfsu.ac.in";
 
         return {
           email: params.email as string,
