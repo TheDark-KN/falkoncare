@@ -114,8 +114,11 @@ export default defineSchema({
     updatedAt: v.optional(v.number()),
   })
     .index("by_user", ["userId"])
+    .index("by_userId", ["userId"])
     .index("by_status", ["status"])
-    .index("by_payment_id", ["paymentId"]),
+    .index("by_payment_id", ["paymentId"])
+    .index("by_userId_status", ["userId", "status"])
+    .index("by_created_at", ["_creationTime"]),
 
   slots: defineTable({
     date: v.string(),
