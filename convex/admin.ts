@@ -4,6 +4,16 @@ import { getAuthUserId } from "@convex-dev/auth/server";
 import { internal } from "./_generated/api";
 
 // Helper function to check admin role
+// Helper function to check admin role for queries (returns null instead of throwing to prevent client-side crashes during auth loading)
+async function checkAdminQuery(ctx: any) {
+  const userId = await getAuthUserId(ctx);
+  if (!userId) return null;
+  const user = await ctx.db.get(userId);
+  if (!user || user.role !== "admin") return null;
+  return userId;
+}
+
+// Helper function to check admin role for mutations (throws error)
 async function checkAdmin(ctx: any) {
   const userId = await getAuthUserId(ctx);
   if (!userId) {
@@ -20,7 +30,8 @@ async function checkAdmin(ctx: any) {
 export const getAllBookings = query({
   args: {},
   handler: async (ctx) => {
-    await checkAdmin(ctx);
+    const adminId = await checkAdminQuery(ctx);
+    if (!adminId) return [];
 
     const bookings = await ctx.db
       .query("bookings")
@@ -80,7 +91,8 @@ export const getAllBookings = query({
 export const getAllUsers = query({
   args: {},
   handler: async (ctx) => {
-    await checkAdmin(ctx);
+    const adminId = await checkAdminQuery(ctx);
+    if (!adminId) return [];
 
     const users = await ctx.db
       .query("users")
@@ -103,6 +115,7 @@ export const getAllUsers = query({
           phone: user.phone ?? user.phoneNumber ?? "-",
           role: user.role ?? "customer",
           bookingCount: userBookings.length,
+          status: user.status ?? "available",
         };
       })
     );
@@ -115,7 +128,22 @@ export const getAllUsers = query({
 export const getDashboardStats = query({
   args: {},
   handler: async (ctx) => {
-    await checkAdmin(ctx);
+    const adminId = await checkAdminQuery(ctx);
+    if (!adminId) {
+      return {
+        totalUsers: 0,
+        totalBookings: 0,
+        totalRevenue: 0,
+        bookingsByStatus: {
+          pending: 0,
+          confirmed: 0,
+          "in-progress": 0,
+          completed: 0,
+          cancelled: 0,
+        },
+        bookingsThisWeek: 0,
+      };
+    }
 
     const users = await ctx.db.query("users").collect();
     const activeUsers = users.filter((u) => !u.deleted);
