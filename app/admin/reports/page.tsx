@@ -130,16 +130,16 @@ export default function AdminReportsPage() {
     ];
 
     const rows = bookings.map((b: any) => [
-      b._id,
-      new Date(b._creationTime).toLocaleDateString("en-IN"),
-      `"${(b.user?.name ?? "Unknown").replace(/"/g, '""')}"`,
+      b._id || "",
+      b._creationTime ? new Date(b._creationTime).toLocaleDateString("en-IN") : "-",
+      `"${(b.user?.name ?? b.user?.fullName ?? "Unknown").replace(/"/g, '""')}"`,
       b.user?.email ?? "-",
       b.user?.phone ?? "-",
-      `"${b.serviceName.replace(/"/g, '""')}"`,
-      b.amount,
-      b.status,
+      `"${(b.serviceName || "").replace(/"/g, '""')}"`,
+      b.amount ?? 0,
+      b.status || "pending",
       b.rating ?? "Unrated",
-      b.feedback ? `"${b.feedback.replace(/"/g, '""')}"` : "-",
+      b.feedback ? `"${String(b.feedback).replace(/"/g, '""')}"` : "-",
     ]);
 
     const csvContent = [

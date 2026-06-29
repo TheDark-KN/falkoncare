@@ -14,16 +14,21 @@ import type { Id } from "@/convex/_generated/dataModel";
 
 type BookingStatus = "pending" | "confirmed" | "in-progress" | "completed" | "cancelled";
 
-function formatCurrency(amount: number) {
+function formatCurrency(amount: any) {
+  const val = Number(amount);
+  if (Number.isNaN(val)) return "₹0";
   return new Intl.NumberFormat("en-IN", {
     style: "currency",
     currency: "INR",
     maximumFractionDigits: 0,
-  }).format(amount);
+  }).format(val);
 }
 
-function formatDate(timestamp: number) {
-  return new Date(timestamp).toLocaleDateString("en-IN", {
+function formatDate(timestamp: any) {
+  if (!timestamp) return "-";
+  const date = new Date(timestamp);
+  if (Number.isNaN(date.getTime())) return String(timestamp);
+  return date.toLocaleDateString("en-IN", {
     day: "2-digit",
     month: "short",
     year: "numeric",
@@ -212,12 +217,12 @@ export default function AdminBookingsPage() {
                             <SelectValue placeholder="Assign Staff" />
                           </SelectTrigger>
                           <SelectContent className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800">
-                            <SelectItem value="unassigned">Unassigned</SelectItem>
-                            {staffMembers.map((member: any) => (
-                              <SelectItem key={member._id} value={member._id}>
-                                {member.name}
-                              </SelectItem>
-                            ))}
+                             <SelectItem value="unassigned">Unassigned</SelectItem>
+                             {staffMembers.map((member: any) => (
+                               <SelectItem key={member._id || member.email} value={member._id || "unassigned"}>
+                                 {member.name || member.fullName || "Staff Member"}
+                               </SelectItem>
+                             ))}
                           </SelectContent>
                         </Select>
                       </TableCell>
