@@ -1,13 +1,15 @@
-"use client"
+"use client";
 
-import { AdminTopBar } from "@/components/admin/admin-top-bar"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Icons } from "@/components/icons"
-import { useAppStore } from "@/lib/store"
-import { serviceItems } from "@/lib/mock-data"
-import { RevenueMetrics } from "@/components/admin/revenue-metrics"
-import Image from "next/image"
-import dynamic from "next/dynamic"
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { AdminTopBar } from "@/components/admin/admin-top-bar";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Icons } from "@/components/icons";
+import { RevenueMetrics } from "@/components/admin/revenue-metrics";
+import { Button } from "@/components/ui/button";
+import dynamic from "next/dynamic";
+import { useMemo } from "react";
+
 const AnalyticsChart = dynamic(
   () => import("@/components/admin/analytics-chart").then((mod) => mod.AnalyticsChart),
   {
@@ -18,60 +20,166 @@ const AnalyticsChart = dynamic(
       </div>
     ),
   }
-)
+);
 
 export default function AdminReportsPage() {
-  const { bookings, staff, feedback } = useAppStore()
+  const rawBookings = useQuery(api.admin.getAllBookings);
+  const bookings = useMemo(() => rawBookings ?? [], [rawBookings]);
+  const rawUsers = useQuery(api.admin.getAllUsers);
+  const users = useMemo(() => rawUsers ?? [], [rawUsers]);
 
-  const completedBookings = bookings.filter((b) => b.status === "completed")
-  const totalRevenue = completedBookings.reduce((sum, b) => sum + b.amount, 0)
-  const averageRating =
-    feedback.length > 0 ? (feedback.reduce((sum, f) => sum + f.rating, 0) / feedback.length).toFixed(1) : 0
-  const averageBookingValue = bookings.length > 0 ? Math.round(totalRevenue / bookings.length) : 0
-  const pendingPayments = bookings
-    .filter((b) => b.status === "pending" || b.status === "in-progress")
-    .reduce((sum, b) => sum + b.amount, 0)
+  const completedBookings = useMemo(() => bookings.filter((b) => b.status === "completed"), [bookings]);
+  const totalRevenue = useMemo(() => completedBookings.reduce((sum, b) => sum + (b.amount ?? 0), 0), [completedBookings]);
+  
+  const averageRating = useMemo(() => {
+    const ratedBookings = bookings.filter((b) => b.rating !== undefined);
+    if (ratedBookings.length === 0) return 0;
+    const sum = ratedBookings.reduce((acc, b) => acc + (b.rating ?? 0), 0);
+    return (sum / ratedBookings.length).toFixed(1);
+  }, [bookings]);
 
-  // Service popularity
-  const serviceCounts = serviceItems
-    .map((service) => ({
-      ...service,
-      count: bookings.filter((b) => b.serviceId === service.id).length,
-    }))
-    .sort((a, b) => b.count - a.count)
+  const averageBookingValue = useMemo(() => {
+    if (bookings.length === 0) return 0;
+    return Math.round(totalRevenue / bookings.length);
+  }, [bookings, totalRevenue]);
 
-  const weeklyRevenueData = [
-    { name: "Mon", revenue: 2400, bookings: 8 },
-    { name: "Tue", revenue: 3210, bookings: 12 },
-    { name: "Wed", revenue: 2290, bookings: 6 },
-    { name: "Thu", revenue: 2000, bookings: 9 },
-    { name: "Fri", revenue: 2181, bookings: 11 },
-    { name: "Sat", revenue: 2500, bookings: 14 },
-    { name: "Sun", revenue: 2100, bookings: 7 },
-  ]
+  const pendingPayments = useMemo(() => {
+    return bookings
+      .filter((b) => b.status === "pending" || b.status === "in-progress")
+      .reduce((sum, b) => sum + (b.amount ?? 0), 0);
+  }, [bookings]);
 
-  const monthlyBookingData = [
-    { name: "Week 1", completed: 12, pending: 3, cancelled: 1 },
-    { name: "Week 2", completed: 15, pending: 5, cancelled: 2 },
-    { name: "Week 3", completed: 18, pending: 4, cancelled: 1 },
-    { name: "Week 4", completed: 20, pending: 6, cancelled: 2 },
-  ]
+  // Dynamic Weekly Revenue Trend (Last 7 Days)
+  const weeklyRevenueData = useMemo(() => {
+    const last7Days = Array.from({ length: 7 }).map((_, i) => {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      return d;
+    }).reverse();
+
+    return last7Days.map((date) => {
+      const dateStr = date.toLocaleDateString("en-IN", { weekday: "short" });
+      const dayBookings = bookings.filter((b) => {
+        const bDate = new Date(b._creationTime);
+        return bDate.toDateString() === date.toDateString();
+      });
+      const completedDayBookings = dayBookings.filter((b) => b.status === "completed");
+      return {
+        name: dateStr,
+        revenue: completedDayBookings.reduce((sum, b) => sum + (b.amount ?? 0), 0),
+        bookings: dayBookings.length,
+      };
+    });
+  }, [bookings]);
+
+  // Dynamic Booking Status Distribution
+  const statusDistributionData = useMemo(() => {
+    return [
+      { name: "Pending", count: bookings.filter((b) => b.status === "pending").length },
+      { name: "Confirmed", count: bookings.filter((b) => b.status === "confirmed").length },
+      { name: "In Progress", count: bookings.filter((b) => b.status === "in-progress").length },
+      { name: "Completed", count: bookings.filter((b) => b.status === "completed").length },
+      { name: "Cancelled", count: bookings.filter((b) => b.status === "cancelled").length },
+    ];
+  }, [bookings]);
+
+  // Dynamic Service Popularity
+  const serviceCounts = useMemo(() => {
+    const services = ["Overhead Tank Cleaning", "Underground Tank Cleaning", "Sump Sanitization", "Combined Cleaning Package"];
+    const counts = services.map((name) => ({
+      name,
+      count: bookings.filter((b) => b.serviceName === name).length,
+    }));
+    return counts.sort((a, b) => b.count - a.count);
+  }, [bookings]);
+
+  // Dynamic Staff Performance Ranking
+  const staffPerformance = useMemo(() => {
+    const staffMembers = users.filter((u: any) => u.role === "staff");
+    return staffMembers
+      .map((member: any) => {
+        const completedJobs = bookings.filter(
+          (b: any) => b.staffId === member._id && b.status === "completed"
+        ).length;
+        return {
+          id: member._id,
+          name: member.name,
+          completedJobs,
+        };
+      })
+      .sort((a, b) => b.completedJobs - a.completedJobs);
+  }, [users, bookings]);
+
+  // Client-Side CSV Exporter
+  const handleDownloadCSV = () => {
+    if (bookings.length === 0) {
+      alert("No data available to download.");
+      return;
+    }
+    const headers = [
+      "Booking ID",
+      "Date",
+      "Customer Name",
+      "Customer Email",
+      "Customer Phone",
+      "Service",
+      "Amount (INR)",
+      "Status",
+      "Rating",
+      "Feedback",
+    ];
+
+    const rows = bookings.map((b: any) => [
+      b._id,
+      new Date(b._creationTime).toLocaleDateString("en-IN"),
+      `"${(b.user?.name ?? "Unknown").replace(/"/g, '""')}"`,
+      b.user?.email ?? "-",
+      b.user?.phone ?? "-",
+      `"${b.serviceName.replace(/"/g, '""')}"`,
+      b.amount,
+      b.status,
+      b.rating ?? "Unrated",
+      b.feedback ? `"${b.feedback.replace(/"/g, '""')}"` : "-",
+    ]);
+
+    const csvContent = [
+      headers.join(","),
+      ...rows.map((row) => row.join(",")),
+    ].join("\n");
+
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `falkoncare_operations_report_${Date.now()}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   return (
-    <div className="min-h-screen bg-background">
-      <AdminTopBar title="Reports & Analytics" />
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 p-6 md:p-8 font-sans">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+        <AdminTopBar title="Reports & Analytics" />
+        <Button
+          onClick={handleDownloadCSV}
+          className="min-h-[44px] bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl flex items-center gap-2 shadow-lg shadow-emerald-500/10"
+        >
+          <Icons.fileText className="w-4 h-4" /> Download Report (CSV)
+        </Button>
+      </div>
 
-      <div className="p-6 space-y-6">
+      <div className="space-y-6">
         <RevenueMetrics
           totalRevenue={totalRevenue}
-          monthlyGrowth={12}
+          monthlyGrowth={completedBookings.length > 0 ? 12 : 0}
           averageBookingValue={averageBookingValue}
           pendingPayments={pendingPayments}
         />
 
         <div className="grid lg:grid-cols-2 gap-6">
           <AnalyticsChart
-            title="Weekly Revenue Trend"
+            title="Weekly Revenue Trend (INR)"
             data={weeklyRevenueData}
             chartType="line"
             dataKey="revenue"
@@ -79,181 +187,114 @@ export default function AdminReportsPage() {
           />
           <AnalyticsChart
             title="Booking Status Distribution"
-            data={monthlyBookingData}
+            data={statusDistributionData}
             chartType="bar"
-            dataKey="completed"
-            dataKey2="pending"
+            dataKey="count"
             color="#0ea5e9"
-            color2="#f59e0b"
           />
         </div>
 
         <div className="grid lg:grid-cols-2 gap-6">
           {/* Popular Services */}
-          <Card className="bg-card border-border">
-            <CardHeader>
-              <CardTitle className="text-foreground">Popular Services</CardTitle>
+          <Card className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm">
+            <CardHeader className="border-b border-slate-100 dark:border-slate-800 p-6">
+              <CardTitle className="text-base font-bold font-headline text-slate-900 dark:text-white">
+                Popular Services
+              </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {serviceCounts.slice(0, 5).map((service, index) => {
-                  const maxCount = serviceCounts[0].count || 1
-                  const percentage = (service.count / maxCount) * 100
+            <CardContent className="p-6 space-y-4">
+              {serviceCounts.map((service, index) => {
+                const maxCount = serviceCounts[0]?.count || 1;
+                const percentage = (service.count / maxCount) * 100;
 
-                  return (
-                    <div key={service.id}>
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm font-medium text-foreground flex items-center">
-                          <span className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-xs font-bold text-primary mr-2">
-                            {index + 1}
-                          </span>
-                          {service.name}
+                return (
+                  <div key={service.name}>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-semibold text-slate-700 dark:text-slate-350 flex items-center">
+                        <span className="w-6 h-6 rounded-lg bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400 flex items-center justify-center text-xs font-bold mr-2.5">
+                          {index + 1}
                         </span>
-                        <span className="text-sm font-semibold text-primary">{service.count} bookings</span>
-                      </div>
-                      <div className="h-2 bg-muted rounded-full overflow-hidden">
-                        <div
-                          className="h-full bg-primary rounded-full transition-all"
-                          style={{ width: `${percentage}%` }}
-                        />
-                      </div>
+                        {service.name}
+                      </span>
+                      <span className="text-sm font-bold text-blue-600 dark:text-blue-400">{service.count} bookings</span>
                     </div>
-                  )
-                })}
-              </div>
+                    <div className="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-blue-600 dark:bg-blue-500 rounded-full transition-all"
+                        style={{ width: `${percentage}%` }}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
             </CardContent>
           </Card>
 
-          {/* Staff Performance */}
-          <Card className="bg-card border-border">
-            <CardHeader>
-              <CardTitle className="text-foreground">Staff Performance Ranking</CardTitle>
+          {/* Staff Performance Ranking */}
+          <Card className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm">
+            <CardHeader className="border-b border-slate-100 dark:border-slate-800 p-6">
+              <CardTitle className="text-base font-bold font-headline text-slate-900 dark:text-white">
+                Staff Performance Ranking (Completed Jobs)
+              </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {staff
-                  .map((member) => {
-                    const memberBookings = bookings.filter((b) => b.staffId === member.id && b.status === "completed")
-                    return { ...member, completedJobs: memberBookings.length }
-                  })
-                  .sort((a, b) => b.completedJobs - a.completedJobs)
-                  .map((member, index) => (
-                    <div key={member.id} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
-                      <div className="flex items-center gap-3 flex-1">
-                        <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-xs font-bold text-primary">
-                          {index + 1}
+            <CardContent className="p-6">
+              {staffPerformance.length === 0 ? (
+                <div className="text-center py-8">
+                  <p className="text-xs text-slate-500 dark:text-slate-400">No field staff members registered.</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {staffPerformance.map((member, index) => {
+                    const maxJobs = staffPerformance[0]?.completedJobs || 1;
+                    const percentage = (member.completedJobs / maxJobs) * 100;
+
+                    return (
+                      <div key={member.id}>
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-sm font-semibold text-slate-700 dark:text-slate-350 flex items-center">
+                            <span className="w-6 h-6 rounded-lg bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xs font-bold mr-2.5">
+                              {index + 1}
+                            </span>
+                            {member.name}
+                          </span>
+                          <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400">
+                            {member.completedJobs} jobs
+                          </span>
                         </div>
-                        <Image
-                          src={member.photo || "/placeholder.svg"}
-                          alt={member.name}
-                          width={40}
-                          height={40}
-                          className="w-10 h-10 rounded-full object-cover"
-                        />
-                        <div>
-                          <p className="font-medium text-foreground">{member.name}</p>
-                          <div className="flex items-center gap-1">
-                            <Icons.star className="w-3 h-3 fill-warning text-warning" />
-                            <span className="text-xs text-muted-foreground">{member.rating}</span>
-                          </div>
+                        <div className="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-emerald-600 dark:bg-emerald-500 rounded-full transition-all"
+                            style={{ width: `${percentage}%` }}
+                          />
                         </div>
                       </div>
-                      <div className="text-right">
-                        <p className="font-semibold text-foreground">{member.completedJobs}</p>
-                        <p className="text-xs text-muted-foreground">completed</p>
-                      </div>
-                    </div>
-                  ))}
-              </div>
+                    );
+                  })}
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
 
-        {/* Booking Status Distribution */}
-        <Card className="bg-card border-border">
-          <CardHeader>
-            <CardTitle className="text-foreground">Booking Status Overview</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-              {[
-                { status: "pending", label: "Pending", color: "warning", icon: Icons.clock },
-                { status: "confirmed", label: "Confirmed", color: "primary", icon: Icons.checkCircle },
-                { status: "in-progress", label: "In Progress", color: "accent", icon: Icons.activity },
-                { status: "completed", label: "Completed", color: "success", icon: Icons.check },
-                { status: "cancelled", label: "Cancelled", color: "destructive", icon: Icons.x },
-              ].map(({ status, label, color, icon: IconComponent }) => {
-                const count = bookings.filter((b) => b.status === status).length
-                const percentage = bookings.length > 0 ? ((count / bookings.length) * 100).toFixed(0) : 0
-
-                return (
-                  <div key={status} className="text-center p-4 bg-muted/50 rounded-lg border border-border">
-                    <div
-                      className={`w-10 h-10 rounded-lg bg-${color}/10 flex items-center justify-center mx-auto mb-2`}
-                    >
-                      <IconComponent className={`w-5 h-5 text-${color}`} />
-                    </div>
-                    <p className="text-2xl font-bold text-foreground">{count}</p>
-                    <p className="text-sm text-muted-foreground mt-1">{label}</p>
-                    <p className="text-xs text-muted-foreground">{percentage}%</p>
-                  </div>
-                )
-              })}
+        {/* Rating Metric Info */}
+        <Card className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm">
+          <CardContent className="p-6 flex flex-col sm:flex-row items-center gap-4 justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-xl bg-amber-50 dark:bg-amber-950/20 text-amber-500 flex items-center justify-center">
+                <Icons.star className="w-6 h-6 fill-amber-500" />
+              </div>
+              <div>
+                <h4 className="font-bold text-sm text-slate-900 dark:text-white">Customer Satisfaction</h4>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Average feedback score across completed service orders</p>
+              </div>
             </div>
-          </CardContent>
-        </Card>
-
-        {/* Customer Satisfaction */}
-        <Card className="bg-card border-border">
-          <CardHeader>
-            <CardTitle className="text-foreground">Customer Satisfaction & Reviews</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="text-center">
-                <div className="text-5xl font-bold text-primary mb-2 flex items-center justify-center">
-                  {averageRating}
-                  <Icons.star className="w-8 h-8 fill-warning text-warning ml-2" />
-                </div>
-                <p className="text-muted-foreground">{feedback.length} total reviews</p>
-              </div>
-
-              <div className="space-y-3">
-                {[5, 4, 3, 2, 1].map((stars) => {
-                  const starFeedback = feedback.filter((f) => f.rating === stars).length
-                  const percentage = feedback.length > 0 ? ((starFeedback / feedback.length) * 100).toFixed(0) : 0
-
-                  return (
-                    <div key={stars} className="flex items-center gap-3">
-                      <span className="text-sm text-muted-foreground w-8">{stars}★</span>
-                      <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
-                        <div
-                          className="h-full bg-warning rounded-full transition-all"
-                          style={{ width: `${percentage}%` }}
-                        />
-                      </div>
-                      <span className="text-sm text-muted-foreground w-12 text-right">{starFeedback}</span>
-                    </div>
-                  )
-                })}
-              </div>
-
-              <div className="space-y-2">
-                <div className="bg-success/10 rounded-lg p-4 border border-success/20">
-                  <p className="text-3xl font-bold text-success mb-1">{feedback.filter((f) => f.rating >= 4).length}</p>
-                  <p className="text-sm text-muted-foreground">Positive reviews (4-5 stars)</p>
-                </div>
-                <div className="bg-warning/10 rounded-lg p-4 border border-warning/20">
-                  <p className="text-3xl font-bold text-warning mb-1">
-                    {feedback.filter((f) => f.rating === 3).length}
-                  </p>
-                  <p className="text-sm text-muted-foreground">Neutral reviews (3 stars)</p>
-                </div>
-              </div>
+            <div className="flex items-baseline gap-1 bg-amber-500/10 px-4 py-2 rounded-xl border border-amber-500/20 text-amber-600 dark:text-amber-400">
+              <span className="text-2xl font-black">{averageRating}</span>
+              <span className="text-xs font-bold">/ 5.0</span>
             </div>
           </CardContent>
         </Card>
       </div>
     </div>
-  )
+  );
 }

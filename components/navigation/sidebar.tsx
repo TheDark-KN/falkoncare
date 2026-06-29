@@ -28,6 +28,7 @@ const adminNavItems = [
   { href: "/admin/staff", label: "Staff Management", icon: Icons.users },
   { href: "/admin/services", label: "Services", icon: Icons.clipboardList },
   { href: "/admin/customers", label: "Customers", icon: Icons.user },
+  { href: "/admin/surveys", label: "Surveys", icon: Icons.clipboardList },
   { href: "/admin/reports", label: "Reports", icon: Icons.barChart },
 ]
 
@@ -44,6 +45,7 @@ const adminTabs = [
   { href: "/admin/bookings", label: "Bookings", icon: Icons.calendar },
   { href: "/admin/staff", label: "Staff", icon: Icons.users },
   { href: "/admin/customers", label: "Customers", icon: Icons.user },
+  { href: "/admin/surveys", label: "Surveys", icon: Icons.clipboardList },
   { href: "/admin/reports", label: "Reports", icon: Icons.barChart },
 ]
 

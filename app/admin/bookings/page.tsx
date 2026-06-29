@@ -32,12 +32,19 @@ function formatDate(timestamp: number) {
 
 export default function AdminBookingsPage() {
   const bookings = useQuery(api.admin.getAllBookings);
+  const rawUsers = useQuery(api.admin.getAllUsers);
+  const users = useMemo(() => rawUsers ?? [], [rawUsers]);
   const updateStatus = useMutation(api.admin.updateBookingStatus);
+  const assignStaffMutation = useMutation(api.admin.assignStaff);
 
   const [statusFilter, setStatusFilter] = useState<BookingStatus | "all">("all");
   const [serviceFilter, setServiceFilter] = useState<string | "all">("all");
 
   const isLoading = bookings === undefined;
+
+  const staffMembers = useMemo(() => {
+    return users.filter((u: any) => u.role === "staff");
+  }, [users]);
 
   const uniqueServices = useMemo(() => {
     if (!bookings) return [];
@@ -60,6 +67,15 @@ export default function AdminBookingsPage() {
       toast.success(`Booking status updated to ${newStatus}`);
     } catch (e) {
       toast.error("Failed to update booking status");
+    }
+  };
+
+  const handleStaffAssign = async (bookingId: Id<"bookings">, staffId: string) => {
+    try {
+      await assignStaffMutation({ bookingId, staffId: staffId as Id<"users"> });
+      toast.success("Staff assigned to booking successfully");
+    } catch (e) {
+      toast.error("Failed to assign staff to booking");
     }
   };
 
@@ -147,15 +163,16 @@ export default function AdminBookingsPage() {
                   <TableHead className="font-bold text-xs uppercase tracking-wider text-slate-400">Customer</TableHead>
                   <TableHead className="font-bold text-xs uppercase tracking-wider text-slate-400">Service</TableHead>
                   <TableHead className="font-bold text-xs uppercase tracking-wider text-slate-400">Slot</TableHead>
+                  <TableHead className="font-bold text-xs uppercase tracking-wider text-slate-400">Assigned Staff</TableHead>
                   <TableHead className="font-bold text-xs uppercase tracking-wider text-slate-400">Status</TableHead>
                   <TableHead className="font-bold text-xs uppercase tracking-wider text-slate-400 text-right">Amount</TableHead>
-                  <TableHead className="font-bold text-xs uppercase tracking-wider text-slate-400 pr-6 text-right">Actions</TableHead>
+                  <TableHead className="font-bold text-xs uppercase tracking-wider text-slate-400 pr-6 text-right">Status Action</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredBookings.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center py-12 text-sm text-slate-500 dark:text-slate-400">
+                    <TableCell colSpan={8} className="text-center py-12 text-sm text-slate-500 dark:text-slate-400">
                       No bookings match selected filters.
                     </TableCell>
                   </TableRow>
@@ -182,9 +199,27 @@ export default function AdminBookingsPage() {
                       </TableCell>
                       <TableCell>
                         <div className="text-sm font-medium text-slate-600 dark:text-slate-300">
-                          {b.date}
+                          {formatDate(b.date)}
                         </div>
                         <div className="text-xs text-slate-400">{b.time}</div>
+                      </TableCell>
+                      <TableCell>
+                        <Select
+                          value={b.staff?.id || "unassigned"}
+                          onValueChange={(val) => handleStaffAssign(b._id, val)}
+                        >
+                          <SelectTrigger className="w-[140px] min-h-[36px] h-9 text-xs border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 rounded-lg">
+                            <SelectValue placeholder="Assign Staff" />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800">
+                            <SelectItem value="unassigned">Unassigned</SelectItem>
+                            {staffMembers.map((member: any) => (
+                              <SelectItem key={member._id} value={member._id}>
+                                {member.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </TableCell>
                       <TableCell>
                         <StatusBadge status={b.status} />

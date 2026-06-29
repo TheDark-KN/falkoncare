@@ -365,3 +365,39 @@ export const reschedule = mutation({
         return true;
     },
 });
+
+// User: rate and give feedback for a completed booking
+export const submitReview = mutation({
+  args: {
+    bookingId: v.id("bookings"),
+    rating: v.number(),
+    feedback: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const userId = await assertAuth(ctx);
+    const booking = await ctx.db.get(args.bookingId);
+    
+    if (!booking) {
+      throw new ConvexError(ERRORS.BOOKING_NOT_FOUND);
+    }
+    
+    // Check if this booking belongs to the caller
+    if (booking.userId !== userId) {
+      throw new ConvexError(ERRORS.UNAUTHORIZED);
+    }
+    
+    // Check status is completed
+    if (booking.status !== "completed") {
+      throw new ConvexError("Only completed bookings can be reviewed.");
+    }
+    
+    // Update booking with review
+    await ctx.db.patch(args.bookingId, {
+      rating: args.rating,
+      feedback: args.feedback,
+      updatedAt: Date.now(),
+    });
+    
+    return true;
+  },
+});

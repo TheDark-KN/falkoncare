@@ -39,6 +39,21 @@ export const getAllBookings = query({
           // ignore invalid IDs
         }
 
+        let staff: any = null;
+        try {
+          if (booking.staffId) {
+            const st = await ctx.db.get(booking.staffId);
+            if (st) {
+              staff = {
+                id: st._id,
+                name: st.name ?? st.fullName ?? "Staff Member",
+              };
+            }
+          }
+        } catch (e) {
+          // ignore
+        }
+
         return {
           ...booking,
           user: user
@@ -52,6 +67,7 @@ export const getAllBookings = query({
                 email: "-",
                 phone: "-",
               },
+          staff,
         };
       })
     );
@@ -279,6 +295,103 @@ export const sendNotificationToAll = mutation({
         }
       })
     );
+    return true;
+  },
+});
+
+// Admin: add a new staff member
+export const addStaff = mutation({
+  args: {
+    name: v.string(),
+    email: v.string(),
+    phone: v.string(),
+  },
+  handler: async (ctx, args) => {
+    await checkAdmin(ctx);
+    const normalizedEmail = args.email.trim().toLowerCase();
+
+    // Check if email already registered
+    const existing = await ctx.db
+      .query("users")
+      .withIndex("email", (q) => q.eq("email", normalizedEmail))
+      .first();
+    if (existing) {
+      throw new ConvexError("Email already registered in the system");
+    }
+
+    const staffId = await ctx.db.insert("users", {
+      name: args.name,
+      fullName: args.name,
+      email: normalizedEmail,
+      phone: args.phone,
+      role: "staff",
+      status: "available", // default status
+      walletBalance: 0,
+      createdAt: Date.now(),
+      profileComplete: true, // Auto-complete for admin created staff
+    });
+
+    return staffId;
+  },
+});
+
+// Admin: update staff status
+export const updateStaffStatus = mutation({
+  args: {
+    staffId: v.id("users"),
+    status: v.string(),
+  },
+  handler: async (ctx, args) => {
+    await checkAdmin(ctx);
+
+    const user = await ctx.db.get(args.staffId);
+    if (!user || user.role !== "staff") {
+      throw new ConvexError("Staff member not found");
+    }
+
+    await ctx.db.patch(args.staffId, {
+      status: args.status,
+      updatedAt: Date.now(),
+    });
+
+    return true;
+  },
+});
+
+// Admin: assign staff member to a booking
+export const assignStaff = mutation({
+  args: {
+    bookingId: v.id("bookings"),
+    staffId: v.id("users"),
+  },
+  handler: async (ctx, args) => {
+    await checkAdmin(ctx);
+
+    const booking = await ctx.db.get(args.bookingId);
+    if (!booking) {
+      throw new ConvexError("Booking not found");
+    }
+
+    const staff = await ctx.db.get(args.staffId);
+    if (!staff || staff.role !== "staff") {
+      throw new ConvexError("Staff member not found");
+    }
+
+    await ctx.db.patch(args.bookingId, {
+      staffId: args.staffId,
+      updatedAt: Date.now(),
+    });
+
+    // Notify staff member if needed (optional)
+    await ctx.db.insert("notifications", {
+      userId: args.staffId,
+      type: "system",
+      title: "New Job Assigned",
+      message: `You have been assigned to cleaning job ${booking.serviceName} at ${booking.address} on ${new Date(booking.date).toLocaleDateString("en-IN")}.`,
+      read: false,
+      createdAt: Date.now(),
+    });
+
     return true;
   },
 });

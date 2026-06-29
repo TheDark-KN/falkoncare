@@ -352,6 +352,52 @@ export default function BookingDetailsPage() {
               </Card>
             )}
 
+            {/* Rating & Review Section */}
+            {isCompleted && (
+              <Card className="bg-white dark:bg-slate-900 p-6 md:p-8 rounded-2xl border border-slate-200/50 dark:border-slate-800/50 shadow-sm border-t-4 border-amber-500">
+                <div className="space-y-4">
+                  <h4 className="font-headline font-bold text-sky-900 dark:text-white text-base">
+                    {booking.rating !== undefined ? "Your Rating & Review" : "Rate Our Service"}
+                  </h4>
+                  
+                  {booking.rating !== undefined ? (
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-1 text-amber-500">
+                        {Array.from({ length: 5 }).map((_, i) => (
+                          <Icons.star
+                            key={i}
+                            className={cn(
+                              "w-5 h-5",
+                              i < booking.rating! ? "fill-amber-500 text-amber-500" : "text-slate-300 dark:text-slate-700"
+                            )}
+                          />
+                        ))}
+                        <span className="text-sm font-bold text-slate-700 dark:text-slate-350 ml-2">
+                          {booking.rating}/5
+                        </span>
+                      </div>
+                      {booking.feedback && (
+                        <p className="text-xs text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-900/50 p-3 rounded-xl border border-slate-100 dark:border-slate-800 italic leading-relaxed">
+                          &ldquo;{booking.feedback}&rdquo;
+                        </p>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                        Share your feedback to help us keep improving the quality of our tank cleaning service.
+                      </p>
+                      <Link href={`/dashboard/bookings/${booking._id}/feedback`} className="block">
+                        <Button className="w-full py-5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-headline font-bold text-xs shadow-md shadow-amber-500/10 active:scale-95 duration-200 flex items-center justify-center gap-1.5 border-0">
+                          <Icons.star className="w-4 h-4 fill-white" /> Rate Experience
+                        </Button>
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              </Card>
+            )}
+
             {/* Service details summary card */}
             <Card className="bg-white dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800/50 shadow-sm shadow-sky-900/5 rounded-2xl">
               <CardContent className="p-6 md:p-8 space-y-6">

@@ -15,6 +15,7 @@ export default defineSchema({
     imageStorageId: v.optional(v.id("_storage")),
     dob: v.optional(v.string()),
     role: v.optional(v.union(v.literal("admin"), v.literal("user"), v.literal("staff"), v.literal("customer"))),
+    status: v.optional(v.string()),
     profileComplete: v.optional(v.boolean()),
     walletBalance: v.optional(v.number()),
     address: v.optional(v.string()),
@@ -107,6 +108,9 @@ export default defineSchema({
     rescheduleCount: v.optional(v.number()),
     scheduledAt: v.optional(v.number()),
     slotId: v.optional(v.id("slots")),
+    staffId: v.optional(v.id("users")),
+    rating: v.optional(v.number()),
+    feedback: v.optional(v.string()),
     updatedAt: v.optional(v.number()),
   })
     .index("by_user", ["userId"])
