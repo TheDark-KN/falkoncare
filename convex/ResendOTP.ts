@@ -13,9 +13,7 @@ export const ResendOTP = Email({
   },
   async sendVerificationRequest({ identifier: email, provider, token }) {
     const resend = new ResendAPI(provider.apiKey);
-    const from = process.env.RESEND_FROM_EMAIL
-      ? `FalkonCare <${process.env.RESEND_FROM_EMAIL}>`
-      : "FalkonCare <noreply@mail.falkoncare.com>";
+    const from = `FalkonCare <${process.env.RESEND_FROM_EMAIL ?? "102ctbmti2122016@nfsu.ac.in"}>`;
     const { error } = await resend.emails.send({
       from,
       to: [email],
