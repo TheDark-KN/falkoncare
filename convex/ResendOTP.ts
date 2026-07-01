@@ -13,9 +13,9 @@ export const ResendOTP = Email({
   },
   async sendVerificationRequest({ identifier: email, provider, token }) {
     const resend = new ResendAPI(provider.apiKey);
-    const from = process.env.NODE_ENV === "production" && process.env.RESEND_FROM_EMAIL
+    const from = process.env.RESEND_FROM_EMAIL
       ? `FalkonCare <${process.env.RESEND_FROM_EMAIL}>`
-      : "FalkonCare <onboarding@resend.dev>";
+      : "FalkonCare <noreply@mail.falkoncare.com>";
     const { error } = await resend.emails.send({
       from,
       to: [email],
