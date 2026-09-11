@@ -1,5 +1,6 @@
 import type React from "react"
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
+
 import { Public_Sans, Plus_Jakarta_Sans } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
@@ -21,7 +22,15 @@ const plusJakartaSans = Plus_Jakarta_Sans({
   display: 'swap',
 })
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  colorScheme: "light",
+  themeColor: "#f7fafc",
+}
+
 export const metadata: Metadata = {
+
   title: "Falkon Care - Professional Water Tank Cleaning Service in Delhi NCR | Noida, Gurgaon, Faridabad",
   description: "Falkon Care provides expert water tank cleaning services in Delhi, Noida, Gurgaon, Faridabad & Ghaziabad. Professional residential & commercial tank cleaning. Book now for same-day service! ✓ Certified Technicians ✓ Safe & Hygienic ✓ Affordable Rates",
   keywords: "Falkon Care, water tank cleaning Delhi, water tank cleaning NCR, water tank cleaning near me, water tank cleaning service, tank cleaning Noida, tank cleaning Gurgaon, water tank sanitization",
@@ -35,6 +44,8 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Falkon Care - Best Water Tank Cleaning Service in Delhi NCR",
+    images: [{ url: "/water-tank-cleaning-service.jpg", width: 1200, height: 630, alt: "Falkon Care water tank cleaning service" }],
+
     description: "Professional water tank cleaning services across Delhi, Noida, Gurgaon, Faridabad & Ghaziabad. Book Falkon Care today!",
     url: 'https://falkoncare.com',
     siteName: 'Falkon Care',
@@ -77,7 +88,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className="bg-background">
+
       <head>
         <script
           type="application/ld+json"
@@ -156,14 +168,22 @@ export default function RootLayout({
         />
       </head>
       <body className={`${publicSans.variable} ${plusJakartaSans.variable} font-sans antialiased`}>
-        <ConvexAuthNextjsServerProvider>
-          <ConvexClientProvider>
+        {process.env.NEXT_PUBLIC_CONVEX_URL ? (
+          <ConvexAuthNextjsServerProvider>
+            <ConvexClientProvider>
+              {children}
+              <Toaster />
+            </ConvexClientProvider>
+          </ConvexAuthNextjsServerProvider>
+        ) : (
+          <>
             {children}
             <Toaster />
-          </ConvexClientProvider>
-        </ConvexAuthNextjsServerProvider>
+          </>
+        )}
         <Analytics />
       </body>
+
     </html>
   );
 }

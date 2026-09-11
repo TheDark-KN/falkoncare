@@ -140,11 +140,10 @@ export function ServicesSection({
                 <p className="text-on-surface-variant text-slate-500 leading-relaxed">Our proprietary 6-stage process includes sludge removal, high-pressure washing, vacuuming, and UV sterilization to kill 99.9% of pathogens.</p>
               </div>
               <Image
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAk-wzDwQ_KDHxdlLbUtAIbi5KYUKqUWHCd70Mhr9FMsjMmDEzq6hnhfrp3W-LaoHgPJYfLIyUBW0TEHAQYY87LJOCs0Eojp3kliano7D8Z1GVDfV2Ze9g5NDc7Hmb5XDzUVw1Ii8lYJ09y1mBame9Gk0kNkxnZashg5Axy8l1NqROwLYd5TJshVM8-xo1doiWZ92npCAST4xtIGNsqFP3fUoJAgIeFrT_yy4bmiAYTMpuaMUoiuL1rGDCuygG70Ll8fansjcNysA"
+                src="/premium-water-tank-cleaning-with-uv-treatment.jpg"
                 alt="Sterile cleaning equipment"
                 width={600}
                 height={400}
-                placeholder="blur"
                 className="mt-8 rounded-xl h-48 w-full object-cover"
               />
             </div>

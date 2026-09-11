@@ -19,7 +19,7 @@ const links = [
   { href: "/about", label: "About" },
 ]
 
-export function Header() {
+function ConnectedHeader() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false)
   const pathname = usePathname()
@@ -114,7 +114,10 @@ export function Header() {
                       e.stopPropagation()
                       setProfileDropdownOpen(!profileDropdownOpen)
                     }}
-                    className="flex items-center gap-1.5 focus:outline-none"
+                    className="flex items-center gap-1.5 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2"
+                    aria-label="Open account menu"
+                    aria-expanded={profileDropdownOpen}
+                    aria-haspopup="menu"
                   >
                     {convexUser?.image || convexUser?.imageUrl ? (
                       <Image
@@ -223,7 +226,8 @@ export function Header() {
                 <button
                   type="button"
                   onClick={() => setMenuOpen(false)}
-                  className="flex h-10 w-10 items-center justify-center rounded-lg hover:bg-gray-50"
+                  className="flex h-10 w-10 items-center justify-center rounded-lg hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2"
+                  aria-label="Close menu"
                 >
                   <Icons.x className="h-5 w-5 text-gray-500" />
                 </button>
@@ -311,5 +315,35 @@ export function Header() {
         </>
       )}
     </>
+  )
+}
+
+export function Header() {
+  if (process.env.NEXT_PUBLIC_CONVEX_URL) {
+    return <ConnectedHeader />
+  }
+
+  return (
+    <header className="sticky top-0 z-40 w-full border-b border-gray-150/80 bg-white/80 backdrop-blur-md">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <Link href="/" className="flex items-center gap-2" aria-label="FalkonCare home">
+          <Image src="/icon.png" alt="FalkonCare logo" width={32} height={32} className="object-contain" />
+          <span className="text-lg font-bold font-headline tracking-tight text-sky-900">FalkonCare</span>
+        </Link>
+        <nav aria-label="Primary navigation" className="hidden items-center gap-6 md:flex">
+          {links.map((link) => (
+            <Link key={link.href} href={link.href} className="text-sm font-medium text-slate-700 transition-colors hover:text-sky-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2">
+              {link.label}
+            </Link>
+          ))}
+          <Link href="/signin" className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 transition-colors hover:border-sky-300 hover:text-sky-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2">
+            Sign In
+          </Link>
+          <Link href="/signup" className="rounded-lg bg-sky-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-sky-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2">
+            Get Started
+          </Link>
+        </nav>
+      </div>
+    </header>
   )
 }
